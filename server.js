@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 1234;
 
+const postsRouter = require('./routes/posts');
+
 app.get('/api', (req, res) => {
   res.json([
     {
@@ -10,6 +12,8 @@ app.get('/api', (req, res) => {
     },
   ]);
 });
+
+app.use('/api/posts', postsRouter);
 
 if (process.env.NODE_ENV === 'production') {
   // Serve any static file

@@ -1,23 +1,27 @@
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+const usePosts = () => {
+  const [post, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const res = await fetch('/api');
+      const data = await res.json();
+      setPosts(data);
+    };
+    fetchPosts();
+  }, []);
+  return post;
+};
 function App() {
+  const posts = usePosts();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      {posts.map((post) => (
+        <h2>{post.title}</h2>
+      ))}
     </div>
   );
 }

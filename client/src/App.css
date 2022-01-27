@@ -1,1 +1,66 @@
+@import 'normalize.css'; /* bring in normalize.css styles */
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Poppins:wght@500;600&display=swap');
 
+:root {
+  --c-primary: #7939cb;
+  --c-primary-dark: #461584;
+  --c-primary-light: #f0e4ff;
+  --c-white: #ffffff;
+  --c-white-50: rgba(255, 255, 255, 0.5);
+  --c-primary-text: #313131;
+  --c-secondary-text: #4f5b79;
+  --c-tertiary-text: #b2b0af;
+  --c-yellow: #ff8a00;
+  --c-background: #faf7ff;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+html {
+  /* 62.5% of 16px = 10px */
+  font-size: 62.5%;
+}
+
+body {
+  font-weight: normal;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Poppins', sans-serif;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: 2.4rem;
+  line-height: 36px;
+}
+
+h2 {
+  font-weight: 600;
+  font-size: 1.6rem;
+  line-height: 24px;
+}
+
+h3 {
+  font-weight: 500;
+  font-size: 1.6rem;
+  line-height: 24px;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+  font-size: 1.4rem;
+  line-height: 17px;
+}
+
+caption {
+  font-family: 'Lato', sans-serif;
+  font-size: 1.2rem;
+  line-height: 14px;
+}

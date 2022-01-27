@@ -1,0 +1,28 @@
+/* Inputs */
+.input {
+  border-radius: 20px;
+  margin-bottom: 2rem;
+  width: 100%;
+  color: var(--c-white);
+  background: var(--c-primary-dark);
+  font-size: 1.6rem;
+  padding: 2rem;
+  outline: 0;
+  border: none;
+}
+
+::placeholder {
+  color: var(--c-white-50);
+}
+
+.input-password {
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem;
+}
+
+.show {
+  margin-left: -61px;
+  margin-bottom: 20px;
+  color: var(--c-blue);
+}

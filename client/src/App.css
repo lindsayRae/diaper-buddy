@@ -11,7 +11,10 @@
   --c-secondary-text: #4f5b79;
   --c-tertiary-text: #b2b0af;
   --c-yellow: #ff8a00;
-  --c-background: #faf7ff;
+  --c-background-light: #faf7ff;
+  --c-background-purple: #662daf;
+  --c-blue: #3f9ae0;
+  --c-btn-light: #e5d0ff;
 }
 
 *,
@@ -27,6 +30,7 @@ html {
 
 body {
   font-weight: normal;
+  background: var(--c-background-light);
 }
 
 h1,
@@ -63,4 +67,81 @@ caption {
   font-family: 'Lato', sans-serif;
   font-size: 1.2rem;
   line-height: 14px;
+}
+
+/* General */
+
+.block {
+  padding: 2rem;
+}
+.d-flex {
+  display: flex;
+}
+.background-purple {
+  background: var(--c-background-purple);
+  height: 100vh;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 280px;
+}
+
+.vector-right {
+  position: absolute;
+  top: 64px;
+  right: 0;
+  opacity: 0.3;
+}
+.vector-left {
+  position: absolute;
+  top: 320px;
+  left: 0;
+  opacity: 0.3;
+}
+
+/* Links */
+a {
+  text-decoration: none;
+}
+.landing-links a {
+  color: var(--c-white-50);
+  font-weight: 600;
+  font-size: 2.4rem;
+  font-family: 'Poppins', sans-serif;
+  padding: 3rem 3rem 2rem 0;
+  z-index: 1;
+}
+
+.landing-links .active {
+  color: var(--c-white);
+}
+
+.forgot {
+  font-size: 1.6rem;
+  color: var(--c-white);
+  text-align: right;
+}
+
+.terms {
+  color: var(--c-white);
+  text-align: center;
+  font-size: 1.4rem;
+  margin-bottom: 2rem;
+}
+
+/* Buttons */
+.btn {
+  padding: 2rem;
+  font-size: 1.6rem;
+  width: 100%;
+  border-radius: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.btn-lt {
+  background: var(--c-btn-light);
 }

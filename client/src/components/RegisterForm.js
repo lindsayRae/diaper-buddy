@@ -1,6 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import '../components/Inputs.css';
-const RegisterForm = ({ history }) => {
+import '../components/SignIn.css';
+
+const RegisterForm = () => {
   return (
     <div className='block' style={{ paddingTop: '0' }}>
       <form>

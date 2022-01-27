@@ -86,50 +86,21 @@ caption {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 280px;
-}
-
-.vector-right {
-  position: absolute;
-  top: 64px;
-  right: 0;
-  opacity: 0.3;
-}
-.vector-left {
-  position: absolute;
-  top: 320px;
-  left: 0;
-  opacity: 0.3;
+  height: 233px;
 }
 
 /* Links */
 a {
   text-decoration: none;
-}
-.landing-links a {
-  color: var(--c-white-50);
-  font-weight: 600;
-  font-size: 2.4rem;
-  font-family: 'Poppins', sans-serif;
-  padding: 3rem 3rem 2rem 0;
-  z-index: 1;
-}
-
-.landing-links .active {
-  color: var(--c-white);
-}
-
-.forgot {
-  font-size: 1.6rem;
-  color: var(--c-white);
-  text-align: right;
-}
-
-.terms {
-  color: var(--c-white);
-  text-align: center;
   font-size: 1.4rem;
-  margin-bottom: 2rem;
+  color: var(--c-white);
+}
+.show a {
+  color: var(--c-blue);
+  font-size: 1.6rem;
+  display: inline-block;
+  margin-left: -61px;
+  margin-bottom: 20px;
 }
 
 /* Buttons */

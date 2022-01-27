@@ -1,5 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 import '../components/Inputs.css';
+import '../components/SignIn.css';
+
 const SignInForm = ({ history }) => {
   return (
     <div className='block' style={{ paddingTop: '0' }}>
@@ -14,7 +17,7 @@ const SignInForm = ({ history }) => {
         <button className='btn btn-lt'>Sign In</button>
       </form>
       <p className='forgot'>
-        <a>Forgot Password</a>
+        <NavLink to='/passwordreset'>Forgot Password</NavLink>
       </p>
     </div>
   );

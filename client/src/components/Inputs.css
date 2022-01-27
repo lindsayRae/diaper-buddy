@@ -20,9 +20,3 @@
   align-items: center;
   font-size: 1.6rem;
 }
-
-.show {
-  margin-left: -61px;
-  margin-bottom: 20px;
-  color: var(--c-blue);
-}

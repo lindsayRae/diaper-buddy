@@ -7,6 +7,8 @@ import './App.css';
 // Pages
 import SignIn from './pages/SignIn';
 import Register from './pages/Register';
+import PasswordReset from './pages/PasswordReset';
+import NewPassword from './pages/SetNewPassword';
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Routes>
           <Route path='/' element={<SignIn />} />
           <Route path='/register' element={<Register />} />
+          <Route path='/passwordreset' element={<PasswordReset />} />
+          <Route path='/newpassword' element={<NewPassword />} />
         </Routes>
       </div>
     </BrowserRouter>

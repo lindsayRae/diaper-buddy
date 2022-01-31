@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import SwipeSize from '../components/Swipe_Size';
 import HistoryList from '../components/HistoryList';
 import HistoryGraph from '../components/HistoryGraph';
+import Navbar from '../components/Navbar';
 
 const Home = () => {
   const [historyContent, setHistoryContent] = useState('List');
@@ -38,6 +39,7 @@ const Home = () => {
         {historyContent === 'List' && <HistoryList />}
         {historyContent === 'Graph' && <HistoryGraph />}
       </section>
+      <Navbar />
     </div>
   );
 };

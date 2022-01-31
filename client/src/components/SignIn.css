@@ -1,7 +1,17 @@
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 233px;
+  position: relative;
+}
 .logo-container:first-child {
   padding-top: 64px;
 }
-
+.signin-nav-container {
+  position: relative;
+  padding-bottom: 10px;
+}
 .vector-right {
   position: absolute;
   top: 64px;
@@ -10,7 +20,7 @@
 }
 .vector-left {
   position: absolute;
-  top: 320px;
+  top: 48px;
   left: 0;
   opacity: 0.3;
 }

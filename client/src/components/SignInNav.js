@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import vector2 from '../images/Vector2.png';
-
+import '../components/SignIn.css';
 const SignInNav = () => {
   return (
-    <section className='block' style={{ paddingBottom: '10px' }}>
+    <section className='block signin-nav-container'>
       <div className='d-flex landing-links'>
         <NavLink to='/'>
           <span>Sign In</span>

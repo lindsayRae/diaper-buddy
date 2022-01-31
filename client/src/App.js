@@ -9,6 +9,7 @@ import SignIn from './pages/SignIn';
 import Register from './pages/Register';
 import PasswordReset from './pages/PasswordReset';
 import NewPassword from './pages/SetNewPassword';
+import Home from './pages/Home';
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
           <Route path='/' element={<SignIn />} />
           <Route path='/register' element={<Register />} />
           <Route path='/passwordreset' element={<PasswordReset />} />
-          <Route path='/newpassword' element={<NewPassword />} />
+
+          <Route path='/home' element={<Home />} />
         </Routes>
       </div>
     </BrowserRouter>

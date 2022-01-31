@@ -1,0 +1,24 @@
+.full-card {
+  width: 100%;
+  color: var(--c-background-purple);
+  background: #efe3ff;
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  position: relative;
+  height: 93px;
+  overflow: hidden;
+}
+
+.diaper-ct {
+  font-size: 3.6rem;
+  padding-right: 2rem;
+}
+
+.img-absolute {
+  position: absolute;
+  right: 0;
+  top: 20px;
+}

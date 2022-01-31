@@ -1,0 +1,44 @@
+.size-swipe-container {
+  height: 109px;
+  border-radius: 20px;
+  background: var(--c-white);
+  padding: 2rem;
+  display: flex;
+}
+
+.size-swipe-text {
+  margin-left: 3rem;
+}
+.size-heading {
+  margin: 0;
+  line-height: normal;
+}
+
+.size-weight-title {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+.size-weight {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--c-primary);
+}
+
+.swiper-slide {
+  width: 80% !important;
+}
+.input-add-container {
+  display: flex;
+  margin-bottom: 2rem;
+}
+.input-add {
+  border-radius: 20px;
+  width: 50%;
+  margin-right: 2rem;
+  color: var(--c-primary-text);
+  background: var(--c-white);
+  font-size: 1.6rem;
+  padding: 2rem;
+  outline: 0;
+  border: none;
+}

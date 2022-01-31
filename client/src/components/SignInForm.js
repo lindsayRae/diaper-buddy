@@ -14,7 +14,9 @@ const SignInForm = ({ history }) => {
             <a>Show</a>
           </span>
         </div>
-        <button className='btn btn-lt'>Sign In</button>
+        <NavLink to='/home'>
+          <button className='btn btn-lt'>Sign In</button>
+        </NavLink>
       </form>
       <p className='forgot'>
         <NavLink to='/passwordreset'>Forgot Password</NavLink>

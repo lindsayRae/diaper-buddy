@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Navbar from '../components/Navbar';
+import Navbar from '../components/Nav/Navbar';
 import vector4 from '../images/Vector4.png';
 
 const Pricing = () => {

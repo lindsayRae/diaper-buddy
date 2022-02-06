@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import SwipeSize from '../components/Swipe_Size';
 import HistoryList from '../components/HistoryList';
 import HistoryGraph from '../components/HistoryGraph';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/Nav/Navbar';
 
 const Home = () => {
   const [historyContent, setHistoryContent] = useState('List');

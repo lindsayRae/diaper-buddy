@@ -2,33 +2,46 @@ import React, { useState } from 'react';
 
 import './HistoryGraphs.css';
 import Modal from './Modal/Modal';
+import EditHistory from './EditHistory';
 
+const historyData = [
+  { date: '01/01/22', count: 10 },
+  { date: '01/02/22', count: 8 },
+  { date: '01/03/22', count: 9 },
+  { date: '01/04/22', count: 10 },
+  { date: '01/05/22', count: 11 },
+];
 const HistoryList = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalData, setModalData] = useState();
 
   return (
     <>
       <section className='section history-card'>
         <ul className='list history-list'>
-          <li className='history-list-item'>
-            <div>
-              <span className='list-date'>01/10/22</span>
-              <span className='list-count'>10 used</span>
-            </div>
-            <button className='btn-link' onClick={() => setModalVisible(true)}>
-              Edit
-            </button>
-          </li>
+          {historyData.map((item, index) => {
+            return (
+              <li className='history-list-item' key={index}>
+                <div>
+                  <span className='list-date'>{item.date}</span>
+                  <span className='list-count'>{item.count} used</span>
+                </div>
+                <button
+                  className='btn-link'
+                  onClick={() => {
+                    setModalVisible(true);
+                    setModalData(item);
+                  }}
+                >
+                  Edit
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </section>
       <Modal open={modalVisible} closeModal={() => setModalVisible(false)}>
-        <>
-          <h2>Hello from the modal</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis,
-            recusandae.
-          </p>
-        </>
+        <EditHistory modalData={modalData} />
       </Modal>
     </>
   );

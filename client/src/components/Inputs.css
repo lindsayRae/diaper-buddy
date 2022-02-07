@@ -20,3 +20,19 @@
   align-items: center;
   font-size: 1.6rem;
 }
+.input-line-container {
+  margin-bottom: 2rem;
+  display: flex;
+}
+.edit-count-icon {
+  position: absolute;
+  color: var(--c-primary);
+}
+.input-line {
+  border: none;
+  border-bottom: 1px solid var(--c-primary-light);
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  outline: none;
+  font-size: 1.4rem;
+}

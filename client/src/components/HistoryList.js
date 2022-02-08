@@ -41,7 +41,10 @@ const HistoryList = () => {
         </ul>
       </section>
       <Modal open={modalVisible} closeModal={() => setModalVisible(false)}>
-        <EditHistory modalData={modalData} />
+        <EditHistory
+          modalData={modalData}
+          closeModal={() => setModalVisible(false)}
+        />
       </Modal>
     </>
   );

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { MdOutlineInventory } from 'react-icons/md';
 import './Inputs.css';
-const EditHistory = ({ modalData }) => {
+const EditHistory = ({ modalData, closeModal }) => {
   const [count, setCount] = useState(modalData.count);
 
   const updateCount = (e) => {
     e.preventDefault();
     console.log(count);
+    closeModal();
   };
   return (
     <form>

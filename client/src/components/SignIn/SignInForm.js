@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import '../components/Inputs.css';
-import '../components/SignIn.css';
+import '../../components/Inputs.css';
+import './SignIn.css';
 
 const SignInForm = ({ history }) => {
   return (

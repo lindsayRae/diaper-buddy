@@ -1,5 +1,4 @@
 import React from 'react';
-import SignInNav from './SignInNav';
 
 import logo from '../images/D_Logo.png';
 import vector1 from '../images/Vector1.png';

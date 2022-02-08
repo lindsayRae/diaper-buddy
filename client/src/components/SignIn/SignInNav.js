@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import vector2 from '../images/Vector2.png';
-import '../components/SignIn.css';
+import vector2 from '../../images/Vector2.png';
+import './SignIn.css';
 const SignInNav = () => {
   return (
     <section className='block signin-nav-container'>

@@ -14,3 +14,11 @@
 }
 .lowest-heading-container select option {
 }
+
+.buy-btn-container {
+  margin-top: 1rem;
+}
+
+.buy-btn-container button {
+  margin-bottom: 1rem;
+}

@@ -84,8 +84,11 @@ const Pricing = () => {
       </section>
       <section className='section'>
         <div className='full-card'>
-          <div className='diaper-ct'>3</div>
-          <h2>days before you run out of diapers</h2>
+          <div className='card-count-text'>
+            <div className='diaper-ct'>3</div>
+            <h2 className=''>Days before you run out of diapers</h2>
+          </div>
+
           <img src={vector4} alt='vector4' className='img-absolute' />
         </div>
       </section>
@@ -115,6 +118,12 @@ const Pricing = () => {
             );
           })}
         </Swiper>
+        <div className='buy-btn-container'>
+          <button className='btn btn-blue'>Buy Lowest Price Diaper</button>
+          <button className='btn btn-green'>
+            Buy *Huggies at Lowest Price
+          </button>
+        </div>
       </section>
 
       <Navbar />

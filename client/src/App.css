@@ -14,7 +14,9 @@
   --c-yellow: #ff8a00;
   --c-background-light: #faf6ff;
   --c-background-purple: #662daf;
-  --c-blue: #3f9ae0;
+  --c-blue: #5d5fef;
+  --c-blue-light: #3f9ae0;
+  --c-green: #6fcf97;
   --c-btn-light: #e5d0ff;
   --c-danger: #f94687;
 }
@@ -123,7 +125,7 @@ a {
   color: var(--c-white);
 }
 .show a {
-  color: var(--c-blue);
+  color: var(--c-blue-light);
   font-size: 1.6rem;
   display: inline-block;
   margin-left: -61px;
@@ -152,6 +154,14 @@ a {
 }
 .btn-blue {
   background: var(--c-blue);
+  color: var(--c-white);
+}
+.btn-blue-light {
+  background: var(--c-blue-light);
+  color: var(--c-white);
+}
+.btn-green {
+  background: var(--c-green);
   color: var(--c-white);
 }
 

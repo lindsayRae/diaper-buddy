@@ -1,0 +1,51 @@
+.swiper {
+  padding-top: 2rem !important;
+  padding-bottom: 2rem !important;
+}
+
+.price-container {
+  width: 70% !important;
+}
+.price-swipe-card {
+  height: 201px;
+  width: 205px !important;
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  border-radius: 20px;
+  border: 1px solid rgba(235, 235, 235, 0.52);
+  -webkit-box-shadow: 10px 10px 28px -1px rgba(224, 224, 224, 1);
+  -moz-box-shadow: 10px 10px 28px -1px rgba(224, 224, 224, 1);
+  box-shadow: 10px 10px 28px -1px rgba(224, 224, 224, 1);
+}
+
+.price-swipe-card img {
+  height: 72px;
+  width: 72px;
+}
+.price-swipe-card h2 {
+  margin-bottom: 0;
+}
+.price-swipe-card h2 a {
+  color: var(--c-primary-text);
+}
+.price-swipe-card div {
+  font-size: 1.4rem;
+}
+.unit-price {
+  color: var(--c-primary);
+  margin-top: 1rem;
+}

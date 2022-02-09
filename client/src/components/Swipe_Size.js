@@ -75,7 +75,7 @@ function SwipeSize() {
       </section>
       <section className='section'>
         <Swiper
-          spaceBetween={20}
+          spaceBetween={30}
           slidesPerView={'auto'}
           centeredSlides={false}
           onSlideChange={(swiper) => console.log(swiper)}
@@ -84,8 +84,8 @@ function SwipeSize() {
         >
           {sizeTitles.map((item, index) => {
             return (
-              <SwiperSlide key={index}>
-                <div className='size-swipe-container'>
+              <SwiperSlide key={index} className='size-container'>
+                <div className='size-swipe-card'>
                   <img src={item.img} />
                   <div className='size-swipe-text'>
                     <h2 className='size-heading'>{item.heading}</h2>

@@ -1,0 +1,16 @@
+.lowest-heading-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.lowest-heading-container h2 {
+  font-size: 1.8rem;
+}
+.lowest-heading-container select {
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 1.6rem;
+}
+.lowest-heading-container select option {
+}

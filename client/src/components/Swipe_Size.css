@@ -1,5 +1,6 @@
-.size-swipe-container {
+.size-swipe-card {
   height: 109px;
+  width: 283px;
   border-radius: 20px;
   background: var(--c-white);
   padding: 2rem;
@@ -24,7 +25,7 @@
   color: var(--c-primary);
 }
 
-.swiper-slide {
+.size-container {
   width: 80% !important;
 }
 .input-add-container {

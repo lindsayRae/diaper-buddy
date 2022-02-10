@@ -27,12 +27,13 @@
 .edit-count-icon {
   position: absolute;
   color: var(--c-primary);
+  margin-right: 1rem;
 }
 .input-line {
   border: none;
   border-bottom: 1px solid var(--c-primary-light);
   width: 100%;
-  padding: 1rem 1rem 1rem 3rem;
+  padding: 1rem 1rem 1rem 4rem;
   outline: none;
   font-size: 1.4rem;
 }

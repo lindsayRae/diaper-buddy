@@ -1,0 +1,101 @@
+.profile-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 2rem;
+}
+.profile-heading h2 {
+  font-size: 1.8rem;
+  margin: 0;
+}
+.subtitle {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.6rem;
+}
+.insight-container {
+  display: flex;
+  justify-content: space-between;
+}
+.insight-container > div {
+  width: 155px;
+  height: 169px;
+  border-radius: 20px;
+  color: var(--c-white);
+  padding: 2rem;
+}
+
+.insight-purchased {
+  background: var(--c-green);
+  position: relative;
+}
+.insight-purchased > .insight-icon {
+  margin-left: -10px;
+}
+.insight-used {
+  background: var(--c-blue-light);
+  position: relative;
+}
+.insight-count {
+  font-size: 2.4rem;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+}
+.insight-title {
+  font-size: 1.4rem;
+  margin-top: 1rem;
+}
+.insight-icon {
+  color: rgba(255, 255, 255, 0.49);
+  width: 100%;
+  margin-top: 1.5rem;
+  text-align: center;
+}
+.dots-h {
+  position: absolute;
+  top: 23px;
+  right: 15px;
+}
+.dots-v {
+  position: absolute;
+  top: 75px;
+  right: 15px;
+}
+.contact-container {
+  display: flex;
+  align-items: center;
+  margin-top: 3rem;
+}
+.profile-icons {
+  height: 50px;
+  width: 50px;
+  background: var(--c-primary-light);
+  border-radius: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 2rem;
+}
+.profile-icons > svg {
+  color: var(--c-primary);
+}
+.profile-text-container {
+  width: 80%;
+}
+.profile-text-container p {
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+}
+.profile-text-container div {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.6rem;
+}
+.profile-pass {
+  width: 100%;
+  background: var(--c-background-light);
+  outline: 0;
+  border: none;
+}
+#togglePass {
+  margin-left: -50px;
+}

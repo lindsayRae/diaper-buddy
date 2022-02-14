@@ -117,6 +117,11 @@ caption {
   margin-bottom: 0;
   color: var(--c-primary-text);
 }
+.logout-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 /* Links */
 a {
@@ -146,6 +151,7 @@ a {
 
 .btn-lt {
   background: var(--c-btn-light);
+  color: var(--c-primary);
 }
 
 .btn-danger {

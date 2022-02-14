@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Navbar from '../components/Nav/Navbar';
 import vector4 from '../images/Vector4.png';
 import SwipePrices from '../components/Swipe_Prices';
+import Logout from '../components/Logout';
 
 import {
   Swiper,
@@ -78,7 +79,10 @@ const Pricing = () => {
     <div className='background-light'>
       <section className='section'>
         <div className='page-title'>
-          <div>Roman's Diapers</div>
+          <div className='logout-container'>
+            <div>Roman's Diapers</div>
+            <Logout />
+          </div>
           <h1>Pricing</h1>
         </div>
       </section>

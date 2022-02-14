@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Navbar from '../components/Nav/Navbar';
 import Modal from '../components/Modal/Modal';
 import EditProfile from '../components/EditProfile';
+import Logout from '../components/Logout';
 import { MdLogin, MdLogout } from 'react-icons/md';
 import './Profile.css';
 import dotsH from '../images/horizontalDots.png';
@@ -23,6 +24,10 @@ const Profile = () => {
     <div className='background-light'>
       <section className='section'>
         <div className='page-title' style={{ marginTop: '2rem' }}>
+          <div className='logout-container'>
+            <div></div>
+            <Logout />
+          </div>
           <h1>Profile</h1>
         </div>
       </section>

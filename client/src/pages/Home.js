@@ -4,6 +4,7 @@ import SwipeSize from '../components/Swipe_Size';
 import HistoryList from '../components/HistoryList';
 import HistoryGraph from '../components/HistoryGraph';
 import Navbar from '../components/Nav/Navbar';
+import Logout from '../components/Logout';
 
 const Home = () => {
   const [historyContent, setHistoryContent] = useState('List');
@@ -22,7 +23,10 @@ const Home = () => {
     <div className='background-light'>
       <section className='section'>
         <div className='page-title'>
-          <div>Roman's Diapers</div>
+          <div className='logout-container'>
+            <div>Roman's Diapers</div>
+            <Logout />
+          </div>
           <h1>Home</h1>
         </div>
       </section>

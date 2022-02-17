@@ -140,7 +140,9 @@ const Settings = () => {
               <option>Less than 100</option>
             </select>
           </div>
+
           <button className='btn btn-lt settings-btn'>Save</button>
+          <div style={{ height: '85px' }}></div>
         </form>
       </section>
       <Modal open={modalVisible} closeModal={() => setModalVisible(false)}>

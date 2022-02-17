@@ -23,7 +23,7 @@ const Profile = () => {
   return (
     <div className='background-light'>
       <section className='section'>
-        <div className='page-title' style={{ marginTop: '2rem' }}>
+        <div className='page-title'>
           <div className='logout-container'>
             <div></div>
             <Logout />

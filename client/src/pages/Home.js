@@ -43,6 +43,7 @@ const Home = () => {
         {historyContent === 'List' && <HistoryList />}
         {historyContent === 'Graph' && <HistoryGraph />}
       </section>
+      <div style={{ height: '90px' }}></div>
       <Navbar />
     </div>
   );

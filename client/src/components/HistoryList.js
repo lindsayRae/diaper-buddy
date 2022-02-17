@@ -32,6 +32,7 @@ const HistoryList = () => {
                     setModalVisible(true);
                     setModalData(item);
                   }}
+                  style={{ color: '#3f9ae0' }}
                 >
                   Edit
                 </button>

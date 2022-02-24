@@ -1,6 +1,6 @@
 .logout {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   color: var(--c-purple-text);
 }
 .setting-heading {

@@ -7,6 +7,7 @@ import './App.css';
 // Pages
 import SignIn from './pages/SignIn';
 import Register from './pages/Register';
+import Activate from './components/SignIn/Activate';
 import PasswordReset from './pages/PasswordReset';
 import NewPassword from './pages/SetNewPassword';
 import Home from './pages/Home';
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path='/' element={<SignIn />} />
           <Route path='/register' element={<Register />} />
+          <Route path='/activate' element={<Activate />} />
           <Route path='/passwordreset' element={<PasswordReset />} />
 
           <Route path='/home' element={<Home />} />

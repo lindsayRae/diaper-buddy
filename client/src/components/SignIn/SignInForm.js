@@ -10,9 +10,9 @@ const SignInForm = ({ history }) => {
         <input className='input' placeholder='Email' />
         <div className='input-password'>
           <input className='input' placeholder='Password' />
-          <span className='show'>
+          {/* <span className='show'>
             <a>Show</a>
-          </span>
+          </span> */}
         </div>
         <NavLink to='/home'>
           <button className='btn btn-lt'>Sign In</button>

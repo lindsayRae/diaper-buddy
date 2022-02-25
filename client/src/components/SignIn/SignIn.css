@@ -62,3 +62,17 @@
   color: var(--c-white-50);
   text-align: center;
 }
+
+.sent-container h1 {
+  color: var(--c-white);
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.sent-container p {
+  color: var(--c-white-50);
+  font-size: 1.4rem;
+  text-align: center;
+  margin: 0 1rem;
+}

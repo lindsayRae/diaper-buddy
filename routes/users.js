@@ -26,7 +26,6 @@ router.post('/register', async (req, res) => {
       .send({ message: 'Password must be at least 8 characters' });
   }
   let firstName = req.body.firstName;
-
   let email = req.body.email;
   let password = req.body.password;
 
@@ -35,17 +34,19 @@ router.post('/register', async (req, res) => {
     firstName: firstName,
     email: email.toLowerCase(),
     password: password,
+    activated: false,
     GUID: uuidv4(),
   });
 
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
 
-  //   try {
   let newUser = await user.save();
 
   sendEmail(newUser.firstName, newUser.email, newUser.GUID);
-  res.send(newUser);
+  res.send({
+    user: _.pick(user, ['firstName', 'email', '_id', 'activated']),
+  });
 });
 
 module.exports = router;

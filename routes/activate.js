@@ -4,11 +4,8 @@ const router = express.Router();
 const { User } = require('../models/user.model');
 
 router.put('/', async (req, res) => {
-  console.log('heard active PUT...');
   const userEmail = req.body.email;
   const GUID = req.body.GUID;
-
-  console.log(userEmail);
 
   try {
     const user = await User.findOne({ email: userEmail });

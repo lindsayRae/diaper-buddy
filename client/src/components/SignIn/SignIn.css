@@ -76,3 +76,10 @@
   text-align: center;
   margin: 0 1rem;
 }
+
+.error-msg {
+  text-align: center;
+  margin-top: 0;
+  font-size: 1.6rem;
+  color: var(--c-danger);
+}

@@ -15,6 +15,7 @@ router.post('/', async (req, res) => {
   let email = req.body.email;
 
   let user = await User.findOne({ email: email.toLowerCase() });
+
   if (!user) {
     return res.status(400).send({ message: 'Invalid email or password.' });
   }
@@ -25,7 +26,8 @@ router.post('/', async (req, res) => {
   }
 
   const token = user.generateAuthToken();
-  res.send({ jwt: token, user: _.pick(user, ['userName', 'email', '_id']) });
+
+  res.send({ jwt: token, user: _.pick(user, ['firstName', 'email', '_id']) });
 });
 
 module.exports = router;

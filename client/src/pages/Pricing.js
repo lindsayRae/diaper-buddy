@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import vector4 from '../images/Vector4.png';
 import SwipePrices from '../components/Swipe_Prices';
 import Logout from '../components/Logout';
+import Navbar from '../components/Nav/Navbar';
 
 import {
   Swiper,
@@ -128,6 +129,7 @@ const Pricing = () => {
           </button>
         </div>
       </section>
+      <Navbar />
     </div>
   );
 };

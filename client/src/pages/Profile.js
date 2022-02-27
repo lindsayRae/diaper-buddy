@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Modal from '../components/Modal/Modal';
 import EditProfile from '../components/EditProfile';
 import Logout from '../components/Logout';
+import Navbar from '../components/Nav/Navbar';
 import { MdLogin, MdLogout } from 'react-icons/md';
 import './Profile.css';
 import dotsH from '../images/horizontalDots.png';
@@ -96,6 +97,7 @@ const Profile = () => {
           closeModal={() => setModalVisible(false)}
         />
       </Modal>
+      <Navbar />
     </div>
   );
 };

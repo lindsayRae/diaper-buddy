@@ -3,6 +3,7 @@ import Modal from '../components/Modal/Modal';
 import EditBabyName from '../components/EditBabyName';
 import AddChild from '../components/EditAddChild';
 import Logout from '../components/Logout';
+import Navbar from '../components/Nav/Navbar';
 import icon from '../images/icon.png';
 import { FaBaby } from 'react-icons/fa';
 import { AiOutlineShoppingCart, AiOutlineBell } from 'react-icons/ai';
@@ -157,6 +158,7 @@ const Settings = () => {
           />
         )}
       </Modal>
+      <Navbar />
     </div>
   );
 };

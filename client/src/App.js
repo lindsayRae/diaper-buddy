@@ -14,7 +14,7 @@ import Home from './pages/Home';
 import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
-import Navbar from './components/Nav/Navbar';
+
 import Error from './pages/Error';
 
 function App() {
@@ -33,7 +33,6 @@ function App() {
           <Route path='/settings' element={<Settings />} />
           <Route path='/*' element={<Error />} />
         </Routes>
-        <Navbar />
       </div>
     </BrowserRouter>
   );

@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-
-import Navbar from '../components/Nav/Navbar';
 import Modal from '../components/Modal/Modal';
 import EditProfile from '../components/EditProfile';
 import Logout from '../components/Logout';
@@ -98,8 +96,6 @@ const Profile = () => {
           closeModal={() => setModalVisible(false)}
         />
       </Modal>
-
-      <Navbar />
     </div>
   );
 };

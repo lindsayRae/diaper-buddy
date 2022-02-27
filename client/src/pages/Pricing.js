@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-import Navbar from '../components/Nav/Navbar';
 import vector4 from '../images/Vector4.png';
 import SwipePrices from '../components/Swipe_Prices';
 import Logout from '../components/Logout';
@@ -129,8 +128,6 @@ const Pricing = () => {
           </button>
         </div>
       </section>
-
-      <Navbar />
     </div>
   );
 };

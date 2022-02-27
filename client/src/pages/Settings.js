@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-
-import Navbar from '../components/Nav/Navbar';
 import Modal from '../components/Modal/Modal';
 import EditBabyName from '../components/EditBabyName';
 import AddChild from '../components/EditAddChild';
@@ -159,7 +157,6 @@ const Settings = () => {
           />
         )}
       </Modal>
-      <Navbar />
     </div>
   );
 };

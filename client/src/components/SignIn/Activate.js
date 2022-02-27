@@ -67,7 +67,7 @@ const Activate = () => {
             </p>
             <div className='block'>
               <NavLink to='/'>
-                <button className='btn btn-lt'>Login</button>
+                <button className='btn btn-lt'>Sign In</button>
               </NavLink>
             </div>
           </>

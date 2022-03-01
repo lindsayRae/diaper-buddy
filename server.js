@@ -25,7 +25,7 @@ mongoose.connect(uri).catch((err) => {
 });
 const connection = mongoose.connection;
 connection.once('open', () => {
-  console.log(`MogoDB database connection established successfully: ${uri}`);
+  console.log(`MogoDB database connection established successfully`);
 });
 
 // routes

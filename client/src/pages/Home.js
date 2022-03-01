@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import SwipeSize from '../components/Swipe_Size';
 import HistoryList from '../components/HistoryList';
 import HistoryGraph from '../components/HistoryGraph';
 import Navbar from '../components/Nav/Navbar';
 import Logout from '../components/Logout';
+import { UserContext } from '../context/UserContext';
 
 const Home = () => {
+  const { user, setUser } = useContext(UserContext);
+
   const [historyContent, setHistoryContent] = useState('List');
   const [historyText, setHistoryText] = useState('Graph');
   const toggle = (e) => {
@@ -25,7 +28,7 @@ const Home = () => {
         <div className='page-title'>
           <div className='logout-container'>
             <div>Roman's Diapers</div>
-            <Logout />
+            <Logout user={user} setUser={setUser} />
           </div>
           <h1>Home</h1>
         </div>

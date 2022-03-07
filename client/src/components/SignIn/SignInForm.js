@@ -80,7 +80,7 @@ const SignInForm = () => {
         <button className='btn btn-lt'>Sign In</button>
       </form>
       <p className='forgot'>
-        <NavLink to='/passwordreset'>Forgot Password</NavLink>
+        <NavLink to='/startpassreset'>Forgot Password</NavLink>
       </p>
     </div>
   );

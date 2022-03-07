@@ -1,10 +1,10 @@
 const nodemailer = require('nodemailer');
 const emailURL = process.env.emailURL;
 
-let sendEmailReset = (firstName, lastName, email, GUID) => {
-  let emailBody = `Hello ${firstName} ${lastName},
+let sendEmailReset = (firstName, email, GUID) => {
+  let emailBody = `Hello ${firstName},
 
-  You are receiving this email because you want to reset your password for login-starter Application. To do so, please copy and past or click the link below. If you received this by mistake then please ignore.
+  You are receiving this email because you want to reset your password for the Diaper application. To do so, please copy and past or click the link below. If you received this by mistake then please ignore.
 
   ${emailURL}/pass-reset/?email=${email}&guid=${GUID}
 
@@ -19,9 +19,9 @@ let sendEmailReset = (firstName, lastName, email, GUID) => {
   });
 
   let mailOptions = {
-    from: email,
-    to: 'lbarnett712@gmail.com',
-    subject: 'login-starter password rest',
+    from: 'lbarnett712@gmail.com',
+    to: email,
+    subject: 'Diaper Buddy password reset',
     text: emailBody,
   };
 

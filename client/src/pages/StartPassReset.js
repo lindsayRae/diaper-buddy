@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import queryString from 'query-string';
 import LogoHeading from '../components/LogoHeading';
 
-const PasswordReset = () => {
+const StartReset = () => {
   const [error, setError] = useState('');
   const [sent, setSent] = useState(false);
   const [email, setEmail] = useState('');
@@ -24,9 +25,14 @@ const PasswordReset = () => {
         },
         body: JSON.stringify(body),
       });
+      console.log(res);
 
+      if (res.status === 400) {
+        setSent(true);
+        return;
+      }
       const data = await res.json();
-      console.log(data);
+
       if (data.message) {
         setError(data.message);
         setSent(false);
@@ -88,4 +94,4 @@ const PasswordReset = () => {
   );
 };
 
-export default PasswordReset;
+export default StartReset;

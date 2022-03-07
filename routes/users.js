@@ -49,4 +49,61 @@ router.post('/register', async (req, res) => {
   });
 });
 
+/**
+ * @description generate new GUID to reset password
+ */
+
+router.put('/reset', async (req, res) => {
+  try {
+    let user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+      return res.status(400).send({
+        message: 'If this account is registered you will receive an email.',
+      });
+    }
+
+    user.GUID = uuidv4();
+    let result = await user.save();
+
+    sendEmailReset(user.firstName, user.email, user.GUID);
+
+    return res.send({
+      user: _.pick(user, ['firstName', 'email', '_id', 'activated', 'GUID']),
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: 'There was a problem with the server, please try again later.',
+    });
+  }
+});
+
+/**
+ * @description UPDATE for forgot password reset
+ */
+router.put('/newpass', async (req, res) => {
+  try {
+    let user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+      return res.status(400).send({ message: 'No User' });
+    }
+
+    let password = req.body.password;
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    let result = await user.save();
+    res.send({ result });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message:
+        'There was a problem resetting your password, please try again later',
+    });
+  }
+});
+
 module.exports = router;

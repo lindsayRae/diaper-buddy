@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 import SwipeSize from '../components/Swipe_Size';
 import HistoryList from '../components/HistoryList';
@@ -6,12 +6,21 @@ import HistoryGraph from '../components/HistoryGraph';
 import Navbar from '../components/Nav/Navbar';
 import Logout from '../components/Logout';
 import { UserContext } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const { user, setUser } = useContext(UserContext);
-
+  const isAuthenticated = localStorage.getItem('userData');
   const [historyContent, setHistoryContent] = useState('List');
   const [historyText, setHistoryText] = useState('Graph');
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/');
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const toggle = (e) => {
     let currentText = e.target.innerText;
     if (currentText === 'Graph') {

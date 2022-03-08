@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import vector4 from '../images/Vector4.png';
 import SwipePrices from '../components/Swipe_Prices';
 import Logout from '../components/Logout';
 import Navbar from '../components/Nav/Navbar';
+import { UserContext } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Swiper,
@@ -19,6 +21,15 @@ import costco from '../images/Costco.png';
 
 const Pricing = () => {
   const [currentSize, setCurrentSize] = useState('nb');
+  const { user, setUser } = useContext(UserContext);
+  const isAuthenticated = localStorage.getItem('userData');
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/');
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const priceData = [
     {
@@ -81,7 +92,7 @@ const Pricing = () => {
         <div className='page-title'>
           <div className='logout-container'>
             <div>Roman's Diapers</div>
-            <Logout />
+            <Logout user={user} setUser={setUser} />
           </div>
           <h1>Pricing</h1>
         </div>

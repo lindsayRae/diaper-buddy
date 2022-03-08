@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Modal from '../components/Modal/Modal';
 import EditBabyName from '../components/EditBabyName';
 import AddChild from '../components/EditAddChild';
 import Logout from '../components/Logout';
 import Navbar from '../components/Nav/Navbar';
+import { UserContext } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 import icon from '../images/icon.png';
 import { FaBaby } from 'react-icons/fa';
 import { AiOutlineShoppingCart, AiOutlineBell } from 'react-icons/ai';
@@ -21,6 +23,15 @@ const Settings = () => {
   const [modalData, setModalData] = useState();
   const [isAddChild, setIsAddChild] = useState(false);
   const [isEditName, setIsEditName] = useState(false);
+  const { user, setUser } = useContext(UserContext);
+  const isAuthenticated = localStorage.getItem('userData');
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/');
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const openEditName = (e) => {
     setIsAddChild(false);
@@ -36,7 +47,7 @@ const Settings = () => {
     <div>
       <section className='section'>
         <div className='logout'>
-          <Logout />
+          <Logout user={user} setUser={setUser} />
         </div>
 
         <div className='setting-heading'>

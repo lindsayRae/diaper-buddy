@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Modal from '../components/Modal/Modal';
 import EditProfile from '../components/EditProfile';
 import Logout from '../components/Logout';
 import Navbar from '../components/Nav/Navbar';
+import { UserContext } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 import { MdLogin, MdLogout } from 'react-icons/md';
 import './Profile.css';
 import dotsH from '../images/horizontalDots.png';
@@ -15,6 +17,15 @@ const Profile = () => {
   const [passwordShown, setPasswordShown] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState();
+  const { user, setUser } = useContext(UserContext);
+  const isAuthenticated = localStorage.getItem('userData');
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/');
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
@@ -25,7 +36,7 @@ const Profile = () => {
         <div className='page-title'>
           <div className='logout-container'>
             <div></div>
-            <Logout />
+            <Logout user={user} setUser={setUser} />
           </div>
           <h1>Profile</h1>
         </div>

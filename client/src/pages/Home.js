@@ -20,7 +20,7 @@ const Home = () => {
       navigate('/');
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
+  console.log('USER', user);
   const toggle = (e) => {
     let currentText = e.target.innerText;
     if (currentText === 'Graph') {

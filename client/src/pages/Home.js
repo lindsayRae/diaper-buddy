@@ -20,7 +20,15 @@ const Home = () => {
       navigate('/');
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  console.log('USER', user);
+
+  const userData = user.user;
+  //console.log('userData', userData);
+  let currentChild = userData.currentChild;
+
+  const children = userData.children;
+  const currentChildData = children.find((o) => o.firstName === currentChild);
+  //console.log('currentChildData', currentChildData);
+
   const toggle = (e) => {
     let currentText = e.target.innerText;
     if (currentText === 'Graph') {
@@ -36,14 +44,14 @@ const Home = () => {
       <section className='section'>
         <div className='page-title'>
           <div className='logout-container'>
-            <div>Roman's Diapers</div>
+            <div>{currentChild}'s Diapers</div>
             <Logout user={user} setUser={setUser} />
           </div>
           <h1>Home</h1>
         </div>
       </section>
       <section>
-        <SwipeSize />
+        <SwipeSize currentChildData={currentChildData} />
       </section>
       <section className='section'>
         <div className='history-title'>

@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import CardHeading from '../components/CardHeading';
 import CountForm from '../components/CountForm';
 import './Swipe_Size.css';
+import babyPR from '../images/babyPR.png';
 import babyNB from '../images/babyNB.png';
 import baby1 from '../images/baby1.png';
 import baby2 from '../images/baby2.png';
 import baby3 from '../images/baby3.png';
 import baby4 from '../images/baby4.png';
+import './CardHeading.css';
+import vector3 from '../images/Vector3.png';
 
 import {
   Swiper,
@@ -21,66 +24,99 @@ const sizeTitles = [
     heading: 'Newborn',
     weight: 'less than 10 lbs',
     img: babyNB,
-    index: 0,
-    count: 20,
+    size: 0,
   },
   {
     heading: 'Size One',
     weight: '8 - 14 lbs',
     img: baby1,
-    index: 1,
-    count: 100,
+    size: 1,
   },
   {
     heading: 'Size Two',
     weight: '12 - 18 lbs',
     img: baby2,
-    index: 2,
-    count: 0,
+    size: 2,
   },
   {
     heading: 'Size Three',
     weight: '16 -28 lbs',
     img: baby3,
-    index: 3,
-    count: 250,
+    size: 3,
   },
   {
     heading: 'Size Four',
     weight: '22 - 37 lbs',
     img: baby4,
-    index: 4,
-    count: 20,
+    size: 4,
   },
 ];
 
-function SwipeSize() {
-  const updateDiaperSelection = (index) => {
-    let currentObj = sizeTitles.find((x) => x.index === index);
-    console.log(currentObj);
-    setCurrentSize(currentObj);
+function SwipeSize({ currentChildData }) {
+  console.log(currentChildData);
+  const [childData, setChildData] = useState(currentChildData);
+  const [viewableSize, setViewableSize] = useState(childData.currentSize);
+  const [viewableSizeLabel, setViewableSizeLabel] = useState();
+  const [displayCount, setDisplayCount] = useState(0);
+
+  const currentInventory = (inventory, newSize) => {
+    console.log(inventory);
+    console.log(viewableSize);
+    let obj = inventory.filter((x) => x.size == newSize);
+    console.log(obj);
+    let count = obj[0].purchased - obj[0].used;
+    //  console.log(count);
+    setDisplayCount(count);
   };
-  const [currentSize, setCurrentSize] = useState({
-    heading: 'Newborn',
-    weight: 'less than 10 lbs',
-    img: babyNB,
-    index: 0,
-    count: 20,
-  });
+
+  useEffect(() => {
+    // currentInventory(inventory);
+    console.log('********* now');
+  }, []);
+
+  const updateDiaperTitleCard = (size) => {
+    console.log(size);
+    let currentObj = sizeTitles.find((x) => x.size === size);
+    console.log(currentObj);
+
+    setViewableSize(currentObj.size);
+    setViewableSizeLabel(currentObj.heading);
+    currentInventory(childData.inventory, currentObj.size);
+  };
+
+  const addDiaper = () => {
+    // POST request
+    //setChildData(data)
+  };
+
+  const removeDiaper = () => {
+    // POST request
+    //setChildData(data)
+  };
 
   return (
     <>
       <section className='section'>
-        <CardHeading currentSize={currentSize} />
+        <div className='full-card'>
+          <div className='card-count-text'>
+            <div className='diaper-ct'>{displayCount}</div>
+            <h2>{viewableSizeLabel} diapers on hand</h2>
+          </div>
+          <img src={vector3} alt='vector3' className='img-absolute' />
+        </div>
       </section>
       <section className='section'>
         <Swiper
           spaceBetween={30}
+          initialSlide={viewableSize}
           slidesPerView={'auto'}
           centeredSlides={false}
-          onSlideChange={(swiper) => console.log(swiper)}
-          onSwiper={(swiper) => console.log(swiper)}
-          onTransitionEnd={(swiper) => updateDiaperSelection(swiper.realIndex)}
+          onSlideChange={(swiper) => updateDiaperTitleCard(swiper.realIndex)}
+          //onSwiper={(swiper) => console.log(swiper)}
+          // onTransitionEnd={(swiper) => console.log(swiper)}
+          // onSliderFirstMove={(swiper) =>
+          //   updateDiaperTitleCard(swiper.realIndex)
+          // }
         >
           {sizeTitles.map((item, index) => {
             return (

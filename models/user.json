@@ -14,7 +14,8 @@
         "firstName": "Roman",
         "brandPreference": "Huggies",
         "sizeOptions": ["Size 1", "Size 2", "Size 3", "Size 4"],
-        "currentSize": "Size 1",
+        "currentSize": "1",
+        "currentSizeLabel": "Size 1",
         "lowAlert": "10 days",
         "diaperHistory": [
           {
@@ -38,27 +39,27 @@
         "totalUsed": 200,
         "inventory": [
           {
-            "size": "NB",
+            "size": "0",
             "purchased": 100,
             "used": 100
           },
           {
-            "size": "Size 1",
+            "size": "1",
             "purchased": 200,
             "used": 100
           },
           {
-            "size": "Size 2",
+            "size": "2",
             "purchased": 200,
-            "used": 100
+            "used": 0
           },
           {
-            "size": "Size 3",
+            "size": "3",
             "purchased": 100,
             "used": 0
           },
           {
-            "size": "Size 4",
+            "size": "4",
             "purchased": 100,
             "used": 0
           }
@@ -69,33 +70,38 @@
         "firstName": "Oden",
         "brandPreference": "Huggies",
         "sizeOptions": ["Newborn", "Size 1", "Size 2", "Size 3", "Size 4"],
-        "currentSize": "Size 1",
+        "currentSize": "0",
         "lowAlert": "10 days",
         "totalPurchased": 0,
         "totalUsed": 0,
         "inventory": [
           {
-            "size": "NB",
+            "size": "-1",
             "purchased": 0,
             "used": 0
           },
           {
-            "size": "Size 1",
+            "size": "0",
             "purchased": 0,
             "used": 0
           },
           {
-            "size": "Size 2",
+            "size": "1",
             "purchased": 0,
             "used": 0
           },
           {
-            "size": "Size 3",
+            "size": "2",
             "purchased": 0,
             "used": 0
           },
           {
-            "size": "Size 4",
+            "size": "3",
+            "purchased": 0,
+            "used": 0
+          },
+          {
+            "size": "4",
             "purchased": 0,
             "used": 0
           }

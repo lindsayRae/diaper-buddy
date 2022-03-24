@@ -113,15 +113,15 @@ const Settings = () => {
               style={{ marginTop: '4px' }}
             />
             <select className='settings-select'>
-              <option>Current Size</option>
-              <option>Newborn</option>
-              <option>Size 1</option>
-              <option>Size 2</option>
-              <option>Size 3</option>
-              <option>Size 4</option>
+              <option value='-1'>Current Size</option>
+              <option value='0'>Newborn</option>
+              <option value='1'>Size 1</option>
+              <option value='2'>Size 2</option>
+              <option value='3'>Size 3</option>
+              <option value='4'>Size 4</option>
             </select>
           </div>
-          <div className='input-line-container'>
+          {/* <div className='input-line-container'>
             <IoIosAddCircleOutline
               size={24}
               className='edit-count-icon'
@@ -135,7 +135,7 @@ const Settings = () => {
               <option>Size 3</option>
               <option>Size 4</option>
             </select>
-          </div>
+          </div> */}
           <div className='input-line-container'>
             <AiOutlineBell
               size={24}

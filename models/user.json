@@ -18,22 +18,18 @@
         "currentSizeLabel": "Size 1",
         "lowAlert": "10 days",
         "diaperHistory": [
-          {
-            "date": "01/01/2022",
-            "amount": 10
-          },
-          {
-            "date": "01/02/2022",
-            "amount": 9
-          },
-          {
-            "date": "01/03/2022",
-            "amount": 11
-          },
-          {
-            "date": "01/04/2022",
-            "amount": 10
-          }
+          { "date": "01/01/22", "amount": "10" },
+          { "date": "01/02/22", "amount": "11" },
+          { "date": "01/03/22", "amount": "9" },
+          { "date": "01/04/22", "amount": "10" },
+          { "date": "01/05/22", "amount": "9" },
+          { "date": "01/06/22", "amount": "8" },
+          { "date": "01/07/22", "amount": "10" },
+          { "date": "01/08/22", "amount": "11" },
+          { "date": "01/09/22", "amount": "9" },
+          { "date": "01/10/22", "amount": "10" },
+          { "date": "01/11/22", "amount": "9" },
+          { "date": "01/12/22", "amount": "8" }
         ],
         "totalPurchased": 500,
         "totalUsed": 200,

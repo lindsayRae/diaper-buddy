@@ -53,17 +53,17 @@ const sizeTitles = [
 ];
 
 function SwipeSize({ currentChildData }) {
-  console.log(currentChildData);
+  // console.log(currentChildData);
   const [childData, setChildData] = useState(currentChildData);
   const [viewableSize, setViewableSize] = useState(childData.currentSize);
   const [viewableSizeLabel, setViewableSizeLabel] = useState();
   const [displayCount, setDisplayCount] = useState(0);
 
   const currentInventory = (inventory, newSize) => {
-    console.log(inventory);
-    console.log(viewableSize);
+    // console.log(inventory);
+    // console.log(viewableSize);
     let obj = inventory.filter((x) => x.size == newSize);
-    console.log(obj);
+    //console.log(obj);
     let count = obj[0].purchased - obj[0].used;
     //  console.log(count);
     setDisplayCount(count);
@@ -71,13 +71,13 @@ function SwipeSize({ currentChildData }) {
 
   useEffect(() => {
     // currentInventory(inventory);
-    console.log('********* now');
+    // console.log('********* now');
   }, []);
 
   const updateDiaperTitleCard = (size) => {
-    console.log(size);
+    // console.log(size);
     let currentObj = sizeTitles.find((x) => x.size === size);
-    console.log(currentObj);
+    //console.log(currentObj);
 
     setViewableSize(currentObj.size);
     setViewableSizeLabel(currentObj.heading);

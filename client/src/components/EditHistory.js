@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { MdOutlineInventory } from 'react-icons/md';
 import './Inputs.css';
 const EditHistory = ({ modalData, closeModal }) => {
-  const [count, setCount] = useState(modalData.count);
+  const [count, setCount] = useState(modalData.amount);
 
   const updateCount = (e) => {
     e.preventDefault();

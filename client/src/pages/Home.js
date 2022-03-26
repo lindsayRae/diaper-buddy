@@ -27,7 +27,6 @@ const Home = () => {
 
   const children = userData.children;
   const currentChildData = children.find((o) => o.firstName === currentChild);
-  //console.log('currentChildData', currentChildData);
 
   const toggle = (e) => {
     let currentText = e.target.innerText;
@@ -60,8 +59,12 @@ const Home = () => {
             {historyText}
           </button>
         </div>
-        {historyContent === 'List' && <HistoryList />}
-        {historyContent === 'Graph' && <HistoryGraph />}
+        {historyContent === 'List' && (
+          <HistoryList history={currentChildData.diaperHistory} />
+        )}
+        {historyContent === 'Graph' && (
+          <HistoryGraph history={currentChildData.diaperHistory} />
+        )}
       </section>
       <div style={{ height: '90px' }}></div>
       <Navbar />

@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const fetch = require('node-fetch');
 const { v4: uuidv4 } = require('uuid');
 const _ = require('lodash');
 const { User, validateUser } = require('../models/user.model');
+const { KidsRecord } = require('../models/kids.model');
 const { sendEmail } = require('../middleware/email');
 const { sendEmailReset } = require('../middleware/email-reset');
 const auth = require('../middleware/auth');
@@ -36,17 +38,68 @@ router.post('/register', async (req, res) => {
     password: password,
     activated: false,
     GUID: uuidv4(),
+    currentChild: '',
   });
 
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
 
-  let newUser = await user.save();
+  try {
+    let newUser = await user.save();
 
-  sendEmail(newUser.firstName, newUser.email, newUser.GUID);
-  res.send({
-    user: _.pick(user, ['firstName', 'email', '_id', 'activated']),
-  });
+    //? Need to create a header for the creation of the blank you document in kidsRecord
+    let headers = {
+      'Content-Type': 'application/json',
+    };
+    const token = user.generateAuthToken();
+
+    //? Call out to existing endpoint to create a new PR record with empty arrays (lifts, cardio, skills)
+
+    //! For the backend you need an absolute URL for the fetch method to work
+    let baseURL = process.env.baseURL;
+    let url = `${baseURL}/api/users/usersetup/${newUser._id}`;
+
+    let response = await fetch(url, {
+      method: 'POST',
+      headers: headers,
+    });
+
+    let json = await response.json();
+    console.log('JSON', json);
+
+    sendEmail(newUser.firstName, newUser.email, newUser.GUID);
+    res.send({
+      jwt: token,
+      user: _.pick(user, [
+        'firstName',
+        'email',
+        '_id',
+        'activated',
+        'currentChild',
+      ]),
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: 'There was a problem creating your user, please try again later',
+    });
+  }
+});
+
+/**
+ * @description called after creating a new user to set up their empty PRs
+ */
+//? Called in create new user to set up empty KidsRecord
+router.post('/usersetup/:id', async (req, res) => {
+  let user_id = req.params.id;
+  let newUserEntry = {
+    user_id: user_id,
+    kids: [],
+  };
+  let kidsRecord = new KidsRecord(newUserEntry);
+  let result = await kidsRecord.save();
+
+  res.send(result);
 });
 
 /**

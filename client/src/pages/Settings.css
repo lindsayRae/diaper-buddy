@@ -34,13 +34,15 @@ option {
   background: var(--c-background-light);
   border-bottom: 1px solid #7839cb38;
 }
-.btn-group {
-  display: flex;
-  position: absolute;
-  right: 20px;
-  margin-top: 5px;
-}
 
 .settings-select.add {
   background: var(--c-white);
+}
+
+.settings-select::placeholder,
+.input-name::placeholder,
+.input-name2::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--c-primary-text);
+  opacity: 1; /* Firefox */
 }

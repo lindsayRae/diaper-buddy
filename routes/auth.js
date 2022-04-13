@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
 
   let user = await User.findOne({ email: email.toLowerCase() });
 
-  console.log('user', user);
+  console.log('**user:', user);
   if (!user) {
     return res.status(400).send({ message: 'Invalid email or password.' });
   }
@@ -28,11 +28,10 @@ router.post('/', async (req, res) => {
   }
 
   const token = user.generateAuthToken();
-  console.log('token', token);
 
   //res.send({ jwt: token, user: _.pick(user, ['firstName', 'email', '_id']) });
   res.send({
-    jwt: 'qwertasdf12346',
+    jwt: token,
     user: user,
   });
 });

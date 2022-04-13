@@ -3,70 +3,6 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 
-const inventorySchema = new mongoose.Schema({
-  size: {
-    type: String,
-  },
-  purchased: {
-    type: Number,
-  },
-  used: {
-    type: Number,
-  },
-});
-
-const diaperHistorySchema = new mongoose.Schema({
-  date: {
-    required: true,
-    trim: true,
-    type: String,
-    maxlength: 10,
-  },
-  amount: {
-    required: true,
-    trim: true,
-    type: Number,
-    maxlength: 2,
-  },
-});
-
-const childrenSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 1,
-    maxlength: 99,
-  },
-  brandPreference: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 1,
-    maxlength: 99,
-  },
-  currentSize: {
-    type: String,
-    required: true,
-  },
-  currentSizeLabel: {
-    type: String,
-    required: true,
-  },
-  lowAlert: {
-    type: String,
-    required: true,
-  },
-  diaperHistory: [diaperHistorySchema],
-  totalPurchased: {
-    type: Number,
-  },
-  totalUsed: {
-    type: Number,
-  },
-  inventory: [inventorySchema],
-});
-
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -102,10 +38,7 @@ const userSchema = new mongoose.Schema(
     currentChild: {
       type: String,
       trim: true,
-      minlength: 1,
-      maxlength: 99,
     },
-    children: [childrenSchema],
   },
   {
     timestamps: true,

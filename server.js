@@ -33,6 +33,7 @@ const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/users');
 const activateRouter = require('./routes/activate');
 const authRouter = require('./routes/auth');
+const kidsRouter = require('./routes/kidsRecords');
 
 app.get('/api', (req, res) => {
   res.json([
@@ -48,6 +49,8 @@ app.use('/api/posts', postsRouter);
 app.use('/api/users', userRouter);
 app.use('/api/activate', activateRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/kids', kidsRouter);
+
 app.use('*', (req, res) => res.status(404).json({ error: 'Page not found' }));
 
 if (process.env.NODE_ENV === 'production') {

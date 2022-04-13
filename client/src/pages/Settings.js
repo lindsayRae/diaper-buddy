@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Modal from '../components/Modal/Modal';
-import EditBabyName from '../components/EditBabyName';
-import AddChild from '../components/EditAddChild';
+import AddChild from '../components/AddChild';
 import Logout from '../components/Logout';
 import Navbar from '../components/Nav/Navbar';
 import { UserContext } from '../context/UserContext';
@@ -10,39 +9,110 @@ import icon from '../images/icon.png';
 import { FaBaby } from 'react-icons/fa';
 import { AiOutlineShoppingCart, AiOutlineBell } from 'react-icons/ai';
 import { TiSortNumerically } from 'react-icons/ti';
-import { IoIosAddCircleOutline } from 'react-icons/io';
 import './Settings.css';
 
 const Settings = () => {
-  const [baby, setBaby] = useState('Roman');
-  const [brand, setBrand] = useState('Roman');
-  const [currentSize, setCurrentSize] = useState('Roman');
-  const [addSize, setAddSize] = useState('Roman');
-  const [lowAlert, setLowAlert] = useState('Roman');
+  const [baby, setBaby] = useState('');
+  const [babyID, setBabyID] = useState('');
+  const [brand, setBrand] = useState('');
+  const [currentSize, setCurrentSize] = useState('');
+  const [currentSizeLabel, setCurrentSizeLabel] = useState('');
+  const [lowAlert, setLowAlert] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState();
   const [isAddChild, setIsAddChild] = useState(false);
-  const [isEditName, setIsEditName] = useState(false);
+  const [oneKid, setOneKid] = useState(true);
+  const [error, setError] = useState('');
   const { user, setUser } = useContext(UserContext);
   const isAuthenticated = localStorage.getItem('userData');
   let navigate = useNavigate();
-
-  useEffect(() => {
+  console.log(user);
+  useEffect(async () => {
     if (!isAuthenticated) {
       navigate('/');
     }
+    console.log('in use effect');
+    if (!modalVisible) {
+      console.log('get current child');
+
+      setPage();
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const openEditName = (e) => {
-    setIsAddChild(false);
-    setIsEditName(true);
-    setModalVisible(true);
+  const setPage = async () => {
+    let kids = await getKids();
+    console.log(kids);
+    if (!kids) openAddChild();
+    if (kids.length > 1) {
+      setOneKid(false);
+    } else {
+      setBaby(kids[0].firstName);
+      setBabyID(kids[0]._id);
+      setBrand(kids[0].brandPreference);
+      setCurrentSize(kids[0].currentSize);
+      setLowAlert(kids[0].lowAlert);
+    }
+    // set select option to current child
   };
+  const getKids = async () => {
+    const user_ID = user.user._id;
+    try {
+      const url = `/api/kids/${user_ID}`;
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': user.jwt,
+      };
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: headers,
+      });
+      const data = await res.json();
+      if (data.message) {
+        setError(data.message);
+        return;
+      } else {
+        return data;
+      }
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   const openAddChild = (e) => {
     setIsAddChild(true);
-    setIsEditName(false);
     setModalVisible(true);
   };
+
+  const handleSubmit = async (e) => {
+    console.log('submitting form...');
+    e.preventDefault();
+    let body = {
+      user_id: user.user._id,
+      _id: babyID,
+      firstName: baby,
+      brandPreference: brand,
+      currentSize: currentSize,
+      currentSizeLabel: currentSizeLabel,
+      lowAlert: lowAlert,
+    };
+
+    try {
+      const res = await fetch(`/api/kids`, {
+        method: 'PUT',
+        headers: {
+          'x-auth-token': user.jwt,
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   return (
     <div>
       <section className='section'>
@@ -56,48 +126,55 @@ const Settings = () => {
         </div>
       </section>
       <section className='section' style={{ marginTop: '20px' }}>
-        <form>
-          <div className='input-line-container'>
-            <FaBaby
-              size={20}
-              className='edit-count-icon'
-              style={{ marginTop: '8px' }}
-            />
-            <input
-              type='text'
-              className='input-line input-name'
-              value={baby}
-              onChange={(e) => setBaby(e.target.value)}
-            />
-            <span className='btn-group'>
-              <button
-                type='button'
-                className='btn-link'
-                onClick={() => {
-                  openEditName();
+        <form onSubmit={handleSubmit}>
+          {oneKid ? (
+            <div className='input-line-container'>
+              <FaBaby
+                size={20}
+                className='edit-count-icon'
+                style={{
+                  marginTop: '8px',
+                  width: '24px',
                 }}
+              />
+              <input
+                type='text'
+                className='input-line input-name'
+                value={baby}
+                placeholder='Baby Name'
+                style={{ marginLeft: '5px', paddingBottom: '25px' }}
+                onChange={(e) => setBaby(e.target.value)}
+              />
+            </div>
+          ) : (
+            <div className='input-line-container'>
+              <FaBaby
+                size={20}
+                className='edit-count-icon'
+                style={{ marginTop: '6px' }}
+              />
+              <select
+                className='settings-select'
+                onChange={(e) => setBrand(e.target.value)}
+                value={brand}
               >
-                Edit
-              </button>
-              <button
-                type='button'
-                className='btn-link'
-                style={{ marginLeft: '15px' }}
-                onClick={() => {
-                  openAddChild();
-                }}
-              >
-                Add
-              </button>
-            </span>
-          </div>
+                <option>Baby Name</option>
+                <option>Huggies</option>
+              </select>
+            </div>
+          )}
+
           <div className='input-line-container'>
             <AiOutlineShoppingCart
               size={24}
               className='edit-count-icon'
               style={{ marginTop: '6px' }}
             />
-            <select className='settings-select'>
+            <select
+              className='settings-select'
+              onChange={(e) => setBrand(e.target.value)}
+              value={brand}
+            >
               <option>Brand Preference</option>
               <option>Huggies</option>
               <option>Kirkland</option>
@@ -112,7 +189,16 @@ const Settings = () => {
               className='edit-count-icon'
               style={{ marginTop: '4px' }}
             />
-            <select className='settings-select'>
+            <select
+              className='settings-select'
+              onChange={(e) => {
+                setCurrentSize(e.target.value);
+                setCurrentSizeLabel(
+                  e.target.options[e.target.selectedIndex].text
+                );
+              }}
+              value={currentSize}
+            >
               <option value='-1'>Current Size</option>
               <option value='0'>Newborn</option>
               <option value='1'>Size 1</option>
@@ -121,49 +207,44 @@ const Settings = () => {
               <option value='4'>Size 4</option>
             </select>
           </div>
-          {/* <div className='input-line-container'>
-            <IoIosAddCircleOutline
-              size={24}
-              className='edit-count-icon'
-              style={{ marginTop: '5px' }}
-            />
-            <select className='settings-select'>
-              <option>Add Size</option>
-              <option>Newborn</option>
-              <option>Size 1</option>
-              <option>Size 2</option>
-              <option>Size 3</option>
-              <option>Size 4</option>
-            </select>
-          </div> */}
           <div className='input-line-container'>
             <AiOutlineBell
               size={24}
               className='edit-count-icon'
               style={{ marginTop: '5px' }}
             />
-            <select className='settings-select'>
-              <option>Low Alert</option>
-              <option>Less than 10</option>
-              <option>Less than 20</option>
-              <option>Less than 50</option>
-              <option>Less than 100</option>
+            <select
+              className='settings-select'
+              onChange={(e) => setLowAlert(e.target.value)}
+              value={lowAlert}
+            >
+              <option value='-1'>Low Alert</option>
+              <option value='0'>None</option>
+              <option value='10'>Less than 10</option>
+              <option value='20'>Less than 20</option>
+              <option value='50'>Less than 50</option>
+              <option value='100'>Less than 100</option>
             </select>
           </div>
 
           <button className='btn btn-lt settings-btn'>Save</button>
-          <div style={{ height: '85px' }}></div>
+          <div style={{ textAlign: 'right', marginTop: '20px' }}>
+            <button
+              type='button'
+              className='btn-link'
+              onClick={() => {
+                openAddChild();
+              }}
+            >
+              Add Another Child
+            </button>
+          </div>
         </form>
       </section>
       <Modal open={modalVisible} closeModal={() => setModalVisible(false)}>
         {isAddChild && (
           <AddChild
-            modalData={modalData}
-            closeModal={() => setModalVisible(false)}
-          />
-        )}
-        {isEditName && (
-          <EditBabyName
+            user={user}
             modalData={modalData}
             closeModal={() => setModalVisible(false)}
           />

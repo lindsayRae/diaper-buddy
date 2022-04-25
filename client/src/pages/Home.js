@@ -13,20 +13,59 @@ const Home = () => {
   const isAuthenticated = localStorage.getItem('userData');
   const [historyContent, setHistoryContent] = useState('List');
   const [historyText, setHistoryText] = useState('Graph');
+  const [babyName, setBabyName] = useState('');
+  const [babyData, setBabyData] = useState('');
+  const [error, setError] = useState('');
   let navigate = useNavigate();
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/');
     }
+    console.log('uesEffect ran in Home component');
+    buildUI();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const userData = user.user;
-  //console.log('userData', userData);
-  let currentChild = userData.currentChild;
+  const userID = user.user._id;
+  const buildUI = async () => {
+    const kids = await getKidData();
 
-  const children = userData.children;
-  const currentChildData = children.find((o) => o.firstName === currentChild);
+    //if (kids.length === 1) {
+    console.log(kids[0]);
+    setBabyName(kids[0].firstName);
+    setBabyData(kids[0]);
+    setBabyData(kids[0]);
+    // }
+  };
+  const getKidData = async () => {
+    try {
+      const url = `/api/kids/${userID}`;
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': user.jwt,
+      };
+
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: headers,
+      });
+      const data = await res.json();
+
+      if (data.message) {
+        setError(data.message);
+        return;
+      }
+      return data;
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+  //buildUI();
+  // let currentChild = userData.currentChild;
+
+  // const kids = userData.kids;
+  // const currentChildData = kids.find((o) => o.firstName === currentChild);
 
   const toggle = (e) => {
     let currentText = e.target.innerText;
@@ -43,14 +82,14 @@ const Home = () => {
       <section className='section'>
         <div className='page-title'>
           <div className='logout-container'>
-            <div>{currentChild}'s Diapers</div>
+            <div>{babyName}'s Diapers</div>
             <Logout user={user} setUser={setUser} />
           </div>
           <h1>Home</h1>
         </div>
       </section>
       <section>
-        <SwipeSize currentChildData={currentChildData} />
+        <SwipeSize />
       </section>
       <section className='section'>
         <div className='history-title'>
@@ -59,11 +98,9 @@ const Home = () => {
             {historyText}
           </button>
         </div>
-        {historyContent === 'List' && (
-          <HistoryList history={currentChildData.diaperHistory} />
-        )}
+        {historyContent === 'List' && <HistoryList />}
         {historyContent === 'Graph' && (
-          <HistoryGraph history={currentChildData.diaperHistory} />
+          <HistoryGraph history={babyData.diaperHistory} />
         )}
       </section>
       <div style={{ height: '90px' }}></div>

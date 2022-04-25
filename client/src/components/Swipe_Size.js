@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 
+import { UserContext } from '../context/UserContext';
 import CardHeading from '../components/CardHeading';
 import CountForm from '../components/CountForm';
 import './Swipe_Size.css';
@@ -52,36 +53,69 @@ const sizeTitles = [
   },
 ];
 
-function SwipeSize({ currentChildData }) {
-  // console.log(currentChildData);
-  const [childData, setChildData] = useState(currentChildData);
-  const [viewableSize, setViewableSize] = useState(childData.currentSize);
-  const [viewableSizeLabel, setViewableSizeLabel] = useState();
+function SwipeSize() {
+  const { user, setUser } = useContext(UserContext);
+  //const [childData, setChildData] = useState(currentChildData);
+  const [viewableSize, setViewableSize] = useState();
   const [displayCount, setDisplayCount] = useState(0);
+  const [error, setError] = useState('');
+  const userID = user.user._id;
+  const sliderRef = useRef();
 
-  const currentInventory = (inventory, newSize) => {
-    // console.log(inventory);
-    // console.log(viewableSize);
-    let obj = inventory.filter((x) => x.size == newSize);
-    //console.log(obj);
-    let count = obj[0].purchased - obj[0].used;
-    //  console.log(count);
-    setDisplayCount(count);
-  };
+  useEffect(async () => {
+    console.log('useEffect ran in SwipeSize component');
+    let data = await getKidData();
 
-  useEffect(() => {
-    // currentInventory(inventory);
-    // console.log('********* now');
+    // if (data.length === 1) {
+    console.log(data);
+    setViewableSize(data[0].currentSize);
+    console.log(viewableSize);
+    sliderRef.current.swiper.slideTo(data[0].currentSize);
+    // }
   }, []);
 
-  const updateDiaperTitleCard = (size) => {
-    // console.log(size);
-    let currentObj = sizeTitles.find((x) => x.size === size);
-    //console.log(currentObj);
+  const getKidData = async () => {
+    try {
+      const url = `/api/kids/${userID}`;
 
-    setViewableSize(currentObj.size);
-    setViewableSizeLabel(currentObj.heading);
-    currentInventory(childData.inventory, currentObj.size);
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': user.jwt,
+      };
+
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: headers,
+      });
+      const data = await res.json();
+
+      if (data.message) {
+        setError(data.message);
+        return;
+      }
+      return data;
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const currentInventory = (inventory, newSize) => {
+    console.log(inventory);
+    // console.log(viewableSize);
+    // let obj = inventory.filter((x) => x.size == newSize);
+    // //console.log(obj);
+    // let count = obj[0].purchased - obj[0].used;
+    // //  console.log(count);
+    // setDisplayCount(count);
+  };
+
+  const updateDiaperTitleCard = (size) => {
+    console.log('***', size);
+    // let currentObj = sizeTitles.find((x) => x.size === size);
+
+    setViewableSize(size);
+
+    // currentInventory(childData.inventory, currentObj.size);
   };
 
   const addDiaper = () => {
@@ -100,23 +134,31 @@ function SwipeSize({ currentChildData }) {
         <div className='full-card'>
           <div className='card-count-text'>
             <div className='diaper-ct'>{displayCount}</div>
-            <h2>{viewableSizeLabel} diapers on hand</h2>
+            <h2>Size {viewableSize} diapers on hand</h2>
           </div>
           <img src={vector3} alt='vector3' className='img-absolute' />
         </div>
       </section>
       <section className='section'>
         <Swiper
+          ref={sliderRef}
           spaceBetween={30}
           initialSlide={viewableSize}
           slidesPerView={'auto'}
           centeredSlides={false}
-          onSlideChange={(swiper) => updateDiaperTitleCard(swiper.realIndex)}
-          //onSwiper={(swiper) => console.log(swiper)}
+          onSlideChange={(swiper) => {
+            console.log(swiper);
+            updateDiaperTitleCard(swiper.realIndex);
+          }}
+          // onSwiper={(swiper) => {
+          //   console.log(swiper);
+          //   updateDiaperTitleCard(viewableSize);
+          // }}
           // onTransitionEnd={(swiper) => console.log(swiper)}
-          // onSliderFirstMove={(swiper) =>
-          //   updateDiaperTitleCard(swiper.realIndex)
-          // }
+          // onSliderFirstMove={(swiper) => {
+          //   console.log(swiper);
+          //   updateDiaperTitleCard(swiper.realIndex);
+          // }}
         >
           {sizeTitles.map((item, index) => {
             return (

@@ -5,12 +5,13 @@ import { AiOutlineShoppingCart, AiOutlineBell } from 'react-icons/ai';
 import { TiSortNumerically } from 'react-icons/ti';
 
 import './Inputs.css';
-const AddChild = ({ modalData, closeModal, user }) => {
+const AddChild = ({ modalData, closeModal, user, setPage }) => {
   const [baby, setBaby] = useState('');
   const [brand, setBrand] = useState('Brand Preference');
   const [currentSize, setCurrentSize] = useState('Current Size');
   const [lowAlert, setLowAlert] = useState('Low Alert');
   const [error, setError] = useState('');
+
   const handleAddSubmit = async (e) => {
     console.log('submitting form...');
     e.preventDefault();
@@ -30,11 +31,11 @@ const AddChild = ({ modalData, closeModal, user }) => {
     let body = {
       user_id: user.user._id,
       firstName: baby,
-      brandPreference: brand,
-      currentSize: currentSize,
-      lowAlert: lowAlert,
+      brandPreference: brand.toLowerCase(),
+      currentSize: currentSize.toLowerCase(),
+      lowAlert: lowAlert.toLowerCase(),
     };
-    console.log(body);
+
     try {
       const res = await fetch(`/api/kids`, {
         method: 'POST',
@@ -46,6 +47,7 @@ const AddChild = ({ modalData, closeModal, user }) => {
       });
       const data = await res.json();
       console.log(data);
+      setPage();
       closeModal();
     } catch (error) {
       setError(error.message);

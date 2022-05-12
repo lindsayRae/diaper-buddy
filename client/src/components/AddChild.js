@@ -13,7 +13,6 @@ const AddChild = ({ modalData, closeModal, user, setPage }) => {
   const [error, setError] = useState('');
 
   const handleAddSubmit = async (e) => {
-    console.log('submitting form...');
     e.preventDefault();
     if (!baby) {
       return setError('You must add a baby name.');
@@ -32,7 +31,7 @@ const AddChild = ({ modalData, closeModal, user, setPage }) => {
       user_id: user.user._id,
       firstName: baby,
       brandPreference: brand.toLowerCase(),
-      currentSize: currentSize.toLowerCase(),
+      currentSize: currentSize,
       lowAlert: lowAlert.toLowerCase(),
     };
 
@@ -80,12 +79,12 @@ const AddChild = ({ modalData, closeModal, user, setPage }) => {
           className='settings-select add'
           onChange={(e) => setBrand(e.target.value)}
         >
-          <option>Brand Preference</option>
-          <option>Huggies</option>
-          <option>Kirkland</option>
-          <option>Pampers</option>
-          <option>Parent's Choice</option>
-          <option>Up & Up</option>
+          <option value='-1'>Brand Preference</option>
+          <option value='huggies'>Huggies</option>
+          <option value='kirkland'>Kirkland</option>
+          <option value='pampers'>Pampers</option>
+          <option value='choice'>Parent's Choice</option>
+          <option value='up'>Up & Up</option>
         </select>
       </div>
       <div className='input-line-container'>
@@ -101,12 +100,12 @@ const AddChild = ({ modalData, closeModal, user, setPage }) => {
             //setCurrentSizeLabel(e.target.options[e.target.selectedIndex].text);
           }}
         >
-          <option>Current Size</option>
-          <option>Newborn</option>
-          <option>Size 1</option>
-          <option>Size 2</option>
-          <option>Size 3</option>
-          <option>Size 4</option>
+          <option value='-1'>Current Size</option>
+          <option value='0'>Newborn</option>
+          <option value='1'>Size 1</option>
+          <option value='2'>Size 2</option>
+          <option value='3'>Size 3</option>
+          <option value='4'>Size 4</option>
         </select>
       </div>
 
@@ -120,12 +119,12 @@ const AddChild = ({ modalData, closeModal, user, setPage }) => {
           className='settings-select add'
           onChange={(e) => setLowAlert(e.target.value)}
         >
-          <option>Low Alert</option>
-          <option>None</option>
-          <option>Less than 10</option>
-          <option>Less than 20</option>
-          <option>Less than 50</option>
-          <option>Less than 100</option>
+          <option value='-1'>Low Alert</option>
+          <option value='0'>None</option>
+          <option value='10'>Less than 10</option>
+          <option value='20'>Less than 20</option>
+          <option value='50'>Less than 50</option>
+          <option value='100'>Less than 100</option>
         </select>
       </div>
       {error && (

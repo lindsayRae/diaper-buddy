@@ -46,26 +46,26 @@ router.post('/register', async (req, res) => {
 
   try {
     let newUser = await user.save();
-
+    console.log('newUser:', newUser);
     //? Need to create a header for the creation of the blank you document in kidsRecord
     let headers = {
       'Content-Type': 'application/json',
     };
     const token = user.generateAuthToken();
 
-    //? Call out to existing endpoint to create a new PR record with empty arrays (lifts, cardio, skills)
+    //? Call out to existing endpoint to create a new kids record with empty array
 
     //! For the backend you need an absolute URL for the fetch method to work
     let baseURL = process.env.baseURL;
     let url = `${baseURL}/api/users/usersetup/${newUser._id}`;
-
+    console.log('url:', url);
     let response = await fetch(url, {
       method: 'POST',
       headers: headers,
     });
 
     let json = await response.json();
-    console.log('JSON', json);
+    console.log('JSON:', json);
 
     sendEmail(newUser.firstName, newUser.email, newUser.GUID);
     res.send({
@@ -87,7 +87,7 @@ router.post('/register', async (req, res) => {
 });
 
 /**
- * @description called after creating a new user to set up their empty PRs
+ * @description called after creating a new user to set up their empty kids array
  */
 //? Called in create new user to set up empty KidsRecord
 router.post('/usersetup/:id', async (req, res) => {
@@ -96,7 +96,9 @@ router.post('/usersetup/:id', async (req, res) => {
     user_id: user_id,
     kids: [],
   };
+  console.log('newUserEntry:', newUserEntry);
   let kidsRecord = new KidsRecord(newUserEntry);
+  console.log('kidsRecord:', kidsRecord);
   let result = await kidsRecord.save();
 
   res.send(result);

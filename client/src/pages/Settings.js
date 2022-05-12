@@ -42,7 +42,7 @@ const Settings = () => {
   const setPage = async () => {
     let kids = await getKids();
     console.log(kids);
-    if (!kids) openAddChild();
+    if (!kids || kids.length === 0) return openAddChild();
     if (kids.length > 1) {
       setOneKid(false);
     } else {
@@ -68,6 +68,7 @@ const Settings = () => {
         headers: headers,
       });
       const data = await res.json();
+      console.log('getKids data:', data);
       if (data.message) {
         setError(data.message);
         return;
@@ -159,7 +160,7 @@ const Settings = () => {
                 value={brand}
               >
                 <option>Baby Name</option>
-                <option>Huggies</option>
+                <option>test</option>
               </select>
             </div>
           )}
@@ -175,12 +176,12 @@ const Settings = () => {
               onChange={(e) => setBrand(e.target.value)}
               value={brand}
             >
-              <option>Brand Preference</option>
-              <option>Huggies</option>
-              <option>Kirkland</option>
-              <option>Pampers</option>
-              <option>Parent's Choice</option>
-              <option>Up & Up</option>
+              <option value='0'>Brand Preference</option>
+              <option value='huggies'>Huggies</option>
+              <option value='kirkland'>Kirkland</option>
+              <option value='pampers'>Pampers</option>
+              <option value='parents'>Parent's Choice</option>
+              <option value='up'>Up & Up</option>
             </select>
           </div>
           <div className='input-line-container'>
@@ -218,8 +219,8 @@ const Settings = () => {
               onChange={(e) => setLowAlert(e.target.value)}
               value={lowAlert}
             >
-              <option value='-1'>Low Alert</option>
-              <option value='0'>None</option>
+              <option value='0'>Low Alert</option>
+              <option value='none'>None</option>
               <option value='10'>Less than 10</option>
               <option value='20'>Less than 20</option>
               <option value='50'>Less than 50</option>
@@ -247,10 +248,12 @@ const Settings = () => {
             user={user}
             modalData={modalData}
             closeModal={() => setModalVisible(false)}
+            setPage={setPage}
           />
         )}
       </Modal>
       <Navbar />
+      {error && <p>{error}</p>}
     </div>
   );
 };

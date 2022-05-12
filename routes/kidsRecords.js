@@ -1,46 +1,88 @@
 const auth = require('../middleware/auth');
+const fetch = require('node-fetch');
 const express = require('express');
 const router = express.Router();
-const { KidsRecord } = require('../models/kids.model');
+const { KidsRecord, validateKid } = require('../models/kids.model');
+const { InventoryRecord } = require('../models/inventory.model');
 
 /**
- * @description CREATE child data from setting page
+ * @description CREATE kid from setting page then the inventory
  *
  */
 router.post('/', auth, async (req, res) => {
-  // const { error } = validateMovementSchema(req.body);
+  const { error } = validateKid(req.body);
+  if (error) return { status: 400, message: error.details[0].message };
+  const record = await KidsRecord.findOne({ user_id: req.body.user_id });
 
-  //if (error) return res.status(400).send({ message: error.details[0].message });
-  const id = req.body.user_id;
-  const kid = {
+  if (!record) {
+    return { message: 'Did not find that user.' };
+  }
+
+  if (record.kids.length > 0) {
+    let matchFound = await findMatchingName(record.kids, req.body.firstName);
+    if (matchFound) {
+      return res
+        .status(400)
+        .send({ message: 'There is already a child under that name.' });
+    }
+  }
+
+  let newKid = {
     firstName: req.body.firstName,
     brandPreference: req.body.brandPreference,
     currentSize: req.body.currentSize,
-    // currentSizeLabel: req.body.currentSizeLabel,
     lowAlert: req.body.lowAlert,
   };
-  console.log('kid:', kid);
+
   try {
-    const record = await KidsRecord.findOne({ user_id: id });
-    console.log('*****record', record);
-    if (!record) {
-      res.send({ message: 'Did not find that user.' });
-      return;
-    }
-    //let obj = record.kids;
-    //let match = obj.find((e) => e.firstName === kid.firstName);
+    record.kids.push(newKid);
+    let newKidResult = await record.save(newKid);
 
-    record.kids.push(kid);
-    let result = await record.save(kid);
-
-    if (!result) {
+    if (!newKidResult) {
       res.send({ message: 'Could not add child' });
       return;
     }
-    res.send(result);
+
+    // //? Need to create a header for the creation of the blank you document in personalRecord
+    let headers = {
+      'Content-Type': 'application/json',
+    };
+    let baseURL = process.env.baseURL;
+    let url = `${baseURL}/api/kids/inventorysetup/${
+      newKidResult.kids.at(-1)._id
+    }`;
+
+    let response = await fetch(url, {
+      method: 'POST',
+      headers: headers,
+    });
+
+    let json = await response.json();
+    if (json) res.send(newKidResult.kids.at(-1));
+    else res.send({ message: 'There was an issue, please try again later.' });
   } catch (err) {
-    res.send({ message: err.message });
+    return { message: err.message };
   }
+});
+
+const findMatchingName = async (kidArr, newName) => {
+  return kidArr.find((x) => x.firstName === newName);
+};
+
+/**
+ * @description called after creating a new kid to set up their empty inventory
+ */
+//? Called in create new user to set up empty KidsRecord
+router.post('/inventorysetup/:id', async (req, res) => {
+  let newKidEntry = {
+    kid_id: req.params.id,
+    inventory: [],
+  };
+  console.log('newKidEntry', newKidEntry);
+  let inventoryRecord = new InventoryRecord(newKidEntry);
+  let result = await inventoryRecord.save();
+  console.log('result', result);
+  res.send(result);
 });
 
 /**
@@ -97,4 +139,77 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
+/**
+ * @description DELETE a kid by user_id and kidID
+ */
+router.delete('/:id', auth, async (req, res) => {
+  let id = req.params.id;
+  let kidID = req.body.kidID;
+
+  console.log('kidID', kidID);
+  try {
+    let record = await KidsRecord.findOne({ user_id: id });
+    console.log('kids record', record);
+    let subRecord = record.kids.id(kidID);
+
+    if (subRecord) {
+      subRecord.remove();
+      record.save();
+      res.send({ removed: true });
+    } else {
+      res.send({ message: 'Record not found. Could not delete.' });
+    }
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+});
+
+/**
+ * @description PUT add diapers to kids inventory
+ */
+router.put('/update', auth, async (req, res) => {
+  let id = req.body.user_id;
+  let kidID = req.body.kids_id;
+  let purchased = req.body.purchased;
+  let inventoryID = req.body.inventory_id;
+
+  try {
+    const record = await KidsRecord.updateOne(
+      {
+        user_id: id,
+      },
+      {
+        $inc: {
+          'kids.$[kids].inventory.$[inventory].purchased': purchased,
+        },
+      },
+      {
+        multi: false,
+        upsert: false,
+        arrayFilters: [
+          {
+            'kids._id': {
+              $eq: kidID,
+            },
+          },
+          {
+            'inventory._id': {
+              $eq: inventoryID,
+            },
+          },
+        ],
+      }
+    );
+
+    if (!record) {
+      res.send({ message: 'No kids for this user.' });
+      return;
+    }
+    res.send(record);
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+});
+
+router.put('/update/adddiaper', auth, async (req, res) => {});
 module.exports = router;

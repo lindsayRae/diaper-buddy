@@ -11,7 +11,12 @@ const { InventoryRecord } = require('../models/inventory.model');
  */
 router.post('/', auth, async (req, res) => {
   const { error } = validateKid(req.body);
-  if (error) return { status: 400, message: error.details[0].message };
+
+  if (error)
+    return res
+      .status(400)
+      .send({ status: 400, message: error.details[0].message });
+
   const record = await KidsRecord.findOne({ user_id: req.body.user_id });
 
   if (!record) {
@@ -76,7 +81,44 @@ const findMatchingName = async (kidArr, newName) => {
 router.post('/inventorysetup/:id', async (req, res) => {
   let newKidEntry = {
     kid_id: req.params.id,
-    inventory: [],
+    inventory: [
+      {
+        size: 'NB',
+        purchased: 0,
+        used: [],
+        onHand: 0,
+      },
+      {
+        size: '0',
+        purchased: 0,
+        used: [],
+        onHand: 0,
+      },
+      {
+        size: '1',
+        purchased: 0,
+        used: [],
+        onHand: 0,
+      },
+      {
+        size: '2',
+        purchased: 0,
+        used: [],
+        onHand: 0,
+      },
+      {
+        size: '3',
+        purchased: 0,
+        used: [],
+        onHand: 0,
+      },
+      {
+        size: '4',
+        purchased: 0,
+        used: [],
+        onHand: 0,
+      },
+    ],
   };
   console.log('newKidEntry', newKidEntry);
   let inventoryRecord = new InventoryRecord(newKidEntry);

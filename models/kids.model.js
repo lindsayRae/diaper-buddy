@@ -39,17 +39,16 @@ const KidsRecordSchema = new mongoose.Schema({
 const KidsRecord = mongoose.model('KidsRecord', KidsRecordSchema);
 
 function validateKid(kid) {
-  console.log('kid in validation', kid);
   const schema = Joi.object({
     firstName: Joi.string().min(1).max(99).required(),
     brandPreference: Joi.string().min(1).max(99).required(),
-    currentSize: Joi.number().min(1).max(2).required(),
+    currentSize: Joi.number().required(),
     lowAlert: Joi.string().min(1).max(20).required(),
     user_id: Joi.string().min(1).max(99).required(),
   });
 
-  const { error, value } = schema.validate(kid);
-  return { error, value };
+  const { error } = schema.validate(kid);
+  return { error };
 }
 
 exports.KidsRecord = KidsRecord;

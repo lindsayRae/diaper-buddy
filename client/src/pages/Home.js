@@ -62,10 +62,6 @@ const Home = () => {
     }
   };
   //buildUI();
-  // let currentChild = userData.currentChild;
-
-  // const kids = userData.kids;
-  // const currentChildData = kids.find((o) => o.firstName === currentChild);
 
   const toggle = (e) => {
     let currentText = e.target.innerText;

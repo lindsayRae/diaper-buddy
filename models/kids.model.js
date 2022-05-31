@@ -18,7 +18,7 @@ const kidsSchema = new mongoose.Schema({
     maxlength: 99,
   },
   currentSize: {
-    type: Number,
+    type: String,
   },
   lowAlert: {
     type: String,
@@ -42,7 +42,7 @@ function validateKid(kid) {
   const schema = Joi.object({
     firstName: Joi.string().min(1).max(99).required(),
     brandPreference: Joi.string().min(1).max(99).required(),
-    currentSize: Joi.number().required(),
+    currentSize: Joi.string().required(),
     lowAlert: Joi.string().min(1).max(20).required(),
     user_id: Joi.string().min(1).max(99).required(),
   });

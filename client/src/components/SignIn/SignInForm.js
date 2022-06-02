@@ -34,7 +34,7 @@ const SignInForm = () => {
       });
 
       const data = await response.json();
-
+      console.log(data);
       if (data.message) {
         setError(data.message);
         return;
@@ -42,7 +42,10 @@ const SignInForm = () => {
 
       setUser(data);
       localStorage.setItem('userData', JSON.stringify(data));
-      navigate('/home');
+
+      data.user.currentChild.length == 0
+        ? navigate('/settings')
+        : navigate('/home');
     } catch (err) {
       setError(`Something went wrong: ${err}`);
     }

@@ -1,43 +1,47 @@
-import React, { useState } from 'react';
-
+import React, { useState, useContext } from 'react';
+import Select from 'react-select';
 import { FaBaby } from 'react-icons/fa';
 import { AiOutlineShoppingCart, AiOutlineBell } from 'react-icons/ai';
 import { TiSortNumerically } from 'react-icons/ti';
 
 import './Inputs.css';
-const AddChild = ({ modalData, closeModal, user, setPage }) => {
+const brandList = [
+  { value: 'Huggies', label: 'Huggies' },
+  { value: 'Kirkland', label: 'Kirkland' },
+  { value: 'Pampers', label: 'Pampers' },
+  { value: "Parent's Choice", label: "Parent's Choice" },
+  { value: 'Up & Up', label: 'Up & Up' },
+];
+const sizeList = [
+  { value: 'Newborn', label: 'Newborn' },
+  { value: 'Size 1', label: 'Size 1' },
+  { value: 'Size 2', label: 'Size 2' },
+  { value: 'Size 3', label: 'Size 3' },
+  { value: 'Size 4', label: 'Size 4' },
+];
+const alertList = [
+  { value: '0', label: 'None' },
+  { value: '10', label: '10' },
+  { value: '20', label: '20' },
+  { value: '50', label: '50' },
+  { value: '100', label: '100' },
+];
+
+const AddChild = ({ modalData, closeModal, user, setUser, setPage }) => {
   const [baby, setBaby] = useState('');
-  const [brand, setBrand] = useState('Brand Preference');
-  const [currentSize, setCurrentSize] = useState('Current Size');
-  const [lowAlert, setLowAlert] = useState('Low Alert');
+  const [brandOption, setBrandOption] = useState();
+  const [sizeOption, setSizeOption] = useState();
+  const [alertOption, setAlertOption] = useState();
   const [error, setError] = useState('');
 
-  const handleAddSubmit = async (e) => {
-    e.preventDefault();
-    if (!baby) {
-      return setError('You must add a baby name.');
-    }
-    if (brand === 'Brand Preference') {
-      return setError('You must select a brand preference.');
-    }
-    if (currentSize === 'Current Size') {
-      return setError('You must select the current size.');
-    }
-    if (lowAlert === 'Low Alert') {
-      return setError('You must select a low alert.');
-    }
-
+  const updateUserData = async (kid_id) => {
+    const user_id = user.user._id;
     let body = {
-      user_id: user.user._id,
-      firstName: baby,
-      brandPreference: brand.toLowerCase(),
-      currentSize: currentSize,
-      lowAlert: lowAlert.toLowerCase(),
+      kidID: kid_id,
     };
-
     try {
-      const res = await fetch(`/api/kids`, {
-        method: 'POST',
+      const res = await fetch(`/api/users/update/${user_id}`, {
+        method: 'PUT',
         headers: {
           'x-auth-token': user.jwt,
           'Content-type': 'application/json',
@@ -45,10 +49,62 @@ const AddChild = ({ modalData, closeModal, user, setPage }) => {
         body: JSON.stringify(body),
       });
       const data = await res.json();
-      console.log(data);
-      setPage();
-      closeModal();
+      user.user.currentChild = data.currentChild;
+      setUser(user);
+      localStorage.setItem('userData', JSON.stringify(user));
+      return data;
     } catch (error) {
+      setError(error.message);
+    }
+  };
+  const handleAddSubmit = async (e) => {
+    e.preventDefault();
+    if (!baby) {
+      return setError('You must add a baby name.');
+    }
+    if (!brandOption) {
+      return setError('You must select a brand preference.');
+    }
+    if (!sizeOption) {
+      return setError('You must select the current size.');
+    }
+    if (!alertOption) {
+      return setError('You must select a low alert.');
+    }
+
+    let body = {
+      user_id: user.user._id,
+      firstName: baby,
+      brandPreference: brandOption.value,
+      currentSize: sizeOption.value,
+      lowAlert: alertOption.value,
+    };
+
+    try {
+      const res = await fetch(`/api/kids`, {
+        method: 'POST',
+        headers: {
+          'x-auth-token': user.jwt,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.status == 400) {
+        setError(data.message);
+        return;
+      }
+
+      let userData = await updateUserData(data._id);
+
+      if (userData) {
+        setPage();
+        setError('');
+        closeModal();
+      }
+    } catch (error) {
+      console.log(error);
       setError(error.message);
     }
   };
@@ -72,60 +128,45 @@ const AddChild = ({ modalData, closeModal, user, setPage }) => {
       <div className='input-line-container'>
         <AiOutlineShoppingCart
           size={24}
-          className='edit-count-icon'
+          className='select-icon'
           style={{ marginTop: '6px' }}
         />
-        <select
-          className='settings-select add'
-          onChange={(e) => setBrand(e.target.value)}
-        >
-          <option value='-1'>Brand Preference</option>
-          <option value='huggies'>Huggies</option>
-          <option value='kirkland'>Kirkland</option>
-          <option value='pampers'>Pampers</option>
-          <option value='choice'>Parent's Choice</option>
-          <option value='up'>Up & Up</option>
-        </select>
+        <Select
+          className='settings-select'
+          onChange={setBrandOption}
+          options={brandList}
+          value={brandOption}
+          placeholder={'Select Brand Preference'}
+        />
       </div>
       <div className='input-line-container'>
         <TiSortNumerically
           size={24}
-          className='edit-count-icon'
+          className='select-icon'
           style={{ marginTop: '4px' }}
         />
-        <select
-          className='settings-select add'
-          onChange={(e) => {
-            setCurrentSize(e.target.value);
-            //setCurrentSizeLabel(e.target.options[e.target.selectedIndex].text);
-          }}
-        >
-          <option value='-1'>Current Size</option>
-          <option value='0'>Newborn</option>
-          <option value='1'>Size 1</option>
-          <option value='2'>Size 2</option>
-          <option value='3'>Size 3</option>
-          <option value='4'>Size 4</option>
-        </select>
+        <Select
+          className='settings-select'
+          onChange={setSizeOption}
+          options={sizeList}
+          value={sizeOption}
+          placeholder={'Select Current Size'}
+        />
       </div>
 
       <div className='input-line-container'>
         <AiOutlineBell
           size={24}
-          className='edit-count-icon'
+          className='select-icon'
           style={{ marginTop: '5px' }}
         />
-        <select
-          className='settings-select add'
-          onChange={(e) => setLowAlert(e.target.value)}
-        >
-          <option value='-1'>Low Alert</option>
-          <option value='0'>None</option>
-          <option value='10'>Less than 10</option>
-          <option value='20'>Less than 20</option>
-          <option value='50'>Less than 50</option>
-          <option value='100'>Less than 100</option>
-        </select>
+        <Select
+          className='settings-select'
+          onChange={setAlertOption}
+          options={alertList}
+          value={alertOption}
+          placeholder={'Select Low Alert'}
+        />
       </div>
       {error && (
         <p style={{ textAlign: 'center', color: '#f94687' }}>{error}</p>

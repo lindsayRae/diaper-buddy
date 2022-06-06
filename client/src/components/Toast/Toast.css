@@ -1,0 +1,51 @@
+.container {
+  font-size: 14px;
+  position: fixed;
+  z-index: 10;
+}
+
+.top-left {
+  top: 3rem;
+  left: 3rem;
+  animation: toast-in-left 0.7s;
+}
+
+.notification {
+  border-radius: 3px;
+  box-shadow: 0 0 10px #999;
+  color: #000;
+  opacity: 0.9;
+  transition: 0.3s ease;
+}
+
+.notification:hover {
+  box-shadow: 0 0 12px #fff;
+  opacity: 1;
+}
+.toast {
+  color: #fff;
+  padding: 15px;
+}
+
+.container button {
+  float: right;
+  background: none;
+  border: none;
+  color: #fff;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.description {
+  margin: 0;
+  text-align: center;
+}
+
+@keyframes toast-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

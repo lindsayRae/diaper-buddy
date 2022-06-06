@@ -60,6 +60,21 @@ const Settings = () => {
   const [list, setList] = useState([]);
   let toastProperties = null;
 
+  const customStyles = {
+    singleValue: (provided, state) => ({
+      ...provided,
+      fontSize: '1.4rem',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      fontSize: '1.4rem',
+    }),
+    placeholder: (provided, state) => ({
+      ...provided,
+      fontSize: '1.4rem',
+    }),
+  };
+
   const setMultiChildren = async (data) => {
     const nameOptionList = await createNameOptions(data);
 
@@ -277,10 +292,10 @@ const Settings = () => {
               />
               <input
                 type='text'
-                className='input-line input-name'
+                className='input-line-no-border input-name'
                 value={babyName}
                 placeholder='Baby Name'
-                style={{ marginLeft: '5px', paddingBottom: '25px' }}
+                style={{ marginLeft: '5px' }}
                 onChange={(e) => setBabyName(e.target.value)}
               />
             </div>
@@ -293,6 +308,7 @@ const Settings = () => {
               />
               <Select
                 className='settings-select'
+                styles={customStyles}
                 onChange={async (obj) => {
                   setNameOption({
                     label: obj.label,
@@ -331,6 +347,7 @@ const Settings = () => {
             />
             <Select
               className='settings-select'
+              styles={customStyles}
               onChange={setBrandOption}
               options={brandList}
               value={brandOption}
@@ -345,6 +362,7 @@ const Settings = () => {
             />
             <Select
               className='settings-select'
+              styles={customStyles}
               onChange={setSizeOption}
               options={sizeList}
               value={sizeOption}
@@ -359,6 +377,7 @@ const Settings = () => {
             />
             <Select
               className='settings-select'
+              styles={customStyles}
               onChange={setSizeOption}
               options={alertList}
               value={alertOption}
@@ -387,6 +406,7 @@ const Settings = () => {
             updateUserData={updateUserData}
             closeModal={() => setModalVisible(false)}
             getKids={getKids}
+            customStyles={customStyles}
           />
         )}
       </Modal>

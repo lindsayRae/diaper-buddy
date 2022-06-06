@@ -29,9 +29,27 @@
   color: var(--c-primary);
   margin-right: 1rem;
 }
+.select-icon {
+  color: var(--c-primary);
+  margin-right: 1rem;
+}
 .input-line {
   border: none;
   border-bottom: 1px solid var(--c-primary-light);
+  width: 100%;
+  padding: 1rem 1rem 1rem 4rem;
+  outline: none;
+  font-size: 1.4rem;
+}
+.input-line-no-border {
+  border: none;
+  width: 100%;
+  outline: none;
+  font-size: 1.4rem;
+}
+
+.input-line-no-border-modal {
+  border: none;
   width: 100%;
   padding: 1rem 1rem 1rem 4rem;
   outline: none;

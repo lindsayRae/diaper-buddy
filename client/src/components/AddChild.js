@@ -27,7 +27,13 @@ const alertList = [
   { value: '100', label: '100' },
 ];
 
-const AddChild = ({ user, updateUserData, closeModal, getKids }) => {
+const AddChild = ({
+  user,
+  updateUserData,
+  closeModal,
+  getKids,
+  customStyles,
+}) => {
   const [baby, setBaby] = useState('');
   const [brandOption, setBrandOption] = useState();
   const [sizeOption, setSizeOption] = useState();
@@ -88,7 +94,7 @@ const AddChild = ({ user, updateUserData, closeModal, getKids }) => {
   return (
     <form onSubmit={handleAddSubmit}>
       <h1>Add Child</h1>
-      <div className='input-line-container'>
+      <div className='input-line-container' style={{ marginBottom: '16px' }}>
         <FaBaby
           size={20}
           className='edit-count-icon'
@@ -96,7 +102,7 @@ const AddChild = ({ user, updateUserData, closeModal, getKids }) => {
         />
         <input
           type='text'
-          className='input-line input-name2'
+          className='input-line-no-border-modal input-name2'
           value={baby}
           onChange={(e) => setBaby(e.target.value)}
           placeholder='Baby Name'
@@ -110,6 +116,7 @@ const AddChild = ({ user, updateUserData, closeModal, getKids }) => {
         />
         <Select
           className='settings-select'
+          styles={customStyles}
           onChange={setBrandOption}
           options={brandList}
           value={brandOption}
@@ -124,6 +131,7 @@ const AddChild = ({ user, updateUserData, closeModal, getKids }) => {
         />
         <Select
           className='settings-select'
+          styles={customStyles}
           onChange={setSizeOption}
           options={sizeList}
           value={sizeOption}
@@ -139,6 +147,7 @@ const AddChild = ({ user, updateUserData, closeModal, getKids }) => {
         />
         <Select
           className='settings-select'
+          styles={customStyles}
           onChange={setAlertOption}
           options={alertList}
           value={alertOption}

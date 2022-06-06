@@ -19,11 +19,6 @@ option {
 }
 .settings-select {
   width: 100%;
-  padding: 1rem 1rem 2.5rem 4rem;
-  border: none;
-  outline: none;
-  background: var(--c-background-light);
-  border-bottom: 1px solid #7839cb38;
 }
 
 .settings-btn {
@@ -32,7 +27,7 @@ option {
 
 .input-name {
   background: var(--c-background-light);
-  border-bottom: 1px solid #7839cb38;
+  padding-top: 10px;
 }
 
 .settings-select.add {
@@ -43,6 +38,6 @@ option {
 .input-name::placeholder,
 .input-name2::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: var(--c-primary-text);
+  color: hsl(0, 0%, 50%);
   opacity: 1; /* Firefox */
 }

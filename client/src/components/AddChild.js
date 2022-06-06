@@ -27,36 +27,13 @@ const alertList = [
   { value: '100', label: '100' },
 ];
 
-const AddChild = ({ modalData, closeModal, user, setUser, setPage }) => {
+const AddChild = ({ user, updateUserData, closeModal, getKids }) => {
   const [baby, setBaby] = useState('');
   const [brandOption, setBrandOption] = useState();
   const [sizeOption, setSizeOption] = useState();
   const [alertOption, setAlertOption] = useState();
   const [error, setError] = useState('');
 
-  const updateUserData = async (kid_id) => {
-    const user_id = user.user._id;
-    let body = {
-      kidID: kid_id,
-    };
-    try {
-      const res = await fetch(`/api/users/update/${user_id}`, {
-        method: 'PUT',
-        headers: {
-          'x-auth-token': user.jwt,
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
-      const data = await res.json();
-      user.user.currentChild = data.currentChild;
-      setUser(user);
-      localStorage.setItem('userData', JSON.stringify(user));
-      return data;
-    } catch (error) {
-      setError(error.message);
-    }
-  };
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     if (!baby) {
@@ -99,7 +76,7 @@ const AddChild = ({ modalData, closeModal, user, setUser, setPage }) => {
       let userData = await updateUserData(data._id);
 
       if (userData) {
-        setPage();
+        getKids();
         setError('');
         closeModal();
       }

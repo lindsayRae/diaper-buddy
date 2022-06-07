@@ -11,14 +11,15 @@ const { InventoryRecord } = require('../models/inventory.model');
  */
 router.post('/', auth, async (req, res) => {
   const { error } = validateKid(req.body);
-
+  console.log('herezzz');
+  console.log(error);
   if (error)
     return res
       .status(400)
       .send({ status: 400, message: error.details[0].message });
 
   const record = await KidsRecord.findOne({ user_id: req.body.user_id });
-
+  console.log('record', record);
   if (!record) {
     return { message: 'Did not find that user.' };
   }
@@ -38,17 +39,17 @@ router.post('/', auth, async (req, res) => {
     currentSize: req.body.currentSize,
     lowAlert: req.body.lowAlert,
   };
-
+  console.log('newKid body', newKid);
   try {
     record.kids.push(newKid);
     let newKidResult = await record.save(newKid);
-
+    console.log('newKidResult', newKidResult);
     if (!newKidResult) {
       res.send({ message: 'Could not add child' });
       return;
     }
 
-    // //? Need to create a header for the creation of the blank you document in personalRecord
+    // //? Need to create a header for the creation of the blank you document in inventoryRecord
     let headers = {
       'Content-Type': 'application/json',
     };
@@ -63,6 +64,7 @@ router.post('/', auth, async (req, res) => {
     });
 
     let json = await response.json();
+    console.log('json', json);
     if (json) res.send(newKidResult.kids.at(-1));
     else res.send({ message: 'There was an issue, please try again later.' });
   } catch (err) {

@@ -139,16 +139,13 @@ router.put('/reset', async (req, res) => {
  */
 router.put('/newpass', async (req, res) => {
   try {
-    let user = await User.findOne({ email: req.body.email });
+    let user = await User.findOne({ _id: req.body.user_id });
 
     if (!user) {
       return res.status(400).send({ message: 'No User' });
     }
 
-    let password = req.body.password;
-
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
+    let kidID = req.body.kidID;
 
     let result = await user.save();
     res.send({ result });
@@ -161,4 +158,23 @@ router.put('/newpass', async (req, res) => {
   }
 });
 
+/**
+ * @description UPDATE user with currentKidID
+ */
+router.put('/update/:id', auth, async (req, res) => {
+  try {
+    let user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(400).send({ message: 'No User' });
+    }
+    user.currentChild = req.body.kidID;
+    const result = await user.save();
+
+    if (result) res.send(result);
+    if (!result) return res.send('Could not update the user.');
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+});
 module.exports = router;

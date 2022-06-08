@@ -85,12 +85,6 @@ router.post('/inventorysetup/:id', async (req, res) => {
     kid_id: req.params.id,
     inventory: [
       {
-        size: 'NB',
-        purchased: 0,
-        used: [],
-        onHand: 0,
-      },
-      {
         size: '0',
         purchased: 0,
         used: [],

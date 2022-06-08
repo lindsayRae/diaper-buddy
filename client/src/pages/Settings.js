@@ -407,6 +407,7 @@ const Settings = () => {
             closeModal={() => setModalVisible(false)}
             getKids={getKids}
             customStyles={customStyles}
+            showToast={showToast}
           />
         )}
       </Modal>

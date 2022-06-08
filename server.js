@@ -34,7 +34,7 @@ const userRouter = require('./routes/users');
 const activateRouter = require('./routes/activate');
 const authRouter = require('./routes/auth');
 const kidsRouter = require('./routes/kidsRecords');
-const inventoryRouter = require('./routes/inventory');
+const inventoryRouter = require('./routes/inventoryRecords');
 
 app.get('/api', (req, res) => {
   res.json([
@@ -51,7 +51,7 @@ app.use('/api/users', userRouter);
 app.use('/api/activate', activateRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/kids', kidsRouter);
-app.use('/api/kids/inventory', inventoryRouter);
+app.use('/api/inventory', inventoryRouter);
 
 app.use('*', (req, res) => res.status(404).json({ error: 'Page not found' }));
 

@@ -72,11 +72,9 @@ function SwipeSize() {
     let data = await getKidData();
     let inventoryData = await getInventoryRecord();
 
-    console.log(data);
-    console.log('totalInventory', setTotalInventory);
     setTotalInventory(inventoryData);
     let currentSize;
-    switch (data[0].currentSize) {
+    switch (data.currentSize) {
       case 'Newborn':
         currentSize = 0;
         break;
@@ -96,11 +94,8 @@ function SwipeSize() {
 
     setViewableSize(currentSize);
     let currentData = inventoryData.find((x) => x.size == currentSize);
-    console.log('currentData', currentData);
     setCurrentSizeData(currentData);
     setDisplayCount(currentData.onHand);
-    // console.log()
-    setDisplayCount(20);
     sliderRef.current.swiper.slideTo(currentSize);
   }, []);
 
@@ -130,8 +125,8 @@ function SwipeSize() {
   };
   const getKidData = async () => {
     try {
-      const url = `/api/kids/${userID}`;
-
+      const url = `/api/kids/${userID}/${user.user.currentChild}`;
+      console.log('URL:', url);
       const headers = {
         'Content-Type': 'application/json',
         'x-auth-token': user.jwt,
@@ -144,11 +139,13 @@ function SwipeSize() {
       const data = await res.json();
 
       if (data.message) {
+        console.log(data);
         setError(data.message);
         return;
       }
       return data;
     } catch (err) {
+      console.log(err);
       setError(err.message);
     }
   };

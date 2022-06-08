@@ -159,12 +159,35 @@ router.put('/', auth, async (req, res) => {
 });
 
 /**
+ * @description GET specific child by id
+ *
+ */
+router.get('/:user_id/:kid_id', auth, async (req, res) => {
+  let id = req.params.user_id;
+  let kid_id = req.params.kid_id;
+
+  try {
+    const records = await KidsRecord.findOne({ user_id: id });
+
+    if (!records) {
+      res.send({ message: 'Did not find that user.' });
+      return;
+    }
+    const record = records.kids.find((x) => x._id == kid_id);
+
+    res.send(record);
+  } catch (err) {
+    res.send({ message: err.message });
+  }
+});
+
+/**
  * @description GET all children
  *
  */
 
-router.get('/:id', auth, async (req, res) => {
-  let id = req.params.id;
+router.get('/:user_id', auth, async (req, res) => {
+  let id = req.params.user_id;
   try {
     const record = await KidsRecord.findOne({ user_id: id });
     if (!record) {

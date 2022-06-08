@@ -33,6 +33,7 @@ const AddChild = ({
   closeModal,
   getKids,
   customStyles,
+  showToast,
 }) => {
   const [baby, setBaby] = useState('');
   const [brandOption, setBrandOption] = useState();
@@ -85,6 +86,7 @@ const AddChild = ({
         getKids();
         setError('');
         closeModal();
+        showToast('info', 'Current child has been updated.');
       }
     } catch (error) {
       console.log(error);

@@ -30,12 +30,11 @@ const Home = () => {
   const buildUI = async () => {
     const kids = await getKidData();
 
-    //if (kids.length === 1) {
-    console.log(kids[0]);
-    setBabyName(kids[0].firstName);
-    setBabyData(kids[0]);
-    setBabyData(kids[0]);
-    // }
+    let currentID = user.user.currentChild;
+    let currentChildData = kids.find((x) => x._id === currentID);
+    console.log(currentChildData);
+    setBabyName(currentChildData.firstName);
+    setBabyData(currentChildData);
   };
   const getKidData = async () => {
     try {

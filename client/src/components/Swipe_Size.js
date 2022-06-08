@@ -58,22 +58,76 @@ function SwipeSize() {
   //const [childData, setChildData] = useState(currentChildData);
   const [viewableSize, setViewableSize] = useState();
   const [displayCount, setDisplayCount] = useState(0);
-  const [error, setError] = useState('');
+
+  const [totalInventory, setTotalInventory] = useState();
+  const [currentSizeData, setCurrentSizeData] = useState();
+
+  const [error, setError] = useState();
+  const [addAmt, setAddAmt] = useState(0);
   const userID = user.user._id;
   const sliderRef = useRef();
 
   useEffect(async () => {
     console.log('useEffect ran in SwipeSize component');
     let data = await getKidData();
+    let inventoryData = await getInventoryRecord();
 
-    // if (data.length === 1) {
     console.log(data);
-    setViewableSize(data[0].currentSize);
-    console.log(viewableSize);
-    sliderRef.current.swiper.slideTo(data[0].currentSize);
-    // }
+    console.log('totalInventory', setTotalInventory);
+    setTotalInventory(inventoryData);
+    let currentSize;
+    switch (data[0].currentSize) {
+      case 'Newborn':
+        currentSize = 0;
+        break;
+      case 'Size 1':
+        currentSize = 1;
+        break;
+      case 'Size 2':
+        currentSize = 2;
+        break;
+      case 'Size 3':
+        currentSize = 3;
+        break;
+      case 'Size 4':
+        currentSize = 4;
+        break;
+    }
+
+    setViewableSize(currentSize);
+    let currentData = inventoryData.find((x) => x.size == currentSize);
+    console.log('currentData', currentData);
+    setCurrentSizeData(currentData);
+    setDisplayCount(currentData.onHand);
+    // console.log()
+    setDisplayCount(20);
+    sliderRef.current.swiper.slideTo(currentSize);
   }, []);
 
+  const getInventoryRecord = async () => {
+    try {
+      const url = `/api/inventory/${user.user.currentChild}`;
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': user.jwt,
+      };
+
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: headers,
+      });
+      const data = await res.json();
+
+      if (data.message) {
+        setError(data.message);
+        return;
+      }
+      return data;
+    } catch (err) {
+      setError(err.message);
+    }
+  };
   const getKidData = async () => {
     try {
       const url = `/api/kids/${userID}`;
@@ -99,27 +153,25 @@ function SwipeSize() {
     }
   };
 
-  const currentInventory = (inventory, newSize) => {
-    console.log(inventory);
-    // console.log(viewableSize);
-    // let obj = inventory.filter((x) => x.size == newSize);
-    // //console.log(obj);
-    // let count = obj[0].purchased - obj[0].used;
-    // //  console.log(count);
-    // setDisplayCount(count);
-  };
-
   const updateDiaperTitleCard = (size) => {
-    console.log('***', size);
-    // let currentObj = sizeTitles.find((x) => x.size === size);
-
+    console.log('***updateDiaperTitleCard: ', size);
     setViewableSize(size);
-
-    // currentInventory(childData.inventory, currentObj.size);
+    let currentData = totalInventory.find((x) => x.size == size);
+    setDisplayCount(currentData.onHand);
   };
 
-  const addDiaper = () => {
-    // POST request
+  const addDiaper = (e) => {
+    e.preventDefault();
+    console.log('test');
+    // PUT request
+    let body = {
+      kid_id: '',
+      purchased: '',
+      size: '',
+    };
+
+    try {
+    } catch (error) {}
     //setChildData(data)
   };
 
@@ -134,7 +186,10 @@ function SwipeSize() {
         <div className='full-card'>
           <div className='card-count-text'>
             <div className='diaper-ct'>{displayCount}</div>
-            <h2>Size {viewableSize} diapers on hand</h2>
+            <h2>
+              {viewableSize == 0 ? 'Newborn' : `Size ${viewableSize}`} diapers
+              on hand.
+            </h2>
           </div>
           <img src={vector3} alt='vector3' className='img-absolute' />
         </div>
@@ -177,8 +232,23 @@ function SwipeSize() {
         </Swiper>
       </section>
       <section className='section'>
-        <CountForm />
+        {/* <CountForm /> */}
+        <form>
+          <div className='input-add-container'>
+            <input type='number' className='input-add' placeholder='0' />
+            <button className='btn btn-blue-light' onClick={addDiaper}>
+              Add
+            </button>
+          </div>
+
+          <button className='btn btn-danger'>Remove</button>
+        </form>
       </section>
+      {error && (
+        <p style={{ color: '#d9534f', padding: '0 20px', textAlign: 'center' }}>
+          {error}
+        </p>
+      )}
     </>
   );
 }

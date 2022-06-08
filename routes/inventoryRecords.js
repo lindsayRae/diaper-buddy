@@ -5,6 +5,21 @@ const { KidsRecord } = require('../models/kids.model');
 const { InventoryRecord } = require('../models/inventory.model');
 
 /**
+ * @description GET get all inventory records by kid id
+ */
+
+router.get('/:id', auth, async (req, res) => {
+  let id = req.params.id;
+  try {
+    const record = await InventoryRecord.findOne({ kid_id: id });
+    if (!record) return res.send({ message: 'Did not find inventory records' });
+    else res.send(record.inventory);
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+});
+
+/**
  * @description PUT add purchased diapers to inventory by kid id
  */
 router.put('/purchased', auth, async (req, res) => {

@@ -54,8 +54,7 @@ const sizeTitles = [
 ];
 
 function SwipeSize() {
-  const { user, setUser } = useContext(UserContext);
-  //const [childData, setChildData] = useState(currentChildData);
+  const { user } = useContext(UserContext);
   const [viewableSize, setViewableSize] = useState();
   const [displayCount, setDisplayCount] = useState(0);
 
@@ -67,8 +66,7 @@ function SwipeSize() {
   const userID = user.user._id;
   const sliderRef = useRef();
 
-  useEffect(async () => {
-    console.log('useEffect ran in SwipeSize component');
+  const loadTitleCard = async () => {
     let data = await getKidData();
     let inventoryData = await getInventoryRecord();
 
@@ -97,6 +95,9 @@ function SwipeSize() {
     setCurrentSizeData(currentData);
     setDisplayCount(currentData.onHand);
     sliderRef.current.swiper.slideTo(currentSize);
+  };
+  useEffect(async () => {
+    loadTitleCard();
   }, []);
 
   const getInventoryRecord = async () => {
@@ -126,7 +127,6 @@ function SwipeSize() {
   const getKidData = async () => {
     try {
       const url = `/api/kids/${userID}/${user.user.currentChild}`;
-      console.log('URL:', url);
       const headers = {
         'Content-Type': 'application/json',
         'x-auth-token': user.jwt,
@@ -151,30 +151,50 @@ function SwipeSize() {
   };
 
   const updateDiaperTitleCard = (size) => {
-    console.log('***updateDiaperTitleCard: ', size);
     setViewableSize(size);
     let currentData = totalInventory.find((x) => x.size == size);
     setDisplayCount(currentData.onHand);
   };
 
-  const addDiaper = (e) => {
+  const addDiaper = async (e) => {
     e.preventDefault();
-    console.log('test');
-    // PUT request
+
     let body = {
-      kid_id: '',
-      purchased: '',
-      size: '',
+      kid_id: user.user.currentChild,
+      purchased: addAmt,
+      size: currentSizeData.size,
     };
 
     try {
-    } catch (error) {}
-    //setChildData(data)
+      const url = `/api/inventory/purchased`;
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': user.jwt,
+      };
+
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+
+      if (data.message) {
+        setError(data.message);
+        return;
+      }
+      console.log(data);
+      setAddAmt(0);
+      loadTitleCard();
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    }
   };
 
   const removeDiaper = () => {
     // POST request
-    //setChildData(data)
   };
 
   return (
@@ -232,7 +252,13 @@ function SwipeSize() {
         {/* <CountForm /> */}
         <form>
           <div className='input-add-container'>
-            <input type='number' className='input-add' placeholder='0' />
+            <input
+              type='number'
+              className='input-add'
+              placeholder='0'
+              value={addAmt}
+              onChange={(e) => setAddAmt(e.target.value)}
+            />
             <button className='btn btn-blue-light' onClick={addDiaper}>
               Add
             </button>

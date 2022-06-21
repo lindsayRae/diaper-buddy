@@ -60,6 +60,8 @@ function SwipeSize() {
 
   const [totalInventory, setTotalInventory] = useState();
   const [currentSizeData, setCurrentSizeData] = useState();
+  const [slideChange, setSlideChange] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(null);
 
   const [error, setError] = useState();
   const [addAmt, setAddAmt] = useState(0);
@@ -90,13 +92,21 @@ function SwipeSize() {
         break;
     }
 
-    setViewableSize(currentSize);
-    let currentData = inventoryData.find((x) => x.size == currentSize);
+    let useableSize;
+    if (!viewableSize) {
+      useableSize = currentSize;
+    } else {
+      useableSize = viewableSize;
+    }
+    let currentData = inventoryData.find((x) => x.size == useableSize);
     setCurrentSizeData(currentData);
     setDisplayCount(currentData.onHand);
-    sliderRef.current.swiper.slideTo(currentSize);
+    if (!slideChange) {
+      sliderRef.current.swiper.slideTo(currentSize);
+    }
   };
   useEffect(async () => {
+    console.log('useEffect...');
     loadTitleCard();
   }, []);
 
@@ -162,7 +172,7 @@ function SwipeSize() {
     let body = {
       kid_id: user.user.currentChild,
       purchased: addAmt,
-      size: currentSizeData.size,
+      size: viewableSize,
     };
 
     try {
@@ -219,18 +229,13 @@ function SwipeSize() {
           slidesPerView={'auto'}
           centeredSlides={false}
           onSlideChange={(swiper) => {
-            console.log(swiper);
+            // runs on page load, and first slide
+            setViewableSize(swiper.realIndex);
             updateDiaperTitleCard(swiper.realIndex);
           }}
-          // onSwiper={(swiper) => {
-          //   console.log(swiper);
-          //   updateDiaperTitleCard(viewableSize);
-          // }}
-          // onTransitionEnd={(swiper) => console.log(swiper)}
-          // onSliderFirstMove={(swiper) => {
-          //   console.log(swiper);
-          //   updateDiaperTitleCard(swiper.realIndex);
-          // }}
+          //onSwiper={(swiper) => {}
+          // onTransitionEnd={(swiper) => console.log(swiper)} // runs on page load and first slide
+          onSliderFirstMove={(swiper) => setSlideChange(true)}
         >
           {sizeTitles.map((item, index) => {
             return (

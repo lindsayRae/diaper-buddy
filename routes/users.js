@@ -145,7 +145,10 @@ router.put('/newpass', async (req, res) => {
       return res.status(400).send({ message: 'No User' });
     }
 
-    let kidID = req.body.kidID;
+    let password = req.body.password;
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
 
     let result = await user.save();
     res.send({ result });

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import LogoHeading from '../components/LogoHeading';
 import queryString from 'query-string';
+import { UserContext } from '../context/UserContext';
 
 const SetNewPassword = () => {
   const [error, setError] = useState('');
@@ -12,6 +13,7 @@ const SetNewPassword = () => {
   const [passwordSuccess, setPasswordSuccess] = useState(false);
   const [passwordShown, setPasswordShown] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
+  const { user, setUser } = useContext(UserContext);
 
   let params = queryString.parse(window.location.search);
 
@@ -63,7 +65,9 @@ const SetNewPassword = () => {
     let body = {
       email: params.email,
       password: password,
+      user_id: user.user._id,
     };
+
     try {
       const res = await fetch('/api/users/newpass', {
         method: 'PUT',
@@ -119,6 +123,7 @@ const SetNewPassword = () => {
                     setError('');
                     setPassword(event.target.value);
                   }}
+                  autoComplete='off'
                 />
                 <span className='show'>
                   <a onClick={() => setPasswordShown(!passwordShown)}>
@@ -135,6 +140,7 @@ const SetNewPassword = () => {
                     setError('');
                     setConfirmPassword(event.target.value);
                   }}
+                  autoComplete='off'
                 />
                 <span className='show'>
                   <a onClick={() => setPasswordShown2(!passwordShown2)}>

@@ -35,6 +35,7 @@ const Home = () => {
     console.log(currentChildData);
     setBabyName(currentChildData.firstName);
     setBabyData(currentChildData);
+    localStorage.setItem('babyName', currentChildData.firstName);
   };
   const getKidData = async () => {
     try {

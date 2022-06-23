@@ -104,6 +104,7 @@ const Settings = () => {
   };
   const setOneChild = (data) => {
     setBabyName(data[0].firstName);
+    localStorage.setItem('babyName', data[0].firstName);
     setBabyID(data[0]._id);
     setBrandOption({
       label: data[0].brandPreference,
@@ -296,7 +297,10 @@ const Settings = () => {
                 value={babyName}
                 placeholder='Baby Name'
                 style={{ marginLeft: '5px' }}
-                onChange={(e) => setBabyName(e.target.value)}
+                onChange={(e) => {
+                  setBabyName(e.target.value);
+                  localStorage.setItem('babyName', e.target.value);
+                }}
               />
             </div>
           ) : (

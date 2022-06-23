@@ -17,6 +17,9 @@ const Profile = () => {
   const [passwordShown, setPasswordShown] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState();
+  const [purchased, setPurchased] = useState(0);
+  const [used, setUsed] = useState(0);
+  const [error, setError] = useState('');
   const { user, setUser } = useContext(UserContext);
   const isAuthenticated = localStorage.getItem('userData');
   let navigate = useNavigate();
@@ -25,7 +28,44 @@ const Profile = () => {
     if (!isAuthenticated) {
       navigate('/');
     }
+    buildUI();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const inventoryData = async () => {
+    try {
+      const url = `/api/inventory/${user.user.currentChild}`;
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': user.jwt,
+      };
+
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: headers,
+      });
+      const data = await res.json();
+
+      if (data.message) {
+        setError(data.message);
+        return;
+      }
+      return data;
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+  const buildUI = async () => {
+    let results = await inventoryData();
+    console.log(results);
+    const totalPurchased = results
+      .map((item) => item.purchased)
+      .reduce((prev, next) => prev + next);
+
+    //? const totalUsed =
+    //? setUsed()
+    setPurchased(totalPurchased);
+  };
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
@@ -51,16 +91,18 @@ const Profile = () => {
         <div className='subtitle'>Mom</div>
       </section>
       <section className='section'>
-        <h3 style={{ fontWeight: '600' }}>Diaper Insight</h3>
+        <h3 style={{ fontWeight: '600' }}>
+          Diaper Insight for {localStorage.getItem('babyName')}
+        </h3>
         <div className='insight-container'>
           <div className='insight-purchased'>
-            <div className='insight-count'>568</div>
+            <div className='insight-count'>{purchased}</div>
             <div className='insight-title'>Total Diapers Purchased</div>
             <img src={dotsH} alt='' className='dots-h' />
             <MdLogin size={50} className='insight-icon' />
           </div>
           <div className='insight-used'>
-            <div className='insight-count'>423</div>
+            <div className='insight-count'>{used}</div>
             <div className='insight-title'>Total Diapers Used</div>
             <img src={dotsV} alt='' className='dots-v' />
             <MdLogout size={50} className='insight-icon' />

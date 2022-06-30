@@ -171,7 +171,21 @@ router.put('/update/:id', auth, async (req, res) => {
     if (!user) {
       return res.status(400).send({ message: 'No User' });
     }
-    user.currentChild = req.body.kidID;
+
+    if (req.body.kidID) {
+      user.currentChild = req.body.kidID;
+    }
+
+    if (req.body.email) {
+      user.email = req.body.email;
+      user.firstName = req.body.firstName;
+    }
+    if (req.body.password) {
+      let password = req.body.password;
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
     const result = await user.save();
 
     if (result) res.send(result);

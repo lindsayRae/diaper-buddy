@@ -5,14 +5,50 @@ import { FaUser } from 'react-icons/fa';
 import { MdBadge } from 'react-icons/md';
 import { HiOutlineKey } from 'react-icons/hi';
 import './Inputs.css';
-const EditProfile = ({ modalData, closeModal }) => {
-  const [email, setEmail] = useState('lbarnett712@gmail.com');
-  const [name, setName] = useState('Lindsay Aiello');
-  const [title, setTitle] = useState('Mom');
-  const [password, setPassword] = useState('1234567');
+const EditProfile = ({ userData, closeModal, setUser }) => {
+  const [email, setEmail] = useState(userData.email);
+  const [name, setName] = useState(userData.firstName);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState();
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const user_id = userData._id;
+    let body;
+    if (password.length > 0) {
+      body = {
+        email: email,
+        firstName: name,
+        password: password,
+      };
+    } else {
+      body = {
+        email: email,
+        firstName: name,
+      };
+    }
+
+    try {
+      const res = await fetch(`/api/users/update/${user_id}`, {
+        method: 'PUT',
+        headers: {
+          'x-auth-token': localStorage.getItem('jwt'),
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+
+      setUser(data);
+      localStorage.setItem('userData', JSON.stringify(data));
+      closeModal();
+      return data;
+    } catch (error) {
+      setError(error.message);
+    }
+  };
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <h1>Edit Profile</h1>
       <div className='input-line-container'>
         <GrMail size={24} className='edit-count-icon' />
@@ -21,26 +57,20 @@ const EditProfile = ({ modalData, closeModal }) => {
           className='input-line'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          autoComplete='off'
         />
       </div>
       <div className='input-line-container'>
         <FaUser size={24} className='edit-count-icon' />
         <input
           type='text'
-          className='input-line'
+          className='input-line profile-name'
           value={name}
           onChange={(e) => setName(e.target.value)}
+          autoComplete='off'
         />
       </div>
-      <div className='input-line-container'>
-        <MdBadge size={24} className='edit-count-icon' />
-        <input
-          type='text'
-          className='input-line'
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
+
       <div className='input-line-container'>
         <HiOutlineKey size={24} className='edit-count-icon' />
         <input
@@ -48,8 +78,15 @@ const EditProfile = ({ modalData, closeModal }) => {
           className='input-line'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          autoComplete='off'
+          placeholder='New Password'
         />
       </div>
+      {error && (
+        <p style={{ color: '#d9534f', padding: '0 20px', textAlign: 'center' }}>
+          {error}
+        </p>
+      )}
 
       <button className='btn btn-lt'>Save</button>
     </form>

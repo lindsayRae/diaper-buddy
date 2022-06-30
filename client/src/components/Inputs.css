@@ -41,6 +41,9 @@
   outline: none;
   font-size: 1.4rem;
 }
+.input-line::placeholder {
+  color: var(--c-secondary-text);
+}
 .input-line-no-border {
   border: none;
   width: 100%;
@@ -54,4 +57,8 @@
   padding: 1rem 1rem 1rem 4rem;
   outline: none;
   font-size: 1.4rem;
+}
+
+.profile-name::first-letter {
+  text-transform: capitalize;
 }

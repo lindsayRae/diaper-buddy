@@ -9,10 +9,7 @@
   font-size: 1.8rem;
   margin: 0;
 }
-.subtitle {
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.6rem;
-}
+
 .insight-container {
   display: flex;
   justify-content: space-between;

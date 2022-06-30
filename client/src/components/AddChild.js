@@ -57,7 +57,7 @@ const AddChild = ({
     }
 
     let body = {
-      user_id: user.user._id,
+      user_id: user._id,
       firstName: baby,
       brandPreference: brandOption.value,
       currentSize: sizeOption.value,
@@ -68,7 +68,7 @@ const AddChild = ({
       const res = await fetch(`/api/kids`, {
         method: 'POST',
         headers: {
-          'x-auth-token': user.jwt,
+          'x-auth-token': localStorage.getItem('jwt'),
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),

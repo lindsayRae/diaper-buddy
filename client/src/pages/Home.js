@@ -25,12 +25,12 @@ const Home = () => {
     console.log('uesEffect ran in Home component');
     buildUI();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const userID = user.user._id;
+  console.log('** user', user);
+  const userID = user._id;
   const buildUI = async () => {
     const kids = await getKidData();
 
-    let currentID = user.user.currentChild;
+    let currentID = user.currentChild;
     let currentChildData = kids.find((x) => x._id === currentID);
     console.log(currentChildData);
     setBabyName(currentChildData.firstName);
@@ -43,7 +43,7 @@ const Home = () => {
 
       const headers = {
         'Content-Type': 'application/json',
-        'x-auth-token': user.jwt,
+        'x-auth-token': localStorage.getItem('jwt'),
       };
 
       const res = await fetch(url, {

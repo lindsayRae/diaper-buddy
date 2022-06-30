@@ -65,7 +65,7 @@ const SetNewPassword = () => {
     let body = {
       email: params.email,
       password: password,
-      user_id: user.user._id,
+      user_id: user._id,
     };
 
     try {

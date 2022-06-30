@@ -65,7 +65,7 @@ function SwipeSize() {
 
   const [error, setError] = useState();
   const [addAmt, setAddAmt] = useState(0);
-  const userID = user.user._id;
+  const userID = user._id;
   const sliderRef = useRef();
 
   const loadTitleCard = async () => {
@@ -112,11 +112,11 @@ function SwipeSize() {
 
   const getInventoryRecord = async () => {
     try {
-      const url = `/api/inventory/${user.user.currentChild}`;
+      const url = `/api/inventory/${user.currentChild}`;
 
       const headers = {
         'Content-Type': 'application/json',
-        'x-auth-token': user.jwt,
+        'x-auth-token': localStorage.getItem('jwt'),
       };
 
       const res = await fetch(url, {
@@ -136,10 +136,10 @@ function SwipeSize() {
   };
   const getKidData = async () => {
     try {
-      const url = `/api/kids/${userID}/${user.user.currentChild}`;
+      const url = `/api/kids/${userID}/${user.currentChild}`;
       const headers = {
         'Content-Type': 'application/json',
-        'x-auth-token': user.jwt,
+        'x-auth-token': localStorage.getItem('jwt'),
       };
 
       const res = await fetch(url, {
@@ -170,7 +170,7 @@ function SwipeSize() {
     e.preventDefault();
 
     let body = {
-      kid_id: user.user.currentChild,
+      kid_id: user.currentChild,
       purchased: addAmt,
       size: viewableSize,
     };
@@ -180,7 +180,7 @@ function SwipeSize() {
 
       const headers = {
         'Content-Type': 'application/json',
-        'x-auth-token': user.jwt,
+        'x-auth-token': localStorage.getItem('jwt'),
       };
 
       const res = await fetch(url, {

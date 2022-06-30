@@ -14,9 +14,7 @@ import { HiOutlineKey } from 'react-icons/hi';
 
 const Profile = () => {
   const [password, setPassword] = useState('12345678');
-  const [passwordShown, setPasswordShown] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalData, setModalData] = useState();
   const [purchased, setPurchased] = useState(0);
   const [used, setUsed] = useState(0);
   const [error, setError] = useState('');
@@ -33,11 +31,11 @@ const Profile = () => {
 
   const inventoryData = async () => {
     try {
-      const url = `/api/inventory/${user.user.currentChild}`;
+      const url = `/api/inventory/${user.currentChild}`;
 
       const headers = {
         'Content-Type': 'application/json',
-        'x-auth-token': user.jwt,
+        'x-auth-token': localStorage.getItem('jwt'),
       };
 
       const res = await fetch(url, {
@@ -57,7 +55,7 @@ const Profile = () => {
   };
   const buildUI = async () => {
     let results = await inventoryData();
-    console.log(results);
+
     const totalPurchased = results
       .map((item) => item.purchased)
       .reduce((prev, next) => prev + next);
@@ -65,9 +63,6 @@ const Profile = () => {
     //? const totalUsed =
     //? setUsed()
     setPurchased(totalPurchased);
-  };
-  const togglePassword = () => {
-    setPasswordShown(!passwordShown);
   };
 
   return (
@@ -83,12 +78,11 @@ const Profile = () => {
       </section>
       <section className='section'>
         <div className='profile-heading'>
-          <h2>Lindsay Aiello</h2>
+          <h2 className='profile-name'>{user.firstName}</h2>
           <button className='btn-link' onClick={() => setModalVisible(true)}>
             Edit
           </button>
         </div>
-        <div className='subtitle'>Mom</div>
       </section>
       <section className='section'>
         <h3 style={{ fontWeight: '600' }}>
@@ -117,7 +111,7 @@ const Profile = () => {
           </div>
           <div className='profile-text-container'>
             <p>Email Address</p>
-            <div>lbarnett712@gmail.com</div>
+            <div>{user.email}</div>
           </div>
         </div>
         <div className='contact-container'>
@@ -129,24 +123,18 @@ const Profile = () => {
             <div style={{ display: 'flex' }}>
               <input
                 readOnly
-                type={passwordShown ? 'text' : 'password'}
+                type={'password'}
                 className='profile-pass'
                 value={password}
               />
-              <button
-                className='btn-link'
-                id='togglePass'
-                onClick={togglePassword}
-              >
-                {passwordShown ? 'Hide' : 'Show'}
-              </button>
             </div>
           </div>
         </div>
       </section>
       <Modal open={modalVisible} closeModal={() => setModalVisible(false)}>
         <EditProfile
-          modalData={modalData}
+          userData={user}
+          setUser={setUser}
           closeModal={() => setModalVisible(false)}
         />
       </Modal>

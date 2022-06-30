@@ -34,14 +34,15 @@ const SignInForm = () => {
       });
 
       const data = await response.json();
-      console.log(data);
+      console.log('login data:', data);
       if (data.message) {
         setError(data.message);
         return;
       }
 
-      setUser(data);
-      localStorage.setItem('userData', JSON.stringify(data));
+      setUser(data.user);
+      localStorage.setItem('userData', JSON.stringify(data.user));
+      localStorage.setItem('jwt', data.jwt);
 
       data.user.currentChild.length == 0
         ? navigate('/settings')

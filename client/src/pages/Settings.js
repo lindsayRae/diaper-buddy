@@ -78,7 +78,7 @@ const Settings = () => {
   const setMultiChildren = async (data) => {
     const nameOptionList = await createNameOptions(data);
 
-    let currentID = user.user.currentChild;
+    let currentID = user.currentChild;
 
     let currentChildData = data.find((x) => x._id === currentID);
 
@@ -120,20 +120,20 @@ const Settings = () => {
     });
   };
   const getKids = async () => {
-    const user_ID = user.user._id;
+    const user_ID = user._id;
     const url = `/api/kids/${user_ID}`;
 
     try {
       const headers = {
         'Content-Type': 'application/json',
-        'x-auth-token': user.jwt,
+        'x-auth-token': localStorage.getItem('jwt'),
       };
       const res = await fetch(url, {
         method: 'GET',
         headers: headers,
       });
       const data = await res.json();
-
+      console.log('get kids data', data);
       if (data.message) {
         console.log('error', error);
         setError(data.message);
@@ -208,21 +208,23 @@ const Settings = () => {
     setList([...list, toastProperties]);
   };
   const updateUserData = async (kid_id) => {
-    const user_id = user.user._id;
+    const user_id = user._id;
     let body = {
       kidID: kid_id,
     };
+    console.log(body);
     try {
       const res = await fetch(`/api/users/update/${user_id}`, {
         method: 'PUT',
         headers: {
-          'x-auth-token': user.jwt,
+          'x-auth-token': localStorage.getItem('jwt'),
           'Content-type': 'application/json',
         },
         body: JSON.stringify(body),
       });
       const data = await res.json();
-      user.user.currentChild = data.currentChild;
+      console.log('updated data', data);
+      user.currentChild = data.currentChild;
       setUser(user);
       localStorage.setItem('userData', JSON.stringify(user));
       return data;
@@ -234,7 +236,7 @@ const Settings = () => {
     e.preventDefault();
 
     let body = {
-      user_id: user.user._id,
+      user_id: user._id,
       _id: babyID,
       firstName: kidsData.length === 1 ? babyName : nameOption.value,
       brandPreference: brandOption.value,
@@ -246,7 +248,7 @@ const Settings = () => {
       const res = await fetch(`/api/kids`, {
         method: 'PUT',
         headers: {
-          'x-auth-token': user.jwt,
+          'x-auth-token': localStorage.getItem('jwt'),
           'Content-type': 'application/json',
         },
         body: JSON.stringify(body),
@@ -318,7 +320,9 @@ const Settings = () => {
                     label: obj.label,
                     value: obj.value,
                   });
+                  localStorage.setItem('babyName', obj.label);
                   let newObj = findNewObj(obj.label);
+                  console.log(newObj);
                   setBabyID(newObj._id);
                   setBrandOption({
                     label: newObj.brandPreference,

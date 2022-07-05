@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 
 import vector4 from '../images/Vector4.png';
 import SwipePrices from '../components/Swipe_Prices';
@@ -6,6 +6,7 @@ import Logout from '../components/Logout';
 import Navbar from '../components/Nav/Navbar';
 import { UserContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import Select from 'react-select';
 
 import {
   Swiper,
@@ -19,16 +20,45 @@ import up from '../images/Up.png';
 import parents from '../images/PCFlogo.png';
 import costco from '../images/Costco.png';
 
+const sizeList = [
+  { value: 'Newborn', label: 'Newborn' },
+  { value: 'Size 1', label: 'Size 1' },
+  { value: 'Size 2', label: 'Size 2' },
+  { value: 'Size 3', label: 'Size 3' },
+  { value: 'Size 4', label: 'Size 4' },
+];
 const Pricing = () => {
-  const [currentSize, setCurrentSize] = useState('nb');
+  const [sizeOption, setSizeOption] = useState();
   const { user, setUser } = useContext(UserContext);
+  const [kidName, setKidName] = useState('');
+
+  const [currentBrandIndex, setCurrentBrandIndex] = useState(0);
+  const [brandPreference, setBrandPreference] = useState();
+  const [slideChange, setSlideChange] = useState(false);
+  const [error, setError] = useState();
+  const sliderRef = useRef();
   const isAuthenticated = localStorage.getItem('userData');
   let navigate = useNavigate();
 
+  const customStyles = {
+    singleValue: (provided, state) => ({
+      ...provided,
+      fontSize: '1.4rem',
+      border: 'none',
+      boxShadow: 'none',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      fontSize: '1.4rem',
+    }),
+  };
+  console.log(sizeOption);
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/');
+      return;
     }
+    getKidData();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const priceData = [
@@ -79,19 +109,76 @@ const Pricing = () => {
       unitPrice: 0.19,
     },
   ];
-  const sortedData = priceData.sort((a, b) =>
-    a.unitPrice > b.unitPrice ? 1 : -1
-  );
+  // const sortedData = priceData.sort((a, b) =>
+  //   a.unitPrice > b.unitPrice ? 1 : -1
+  // );
 
   const fetchNewPricing = (size) => {
     console.log(size);
+  };
+
+  const getKidData = async () => {
+    try {
+      const url = `/api/kids/${user._id}/${user.currentChild}`;
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': localStorage.getItem('jwt'),
+      };
+
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: headers,
+      });
+      const data = await res.json();
+      console.log('kid data', data);
+
+      let brandIndex;
+      switch (data.brandPreference) {
+        case 'Huggies':
+          brandIndex = 0;
+          break;
+        case 'Pampers':
+          brandIndex = 1;
+          break;
+        case 'Up & Up':
+          brandIndex = 2;
+          break;
+        case "Parent's Choice":
+          brandIndex = 3;
+          break;
+        case 'Kirkland':
+          brandIndex = 4;
+          break;
+      }
+
+      if (data.message) {
+        console.log(data);
+        setError(data.message);
+        return;
+      }
+      setKidName(data.firstName);
+      setSizeOption({
+        label: data.currentSize,
+        value: data.currentSize,
+      });
+      setCurrentBrandIndex(brandIndex);
+      setBrandPreference(data.brandPreference);
+      if (!slideChange) {
+        sliderRef.current.swiper.slideTo(brandIndex);
+      }
+
+      return data;
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
+    }
   };
   return (
     <div className='background-light'>
       <section className='section'>
         <div className='page-title'>
           <div className='logout-container'>
-            <div>Roman's Diapers</div>
+            <div>{kidName}'s Diapers</div>
             <Logout user={user} setUser={setUser} />
           </div>
           <h1>Pricing</h1>
@@ -101,7 +188,9 @@ const Pricing = () => {
         <div className='full-card'>
           <div className='card-count-text'>
             <div className='diaper-ct'>3</div>
-            <h2 className=''>Days before you run out of diapers</h2>
+            <h2 className=''>
+              Days before you run out of {sizeOption.label} diapers
+            </h2>
           </div>
 
           <img src={vector4} alt='vector4' className='img-absolute' />
@@ -110,22 +199,28 @@ const Pricing = () => {
       <section className='section'>
         <div className='lowest-heading-container'>
           <h2>Lowest Prices</h2>
-          <select>
-            <option>Newborn</option>
-            <option>Size 1</option>
-            <option>Size 2</option>
-            <option>Size 3</option>
-            <option>Size 4</option>
-          </select>
+          <Select
+            styles={customStyles}
+            menuPortalTarget={document.body}
+            menuPosition={'fixed'}
+            options={sizeList}
+            value={sizeOption}
+          />
         </div>
         <Swiper
+          ref={sliderRef}
           spaceBetween={0}
+          initialSlide={0}
           slidesPerView={'auto'}
           centeredSlides={true}
-          onSlideChange={() => console.log('slide change')}
-          onSwiper={(swiper) => console.log(swiper)}
+          onSlideChange={(swiper) => {
+            console.log('slide change', swiper);
+            setCurrentBrandIndex();
+          }}
+          //onSwiper={(swiper) => console.log(swiper)}
+          onSliderFirstMove={(swiper) => setSlideChange(true)}
         >
-          {sortedData.map((item) => {
+          {priceData.map((item) => {
             return (
               <SwiperSlide key={item.brand} className='price-container'>
                 <SwipePrices item={item} />
@@ -136,7 +231,7 @@ const Pricing = () => {
         <div className='buy-btn-container'>
           <button className='btn btn-blue'>Buy Lowest Price Diaper</button>
           <button className='btn btn-green'>
-            Buy *Huggies at Lowest Price
+            Buy {brandPreference} at Lowest Price
           </button>
         </div>
       </section>

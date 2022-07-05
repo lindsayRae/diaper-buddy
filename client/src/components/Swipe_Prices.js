@@ -4,7 +4,7 @@ import './Swipe_Prices.css';
 
 function SwipePrices(props) {
   let item = props.item;
-  console.log(item);
+
   return (
     <div className='price-swipe-card'>
       <img src={item.logo} />

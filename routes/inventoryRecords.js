@@ -197,4 +197,21 @@ router.put('/used', auth, async (req, res) => {
 //     res.send({ message: error.message });
 //   }
 // });
+
+/**
+ * @description GET all purchased inventory by kid_id
+ */
+//! cannot figure out how to query just for purchased
+router.get('/purchased/:id', auth, async (req, res) => {
+  let id = req.params.id;
+  try {
+    const record = await InventoryRecord.findOne({ kid_id: id });
+    console.log('RECORD', record.inventory);
+    if (!record) return res.send({ message: 'Did not find inventory records' });
+    else res.send(record.inventory);
+  } catch (error) {
+    console.log('ERROR:', error);
+    res.send({ message: error.message });
+  }
+});
 module.exports = router;

@@ -28,16 +28,17 @@ const sizeList = [
   { value: 'Size 4', label: 'Size 4' },
 ];
 const Pricing = () => {
-  const [sizeOption, setSizeOption] = useState();
+  const [sizeOption, setSizeOption] = useState({});
   const { user, setUser } = useContext(UserContext);
   const [kidName, setKidName] = useState('');
-
+  const [days, setDays] = useState('');
   const [currentBrandIndex, setCurrentBrandIndex] = useState(0);
   const [brandPreference, setBrandPreference] = useState();
   const [slideChange, setSlideChange] = useState(false);
   const [error, setError] = useState();
   const sliderRef = useRef();
   const isAuthenticated = localStorage.getItem('userData');
+
   let navigate = useNavigate();
 
   const customStyles = {
@@ -52,7 +53,7 @@ const Pricing = () => {
       fontSize: '1.4rem',
     }),
   };
-  console.log(sizeOption);
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/');
@@ -163,6 +164,8 @@ const Pricing = () => {
       });
       setCurrentBrandIndex(brandIndex);
       setBrandPreference(data.brandPreference);
+      setRemainingDisplay(data.currentSize);
+
       if (!slideChange) {
         sliderRef.current.swiper.slideTo(brandIndex);
       }
@@ -172,6 +175,39 @@ const Pricing = () => {
       console.log(err);
       setError(err.message);
     }
+  };
+
+  const getInventoryData = async () => {
+    try {
+      const url = `/api/inventory/${user.currentChild}`;
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': localStorage.getItem('jwt'),
+      };
+
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: headers,
+      });
+      const data = await res.json();
+
+      if (data.message) {
+        setError(data.message);
+        return;
+      }
+      return data;
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+  const setRemainingDisplay = async (currSize) => {
+    let data = await getInventoryData();
+    let avgUsage = 10;
+    currSize = currSize.slice(-1);
+    let onHand = data.find((x) => x.size == currSize).onHand;
+    let daysRemaining = onHand / avgUsage;
+    setDays(daysRemaining);
   };
   return (
     <div className='background-light'>
@@ -187,9 +223,11 @@ const Pricing = () => {
       <section className='section'>
         <div className='full-card'>
           <div className='card-count-text'>
-            <div className='diaper-ct'>3</div>
+            <div className='diaper-ct'>{days}</div>
             <h2 className=''>
-              Days before you run out of {sizeOption.label} diapers
+              {days === 1 ? 'Day' : 'Days'} before you run out of{' '}
+              {sizeOption ? `${sizeOption.label} ` : ''}
+              diapers
             </h2>
           </div>
 

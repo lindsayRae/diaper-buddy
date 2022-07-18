@@ -22,17 +22,16 @@ const Home = () => {
     if (!isAuthenticated) {
       navigate('/');
     }
-    console.log('uesEffect ran in Home component');
     buildUI();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  console.log('** user', user);
+
   const userID = user._id;
   const buildUI = async () => {
     const kids = await getKidData();
 
     let currentID = user.currentChild;
     let currentChildData = kids.find((x) => x._id === currentID);
-    console.log(currentChildData);
+
     setBabyName(currentChildData.firstName);
     setBabyData(currentChildData);
     localStorage.setItem('babyName', currentChildData.firstName);

@@ -106,7 +106,6 @@ function SwipeSize() {
     }
   };
   useEffect(async () => {
-    console.log('useEffect...');
     loadTitleCard();
   }, []);
 

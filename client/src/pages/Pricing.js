@@ -252,7 +252,7 @@ const Pricing = () => {
           slidesPerView={'auto'}
           centeredSlides={true}
           onSlideChange={(swiper) => {
-            console.log('slide change', swiper);
+            //  console.log('slide change', swiper);
             setCurrentBrandIndex();
           }}
           //onSwiper={(swiper) => console.log(swiper)}

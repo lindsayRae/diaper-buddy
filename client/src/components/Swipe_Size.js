@@ -91,10 +91,10 @@ function SwipeSize() {
         currentSize = 4;
         break;
     }
-
     let useableSize;
     if (!viewableSize) {
       useableSize = currentSize;
+      setViewableSize(useableSize);
     } else {
       useableSize = viewableSize;
     }

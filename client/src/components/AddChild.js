@@ -87,7 +87,49 @@ const AddChild = ({
         setError('');
         closeModal();
         showToast('info', 'Current child has been updated.');
+        collectSizeIds(data._id);
       }
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    }
+  };
+
+  const createUsedRecord = async (size_id, size) => {
+    let body = {
+      size,
+    };
+    try {
+      const res = await fetch(`/api/used/${size_id}`, {
+        method: 'POST',
+        headers: {
+          'x-auth-token': localStorage.getItem('jwt'),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    }
+  };
+  const collectSizeIds = async (kid_id) => {
+    try {
+      const res = await fetch(`/api/inventory/${kid_id}`, {
+        method: 'GET',
+        headers: {
+          'x-auth-token': localStorage.getItem('jwt'),
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await res.json();
+      console.log(data);
+      //let sizeIdArr = data.map((x) => x._id);
+      data.forEach(async (el) => {
+        await createUsedRecord(el._id, el.size);
+      });
     } catch (error) {
       console.log(error);
       setError(error.message);

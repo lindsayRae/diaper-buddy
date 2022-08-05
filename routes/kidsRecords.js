@@ -5,14 +5,28 @@ const router = express.Router();
 const { KidsRecord, validateKid } = require('../models/kids.model');
 const { InventoryRecord } = require('../models/inventory.model');
 
+const inventorySetup = async (newKidResult, headers, baseURL) => {
+  let url = `${baseURL}/api/kids/inventorysetup/${
+    newKidResult.kids.at(-1)._id
+  }`;
+
+  let response = await fetch(url, {
+    method: 'POST',
+    headers: headers,
+  });
+
+  let json = await response.json();
+  console.log('inventoySetup json', json); // has inventory_id
+  return json;
+};
+
 /**
  * @description CREATE kid from setting page then the inventory
  *
  */
 router.post('/', auth, async (req, res) => {
   const { error } = validateKid(req.body);
-  console.log('herezzz');
-  console.log(error);
+
   if (error)
     return res
       .status(400)
@@ -54,17 +68,8 @@ router.post('/', auth, async (req, res) => {
       'Content-Type': 'application/json',
     };
     let baseURL = process.env.baseURL;
-    let url = `${baseURL}/api/kids/inventorysetup/${
-      newKidResult.kids.at(-1)._id
-    }`;
 
-    let response = await fetch(url, {
-      method: 'POST',
-      headers: headers,
-    });
-
-    let json = await response.json();
-    console.log('json', json);
+    let json = await inventorySetup(newKidResult, headers, baseURL);
     if (json) res.send(newKidResult.kids.at(-1));
     else res.send({ message: 'There was an issue, please try again later.' });
   } catch (err) {
@@ -116,10 +121,8 @@ router.post('/inventorysetup/:id', async (req, res) => {
       },
     ],
   };
-  console.log('newKidEntry', newKidEntry);
   let inventoryRecord = new InventoryRecord(newKidEntry);
   let result = await inventoryRecord.save();
-  console.log('result', result);
   res.send(result);
 });
 
@@ -274,3 +277,7 @@ router.put('/update', auth, async (req, res) => {
 
 router.put('/update/adddiaper', auth, async (req, res) => {});
 module.exports = router;
+
+// TODO
+
+//! Need to create a delete kids method that: deletes kid, inventory, used, and current child (if that kid is the current child)

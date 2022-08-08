@@ -60,143 +60,26 @@ router.put('/used', auth, async (req, res) => {
   let kidID = req.body.kid_id;
   let currentSize = req.body.size;
 
-  console.log('size', currentSize);
-  //* date will not work because the model sets the date
-  // let dateNow = fmtTodayDate();
-  // console.log(dateNow);
+  let dateNow = fmtTodayDate();
+  console.log(dateNow);
   try {
-    //* works, but just overwrites the used object
-    // const kidRecord = await InventoryRecord.updateOne(
-    //   { kid_id: kidID },
-    //   {
-    //     $set: {
-    //       'inventory.$[el].used': { date: dateNow, count: '1' },
-    //     },
-    //     $inc: { 'inventory.$[el].onHand': -1 },
-    //   },
-    //   { arrayFilters: [{ 'el.size': size }] }
-    // );
-    // const document = await InventoryRecord.find({
-    //   kid_id: kidID,
-    //   //inventory: { $elemMatch: { size: currentSize } },
-    // });
-    // console.log('document', document);
-    // res.send(document[0].inventory[3]);
-    // const today = fmtTodayDate();
-    // document.inventory.forEach((item) => {
-    //   console.log('item: ', item);
-
-    //   if (item.size == size) {
-    //     console.log('item size: ', item);
-    //     let isTodayUsed = false;
-    //     for (let elem of item.used) {
-    //       if (elem.date == today) {
-    //         elem.count = Number(elem.count) + 1;
-    //         isTodayUsed = true;
-    //       }
-    //     }
-    //     if (!isTodayUsed) {
-    //       elem.push({ date: today, count: 1 });
-    //     }
-    //   }
-    // });
-    // await document.save();
-
-    //res.send(document);
-    const document = await InventoryRecord.updateOne(
+    const kidRecord = await InventoryRecord.updateOne(
+      { kid_id: kidID },
       {
-        kid_id: kidID,
-        'inventory.size': currentSize,
-        'inventory.used.date': '11/11/21',
-      },
-      {
-        $inc: {
-          'inventory.$[size].used.$[usedItem].count': 1,
+        $push: {
+          'inventory.$[el].used': { entryDate: dateNow, count: '1' },
         },
+        $inc: { 'inventory.$[el].onHand': -1 },
       },
-      {
-        arrayFilters: [
-          {
-            size: {
-              eq: '3',
-            },
-          },
-          {
-            usedItem: {
-              date: '11/11/21',
-            },
-          },
-        ],
-      }
+      { arrayFilters: [{ 'el.size': currentSize }] }
     );
-    await document.save();
 
-    res.send(document);
+    res.send(kidRecord);
   } catch (error) {
     console.log('error:', error);
     res.send({ message: error.message });
   }
-
-  // try {
-  //   const record = await InventoryRecord.updateOne(
-  //     { kid_id: kidID },
-  //     { $inc: { 'inventory.$[el].used': -1 } },
-  //     { arrayFilters: [{ 'el.size': size }] }
-  //   );
-  //   console.log(record);
-  //   res.send(record);
-  // } catch (error) {
-  //   res.send({ message: error.message });
-  // }
 });
-
-/**
- * @description PUT add used diapers to kids inventory
- */
-// router.put('/used', auth, async (req, res) => {
-//   let id = req.body.user_id;
-//   let kidID = req.body.kids_id;
-//   let used = req.body.used;
-//   let inventoryID = req.body.inventory_id;
-//   let date = req.body.date;
-
-//   try {
-//     const record = await KidsRecord.updateOne(
-//       {
-//         user_id: id,
-//       },
-//       {
-//         $inc: {
-//           'kids.$[kids].inventory.$[inventory].used': used,
-//         },
-//       },
-//       {
-//         multi: false,
-//         upsert: false,
-//         arrayFilters: [
-//           {
-//             'kids._id': {
-//               $eq: kidID,
-//             },
-//           },
-//           {
-//             'inventory._id': {
-//               $eq: inventoryID,
-//             },
-//           },
-//         ],
-//       }
-//     );
-
-//     if (!record) {
-//       res.send({ message: 'No kids for this user.' });
-//       return;
-//     }
-//     res.send(record);
-//   } catch (error) {
-//     res.send({ message: error.message });
-//   }
-// });
 
 /**
  * @description GET all purchased inventory by kid_id

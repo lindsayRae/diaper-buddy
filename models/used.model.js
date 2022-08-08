@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 
 const usedSchema = new mongoose.Schema({
-  date: {
-    type: Date,
+  entryDate: {
+    trim: true,
+    type: String,
+    minlength: 10,
+    maxlength: 10,
   },
   count: {
     type: Number,

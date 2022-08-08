@@ -13,7 +13,23 @@ const SignInForm = () => {
   const [error, setError] = useState('');
 
   const { setUser } = useContext(UserContext);
-
+  const setSessionSizeData = async (kid_id) => {
+    try {
+      const res = await fetch(`/api/inventory/${kid_id}`, {
+        method: 'GET',
+        headers: {
+          'x-auth-token': localStorage.getItem('jwt'),
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await res.json();
+      console.log(data);
+      sessionStorage.setItem('sizeData', JSON.stringify(data));
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    }
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -43,10 +59,12 @@ const SignInForm = () => {
       setUser(data.user);
       localStorage.setItem('userData', JSON.stringify(data.user));
       localStorage.setItem('jwt', data.jwt);
-
-      data.user.currentChild.length == 0
-        ? navigate('/settings')
-        : navigate('/home');
+      if (data.user.currentChild.length == 0) {
+        navigate('/settings');
+      } else {
+        navigate('/home');
+        setSessionSizeData(data.user.currentChild);
+      }
     } catch (err) {
       setError(`Something went wrong: ${err}`);
     }

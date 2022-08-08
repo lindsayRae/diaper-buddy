@@ -268,6 +268,23 @@ const Settings = () => {
     }
   };
 
+  const setSessionSizeData = async (kid_id) => {
+    try {
+      const res = await fetch(`/api/inventory/${kid_id}`, {
+        method: 'GET',
+        headers: {
+          'x-auth-token': localStorage.getItem('jwt'),
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await res.json();
+      console.log(data);
+      sessionStorage.setItem('sizeData', JSON.stringify(data));
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    }
+  };
   return (
     <div>
       <section className='section'>
@@ -324,6 +341,7 @@ const Settings = () => {
                   let newObj = findNewObj(obj.label);
                   console.log(newObj);
                   setBabyID(newObj._id);
+                  setSessionSizeData(newObj._id);
                   setBrandOption({
                     label: newObj.brandPreference,
                     value: newObj.brandPreference,

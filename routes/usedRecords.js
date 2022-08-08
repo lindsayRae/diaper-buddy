@@ -4,6 +4,9 @@ const router = express.Router();
 
 const { UsedRecord } = require('../models/used.model');
 
+/**
+ * @description GET used record by size id
+ */
 router.get('/:id', auth, async (req, res) => {
   let id = req.params.id;
   try {
@@ -30,7 +33,7 @@ router.post('/:size_id', auth, async (req, res) => {
 });
 
 /**
- * @description add a used diaper record
+ * @description add a used diaper record with size id
  */
 
 router.put('/add/:id', auth, async (req, res) => {

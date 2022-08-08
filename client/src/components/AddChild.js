@@ -127,6 +127,7 @@ const AddChild = ({
       const data = await res.json();
       console.log(data);
       //let sizeIdArr = data.map((x) => x._id);
+      sessionStorage.setItem('sizeData', JSON.stringify(data));
       data.forEach(async (el) => {
         await createUsedRecord(el._id, el.size);
       });

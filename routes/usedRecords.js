@@ -38,7 +38,7 @@ router.post('/:size_id', auth, async (req, res) => {
 
 router.put('/add/:id', auth, async (req, res) => {
   let sizeId = req.params.id;
-  let date = req.body.date;
+  let date = req.body.entryDate;
   try {
     const usedRecord = await UsedRecord.updateOne(
       { size_id: sizeId },

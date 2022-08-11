@@ -44,39 +44,26 @@ router.put('/purchased', auth, async (req, res) => {
   }
 });
 
-const fmtTodayDate = () => {
-  let today = new Date();
-  let dd = String(today.getDate()).padStart(2, '0');
-  let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-  let yyyy = today.getFullYear();
-
-  today = mm + '/' + dd + '/' + yyyy;
-  return today;
-};
 /**
- * @description PUT add used diapers to kids inventory
+ * @description PUT decrement onHand by size id
  */
-router.put('/used', auth, async (req, res) => {
-  let kidID = req.body.kid_id;
-  let currentSize = req.body.size;
 
-  let dateNow = fmtTodayDate();
-  console.log(dateNow);
+router.put('/onHand', auth, async (req, res) => {
+  let kidID = req.body.kid_id;
+  let size = req.body.size;
+
   try {
-    const kidRecord = await InventoryRecord.updateOne(
+    const record = await InventoryRecord.updateOne(
       { kid_id: kidID },
       {
-        $push: {
-          'inventory.$[el].used': { entryDate: dateNow, count: '1' },
+        $inc: {
+          'inventory.$[el].onHand': -1,
         },
-        $inc: { 'inventory.$[el].onHand': -1 },
       },
-      { arrayFilters: [{ 'el.size': currentSize }] }
+      { arrayFilters: [{ 'el.size': size }] }
     );
-
-    res.send(kidRecord);
+    res.send(record);
   } catch (error) {
-    console.log('error:', error);
     res.send({ message: error.message });
   }
 });
@@ -84,7 +71,6 @@ router.put('/used', auth, async (req, res) => {
 /**
  * @description GET all purchased inventory by kid_id
  */
-//! cannot figure out how to query just for purchased
 router.get('/purchased/:id', auth, async (req, res) => {
   let id = req.params.id;
   try {

@@ -168,6 +168,11 @@ function SwipeSize() {
   const addDiaper = async (e) => {
     e.preventDefault();
 
+    if (addAmt == 0) {
+      setError('Please enter amount you would like to add.');
+      return;
+    }
+    setError('');
     let body = {
       kid_id: user.currentChild,
       purchased: addAmt,
@@ -193,7 +198,7 @@ function SwipeSize() {
         setError(data.message);
         return;
       }
-      console.log(data);
+
       setAddAmt(0);
       loadTitleCard();
     } catch (error) {
@@ -201,9 +206,84 @@ function SwipeSize() {
       setError(error.message);
     }
   };
+  const fmtTodayDate = () => {
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
 
-  const removeDiaper = () => {
-    // POST request
+    today = mm + '/' + dd + '/' + yyyy;
+    return today;
+  };
+  const decrementOnHand = async () => {
+    let body = {
+      kid_id: user.currentChild,
+      size: viewableSize,
+    };
+
+    try {
+      const url = `/api/inventory/onHand`;
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': localStorage.getItem('jwt'),
+      };
+
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+
+      if (data.message) {
+        setError(data.message);
+        return;
+      }
+      loadTitleCard();
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    }
+  };
+  const addUsed = async (size_id) => {
+    let body = {
+      entryDate: fmtTodayDate(),
+    };
+
+    try {
+      const url = `/api/used/add/${size_id}`;
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': localStorage.getItem('jwt'),
+      };
+
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+
+      if (data.message) {
+        setError(data.message);
+        return;
+      }
+
+      return data;
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    }
+  };
+  const removeDiaper = async (e) => {
+    e.preventDefault();
+
+    let sizeData = JSON.parse(sessionStorage.getItem('sizeData'));
+    let currSize = sizeData.find((el) => el.size == viewableSize);
+    await addUsed(currSize._id);
+    await decrementOnHand(currSize._id);
   };
 
   return (
@@ -268,7 +348,9 @@ function SwipeSize() {
             </button>
           </div>
 
-          <button className='btn btn-danger'>Remove</button>
+          <button className='btn btn-danger' onClick={removeDiaper}>
+            Remove
+          </button>
         </form>
       </section>
       {error && (

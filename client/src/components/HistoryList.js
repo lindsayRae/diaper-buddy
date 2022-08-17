@@ -4,7 +4,7 @@ import './HistoryGraphs.css';
 import Modal from './Modal/Modal';
 import EditHistory from './EditHistory';
 
-const HistoryList = ({ history }) => {
+const HistoryList = ({ history, sizeId }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState();
 
@@ -12,7 +12,7 @@ const HistoryList = ({ history }) => {
     <>
       <section className='section history-card'>
         <ul className='list history-list'>
-          {!history && (
+          {history.length == 0 && (
             <p>
               No used diaper history yet. Remove a diaper from above to start
               tracking!
@@ -23,8 +23,8 @@ const HistoryList = ({ history }) => {
               return (
                 <li className='history-list-item' key={index}>
                   <div>
-                    <span className='list-date'>{item.date}</span>
-                    <span className='list-count'>{item.amount} used</span>
+                    <span className='list-date'>{item.entryDate}</span>
+                    <span className='list-count'>{item.count} used</span>
                   </div>
                   <button
                     className='btn-link'
@@ -44,6 +44,7 @@ const HistoryList = ({ history }) => {
       <Modal open={modalVisible} closeModal={() => setModalVisible(false)}>
         <EditHistory
           modalData={modalData}
+          sizeId={sizeId}
           closeModal={() => setModalVisible(false)}
         />
       </Modal>

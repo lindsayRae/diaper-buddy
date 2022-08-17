@@ -1,8 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 
 import SwipeSize from '../components/Swipe_Size';
-import HistoryList from '../components/HistoryList';
-import HistoryGraph from '../components/HistoryGraph';
 import Navbar from '../components/Nav/Navbar';
 import Logout from '../components/Logout';
 import { UserContext } from '../context/UserContext';
@@ -11,10 +9,8 @@ import { useNavigate } from 'react-router-dom';
 const Home = () => {
   const { user, setUser } = useContext(UserContext);
   const isAuthenticated = localStorage.getItem('userData');
-  const [historyContent, setHistoryContent] = useState('List');
-  const [historyText, setHistoryText] = useState('Graph');
+
   const [babyName, setBabyName] = useState('');
-  const [babyData, setBabyData] = useState('');
   const [error, setError] = useState('');
   let navigate = useNavigate();
 
@@ -33,7 +29,7 @@ const Home = () => {
     let currentChildData = kids.find((x) => x._id === currentID);
 
     setBabyName(currentChildData.firstName);
-    setBabyData(currentChildData);
+    // setBabyData(currentChildData);
     localStorage.setItem('babyName', currentChildData.firstName);
   };
   const getKidData = async () => {
@@ -60,18 +56,6 @@ const Home = () => {
       setError(err.message);
     }
   };
-  //buildUI();
-
-  const toggle = (e) => {
-    let currentText = e.target.innerText;
-    if (currentText === 'Graph') {
-      setHistoryText('List');
-      setHistoryContent('Graph');
-    } else {
-      setHistoryText('Graph');
-      setHistoryContent('List');
-    }
-  };
   return (
     <div className='background-light'>
       <section className='section'>
@@ -86,19 +70,6 @@ const Home = () => {
       <section>
         <SwipeSize />
       </section>
-      <section className='section'>
-        <div className='history-title'>
-          <h2>Diaper History</h2>
-          <button className='btn-link' onClick={toggle}>
-            {historyText}
-          </button>
-        </div>
-        {historyContent === 'List' && <HistoryList />}
-        {historyContent === 'Graph' && (
-          <HistoryGraph history={babyData.diaperHistory} />
-        )}
-      </section>
-      <div style={{ height: '90px' }}></div>
       <Navbar />
     </div>
   );

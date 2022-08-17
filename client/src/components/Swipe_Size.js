@@ -3,6 +3,8 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { UserContext } from '../context/UserContext';
 import CardHeading from '../components/CardHeading';
 import CountForm from '../components/CountForm';
+import HistoryList from '../components/HistoryList';
+import HistoryGraph from '../components/HistoryGraph';
 import './Swipe_Size.css';
 import babyPR from '../images/babyPR.png';
 import babyNB from '../images/babyNB.png';
@@ -60,11 +62,15 @@ function SwipeSize() {
 
   const [totalInventory, setTotalInventory] = useState();
   const [currentSizeData, setCurrentSizeData] = useState();
+  const [sizeId, setSizeId] = useState();
   const [slideChange, setSlideChange] = useState(false);
   const [activeSlide, setActiveSlide] = useState(null);
 
   const [error, setError] = useState();
   const [addAmt, setAddAmt] = useState(0);
+  const [historyContent, setHistoryContent] = useState('List');
+  const [historyText, setHistoryText] = useState('Graph');
+  const [historyData, setHistoryData] = useState('');
   const userID = user._id;
   const sliderRef = useRef();
 
@@ -104,6 +110,7 @@ function SwipeSize() {
     if (!slideChange) {
       sliderRef.current.swiper.slideTo(currentSize);
     }
+    updateUsedHistory(currentData._id);
   };
   useEffect(async () => {
     loadTitleCard();
@@ -136,6 +143,7 @@ function SwipeSize() {
   const getKidData = async () => {
     try {
       const url = `/api/kids/${userID}/${user.currentChild}`;
+
       const headers = {
         'Content-Type': 'application/json',
         'x-auth-token': localStorage.getItem('jwt'),
@@ -163,6 +171,50 @@ function SwipeSize() {
     setViewableSize(size);
     let currentData = totalInventory.find((x) => x.size == size);
     setDisplayCount(currentData.onHand);
+    updateUsedHistory(currentData._id);
+    setSizeId(currentData._id);
+  };
+
+  const transformUsedDataStructure = (data) => {
+    const counts = data.reduce((partialCounts, datum) => {
+      if (partialCounts[datum.entryDate] === undefined) {
+        partialCounts[datum.entryDate] = datum.count;
+      } else {
+        partialCounts[datum.entryDate] += datum.count;
+      }
+
+      return partialCounts;
+    }, {});
+
+    const newData = Object.entries(counts).map((entry) => {
+      return {
+        entryDate: entry[0],
+        count: entry[1],
+      };
+    });
+
+    setHistoryData(newData);
+  };
+
+  const updateUsedHistory = async (size_id) => {
+    try {
+      const url = `/api/used/${size_id}`;
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': localStorage.getItem('jwt'),
+      };
+
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: headers,
+      });
+      const data = await res.json();
+
+      transformUsedDataStructure(data.used);
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    }
   };
 
   const addDiaper = async (e) => {
@@ -285,7 +337,16 @@ function SwipeSize() {
     await addUsed(currSize._id);
     await decrementOnHand(currSize._id);
   };
-
+  const toggle = (e) => {
+    let currentText = e.target.innerText;
+    if (currentText === 'Graph') {
+      setHistoryText('List');
+      setHistoryContent('Graph');
+    } else {
+      setHistoryText('Graph');
+      setHistoryContent('List');
+    }
+  };
   return (
     <>
       <section className='section'>
@@ -353,6 +414,21 @@ function SwipeSize() {
           </button>
         </form>
       </section>
+      <section className='section'>
+        <div className='history-title'>
+          <h2>Diaper History</h2>
+          <button className='btn-link' onClick={toggle}>
+            {historyText}
+          </button>
+        </div>
+        {historyContent === 'List' && (
+          <HistoryList history={historyData} sizeId={sizeId} />
+        )}
+        {historyContent === 'Graph' && (
+          <HistoryGraph history={historyData} sizeId={sizeId} />
+        )}
+      </section>
+      <div style={{ height: '90px' }}></div>
       {error && (
         <p style={{ color: '#d9534f', padding: '0 20px', textAlign: 'center' }}>
           {error}

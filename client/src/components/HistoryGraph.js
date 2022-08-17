@@ -30,13 +30,18 @@ const HistoryGraph = ({ history }) => {
               bottom: 0,
             }}
           >
-            <XAxis dataKey='date' />
+            <XAxis dataKey='entryDate' />
             <YAxis />
             {history.length > 6 && (
-              <Brush dataKey='date' height={20} stroke='#3F9AE0' endIndex={6} />
+              <Brush
+                dataKey='entryDate'
+                height={20}
+                stroke='#3F9AE0'
+                endIndex={6}
+              />
             )}
 
-            <Bar dataKey='amount' fill='#3F9AE0' />
+            <Bar dataKey='count' fill='#3F9AE0' />
           </BarChart>
         </ResponsiveContainer>
       )}

@@ -11,7 +11,10 @@ router.get('/:id', auth, async (req, res) => {
   let id = req.params.id;
   try {
     const record = await UsedRecord.findOne({ size_id: id });
-    if (!record) return res.send({ message: 'Did not find inventory records' });
+    if (!record)
+      return res.send({
+        message: 'Did not find inventory records. Please contact Admin',
+      });
     else res.send(record);
   } catch (error) {
     res.send({ message: error.message });
@@ -49,6 +52,98 @@ router.put('/add/:id', auth, async (req, res) => {
       }
     );
 
+    res.send(usedRecord);
+  } catch (error) {
+    console.log('error:', error);
+    res.send({ message: error.message });
+  }
+});
+
+/**
+ * @description edit/decrease used diaper record with size  - add record by date
+ */
+
+router.put('/edit/decrease/:id', auth, async (req, res) => {
+  let sizeId = req.params.id;
+  let newCount = req.body.newCount;
+  let submittedDate = req.body.date;
+
+  try {
+    const usedRecord = await UsedRecord.updateOne({ size_id: sizeId }, [
+      {
+        $addFields: {
+          outOfScope: {
+            $filter: {
+              input: '$used',
+              as: 'usedEntry',
+              cond: {
+                $ne: ['$$usedEntry.entryDate', submittedDate],
+              },
+            },
+          },
+          inScope: {
+            $filter: {
+              input: '$used',
+              as: 'usedEntry',
+              cond: {
+                $eq: ['$$usedEntry.entryDate', submittedDate],
+              },
+            },
+          },
+        },
+      },
+      {
+        $addFields: {
+          inScopeN: {
+            $slice: ['$inScope', newCount], // remaining amount
+          },
+        },
+      },
+      {
+        $set: {
+          used: {
+            $concatArrays: ['$outOfScope', '$inScopeN'],
+          },
+        },
+      },
+      {
+        $unset: ['outOfScope', 'inScope', 'inScopeN'],
+      },
+    ]);
+    res.send(usedRecord);
+  } catch (error) {
+    console.log('error:', error);
+    res.send({ message: error.message });
+  }
+});
+
+/**
+ * @description edit/increase used diaper record with size  - add record by date
+ */
+
+router.put('/edit/increase/:id', auth, async (req, res) => {
+  let sizeId = req.params.id;
+
+  let startingCount = req.body.startingCount;
+  let newCount = req.body.newCount;
+  let submittedDate = req.body.date;
+  let diff = newCount - startingCount;
+
+  try {
+    let obj = {
+      entryDate: submittedDate,
+      count: 1,
+    };
+
+    const usedRecord = await UsedRecord.findOne({ size_id: sizeId });
+
+    let usedData = usedRecord.used;
+
+    for (let i = 0; i < diff; i++) {
+      usedData.push(obj);
+    }
+    // push new usedData into mongo
+    usedRecord.save();
     res.send(usedRecord);
   } catch (error) {
     console.log('error:', error);

@@ -7,7 +7,6 @@ const { InventoryRecord } = require('../models/inventory.model');
 /**
  * @description GET get all inventory records by kid id
  */
-
 router.get('/:id', auth, async (req, res) => {
   let id = req.params.id;
   try {
@@ -45,10 +44,9 @@ router.put('/purchased', auth, async (req, res) => {
 });
 
 /**
- * @description PUT decrement onHand by size id
+ * @description PUT decrement 1 onHand by size id
  */
-
-router.put('/onHand', auth, async (req, res) => {
+router.put('/decOnHandOne', auth, async (req, res) => {
   let kidID = req.body.kid_id;
   let size = req.body.size;
 
@@ -69,13 +67,61 @@ router.put('/onHand', auth, async (req, res) => {
 });
 
 /**
+ * @description PUT decrement 'x' onHand by size id (edit mode)
+ */
+router.put('/decOnHand/:id', auth, async (req, res) => {
+  let kidID = req.params.id;
+  let sizeId = req.body.sizeId;
+  let amt = req.body.removeAmt;
+
+  try {
+    const record = await InventoryRecord.updateOne(
+      { kid_id: kidID },
+      {
+        $inc: {
+          'inventory.$[el].onHand': -amt,
+        },
+      },
+      { arrayFilters: [{ 'el._id': sizeId }] }
+    );
+    res.send(record);
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+});
+
+/**
+ * @description PUT increment onHand by size id (edit mode)
+ */
+router.put('/incOnHand/:id', auth, async (req, res) => {
+  let kidID = req.params.id;
+  let sizeId = req.body.sizeId;
+  let addAmt = req.body.addAmt;
+
+  try {
+    const record = await InventoryRecord.updateOne(
+      { kid_id: kidID },
+      {
+        $inc: {
+          'inventory.$[el].onHand': addAmt,
+        },
+      },
+      { arrayFilters: [{ 'el._id': sizeId }] }
+    );
+    res.send(record);
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+});
+
+/**
  * @description GET all purchased inventory by kid_id
  */
 router.get('/purchased/:id', auth, async (req, res) => {
   let id = req.params.id;
   try {
     const record = await InventoryRecord.findOne({ kid_id: id });
-    console.log('RECORD', record.inventory);
+
     if (!record) return res.send({ message: 'Did not find inventory records' });
     else res.send(record.inventory);
   } catch (error) {

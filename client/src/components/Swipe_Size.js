@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 
 import { UserContext } from '../context/UserContext';
-import CardHeading from '../components/CardHeading';
-import CountForm from '../components/CountForm';
 import HistoryList from '../components/HistoryList';
 import HistoryGraph from '../components/HistoryGraph';
 import './Swipe_Size.css';
@@ -76,9 +74,11 @@ function SwipeSize() {
 
   const loadTitleCard = async () => {
     let data = await getKidData();
+
     let inventoryData = await getInventoryRecord();
 
     setTotalInventory(inventoryData);
+
     let currentSize;
     switch (data.currentSize) {
       case 'Newborn':
@@ -105,6 +105,7 @@ function SwipeSize() {
       useableSize = viewableSize;
     }
     let currentData = inventoryData.find((x) => x.size == useableSize);
+    setSizeId(currentData._id);
     setCurrentSizeData(currentData);
     setDisplayCount(currentData.onHand);
     if (!slideChange) {
@@ -133,6 +134,7 @@ function SwipeSize() {
 
       if (data.message) {
         setError(data.message);
+        console.error(data.message);
         return;
       }
       return data;
@@ -156,7 +158,7 @@ function SwipeSize() {
       const data = await res.json();
 
       if (data.message) {
-        console.log(data);
+        console.error(data.message);
         setError(data.message);
         return;
       }
@@ -210,6 +212,12 @@ function SwipeSize() {
       });
       const data = await res.json();
 
+      if (data.message) {
+        setError(data.message);
+        return;
+      }
+      setError('');
+
       transformUsedDataStructure(data.used);
     } catch (error) {
       console.log(error);
@@ -247,6 +255,7 @@ function SwipeSize() {
       const data = await res.json();
 
       if (data.message) {
+        console.error(data.message);
         setError(data.message);
         return;
       }
@@ -267,14 +276,14 @@ function SwipeSize() {
     today = mm + '/' + dd + '/' + yyyy;
     return today;
   };
-  const decrementOnHand = async () => {
+  const decrementInventoryOnHand = async () => {
     let body = {
       kid_id: user.currentChild,
       size: viewableSize,
     };
 
     try {
-      const url = `/api/inventory/onHand`;
+      const url = `/api/inventory/decOnHandOne`;
 
       const headers = {
         'Content-Type': 'application/json',
@@ -289,6 +298,7 @@ function SwipeSize() {
       const data = await res.json();
 
       if (data.message) {
+        console.error(data.message);
         setError(data.message);
         return;
       }
@@ -298,7 +308,7 @@ function SwipeSize() {
       setError(error.message);
     }
   };
-  const addUsed = async (size_id) => {
+  const incrementUsedRecords = async (size_id) => {
     let body = {
       entryDate: fmtTodayDate(),
     };
@@ -319,6 +329,7 @@ function SwipeSize() {
       const data = await res.json();
 
       if (data.message) {
+        console.error(data.message);
         setError(data.message);
         return;
       }
@@ -334,8 +345,8 @@ function SwipeSize() {
 
     let sizeData = JSON.parse(sessionStorage.getItem('sizeData'));
     let currSize = sizeData.find((el) => el.size == viewableSize);
-    await addUsed(currSize._id);
-    await decrementOnHand(currSize._id);
+    await incrementUsedRecords(currSize._id);
+    await decrementInventoryOnHand(currSize._id);
   };
   const toggle = (e) => {
     let currentText = e.target.innerText;
@@ -422,18 +433,24 @@ function SwipeSize() {
           </button>
         </div>
         {historyContent === 'List' && (
-          <HistoryList history={historyData} sizeId={sizeId} />
+          <HistoryList
+            history={historyData}
+            sizeId={sizeId}
+            kidId={user.currentChild}
+            loadTitleCard={loadTitleCard}
+            decrementInventoryOnHand={decrementInventoryOnHand}
+          />
         )}
         {historyContent === 'Graph' && (
           <HistoryGraph history={historyData} sizeId={sizeId} />
         )}
       </section>
-      <div style={{ height: '90px' }}></div>
       {error && (
         <p style={{ color: '#d9534f', padding: '0 20px', textAlign: 'center' }}>
           {error}
         </p>
       )}
+      <div style={{ height: '90px' }}></div>
     </>
   );
 }

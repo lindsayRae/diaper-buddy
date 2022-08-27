@@ -4,7 +4,13 @@ import './HistoryGraphs.css';
 import Modal from './Modal/Modal';
 import EditHistory from './EditHistory';
 
-const HistoryList = ({ history, sizeId }) => {
+const HistoryList = ({
+  history,
+  sizeId,
+  loadTitleCard,
+  decrementOnHand,
+  kidId,
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState();
 
@@ -45,6 +51,9 @@ const HistoryList = ({ history, sizeId }) => {
         <EditHistory
           modalData={modalData}
           sizeId={sizeId}
+          loadTitleCard={loadTitleCard}
+          decrementOnHand={decrementOnHand}
+          kidId={kidId}
           closeModal={() => setModalVisible(false)}
         />
       </Modal>

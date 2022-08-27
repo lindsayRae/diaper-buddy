@@ -16,7 +16,7 @@ const inventorySetup = async (newKidResult, headers, baseURL) => {
   });
 
   let json = await response.json();
-  console.log('inventoySetup json', json); // has inventory_id
+
   return json;
 };
 
@@ -53,11 +53,11 @@ router.post('/', auth, async (req, res) => {
     currentSize: req.body.currentSize,
     lowAlert: req.body.lowAlert,
   };
-  console.log('newKid body', newKid);
+
   try {
     record.kids.push(newKid);
     let newKidResult = await record.save(newKid);
-    console.log('newKidResult', newKidResult);
+
     if (!newKidResult) {
       res.send({ message: 'Could not add child' });
       return;

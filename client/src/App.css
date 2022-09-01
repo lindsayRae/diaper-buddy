@@ -95,6 +95,10 @@ caption {
 .d-flex {
   display: flex;
 }
+.d-center {
+  display: flex;
+  justify-content: center;
+}
 .background-purple {
   background: var(--c-background-purple);
   height: 100vh;
@@ -181,6 +185,15 @@ a {
   outline: none;
 }
 
+.btn-link-danger {
+  color: var(--c-danger);
+}
+
+.btn-link-between {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
 .history-title {
   display: flex;
   justify-content: space-between;

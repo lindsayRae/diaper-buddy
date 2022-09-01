@@ -4,6 +4,7 @@ import { UserContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../components/Modal/Modal';
 import AddChild from '../components/AddChild';
+import DeleteChild from '../components/DeleteChild';
 import Logout from '../components/Logout';
 import Navbar from '../components/Nav/Navbar';
 import Toast from '../components/Toast/Toast';
@@ -55,6 +56,7 @@ const Settings = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState();
   const [isAddChild, setIsAddChild] = useState(false);
+  const [isDeleteChild, setIsDeleteChild] = useState(false);
   const [error, setError] = useState('');
 
   const [list, setList] = useState([]);
@@ -74,6 +76,18 @@ const Settings = () => {
       fontSize: '1.4rem',
     }),
   };
+  const closeModal = () => {
+    setModalVisible(false);
+    setIsAddChild(false);
+    setIsDeleteChild(false);
+  };
+  const setNewCurrentChild = async (data, closeModal) => {
+    console.log(data);
+    // update user currentChild
+    updateUserData(data.firstRecord._id);
+    await getKids();
+    closeModal();
+  };
 
   const setMultiChildren = async (data) => {
     const nameOptionList = await createNameOptions(data);
@@ -88,7 +102,7 @@ const Settings = () => {
       label: currentChildData.firstName,
       value: currentChildData.firstName,
     });
-
+    localStorage.setItem('babyName', currentChildData.firstName);
     setBrandOption({
       label: currentChildData.brandPreference,
       value: currentChildData.brandPreference,
@@ -176,6 +190,10 @@ const Settings = () => {
 
   const openAddChild = (e) => {
     setIsAddChild(true);
+    setModalVisible(true);
+  };
+  const openDeleteChild = (e) => {
+    setIsDeleteChild(true);
     setModalVisible(true);
   };
   const showToast = (type, description) => {
@@ -412,7 +430,16 @@ const Settings = () => {
           </div>
 
           <button className='btn btn-lt settings-btn'>Save</button>
-          <div style={{ textAlign: 'right', marginTop: '20px' }}>
+          <div className='btn-link-between'>
+            <button
+              type='button'
+              className='btn-link btn-link-danger'
+              onClick={() => {
+                openDeleteChild();
+              }}
+            >
+              Delete {localStorage.getItem('babyName')}
+            </button>
             <button
               type='button'
               className='btn-link'
@@ -425,15 +452,22 @@ const Settings = () => {
           </div>
         </form>
       </section>
-      <Modal open={modalVisible} closeModal={() => setModalVisible(false)}>
+      <Modal open={modalVisible} closeModal={closeModal}>
         {isAddChild && (
           <AddChild
             user={user}
             updateUserData={updateUserData}
-            closeModal={() => setModalVisible(false)}
+            closeModal={closeModal}
             getKids={getKids}
             customStyles={customStyles}
             showToast={showToast}
+          />
+        )}
+        {isDeleteChild && (
+          <DeleteChild
+            user={user}
+            setNewCurrentChild={setNewCurrentChild}
+            closeModal={closeModal}
           />
         )}
       </Modal>

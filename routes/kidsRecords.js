@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const { KidsRecord, validateKid } = require('../models/kids.model');
 const { InventoryRecord } = require('../models/inventory.model');
+const { UsedRecord } = require('../models/used.model');
 
 const inventorySetup = async (newKidResult, headers, baseURL) => {
   let url = `${baseURL}/api/kids/inventorysetup/${
@@ -33,7 +34,7 @@ router.post('/', auth, async (req, res) => {
       .send({ status: 400, message: error.details[0].message });
 
   const record = await KidsRecord.findOne({ user_id: req.body.user_id });
-  console.log('record', record);
+
   if (!record) {
     return { message: 'Did not find that user.' };
   }
@@ -150,7 +151,7 @@ router.put('/', auth, async (req, res) => {
         },
       }
     );
-    console.log('PUT result', result);
+
     if (!result) {
       res.send({ message: 'No kids for this user.' });
       return;
@@ -206,23 +207,64 @@ router.get('/:user_id', auth, async (req, res) => {
 /**
  * @description DELETE a kid by user_id and kidID
  */
-router.delete('/:id', auth, async (req, res) => {
-  let id = req.params.id;
-  let kidID = req.body.kidID;
+router.delete('/:user_id', auth, async (req, res) => {
+  let kidId = req.body.kid_id;
 
-  console.log('kidID', kidID);
+  let id0 = req.body.id0;
+  let id1 = req.body.id1;
+  let id2 = req.body.id2;
+  let id3 = req.body.id3;
+  let id4 = req.body.id4;
+
+  let userId = req.params.user_id;
+
   try {
-    let record = await KidsRecord.findOne({ user_id: id });
-    console.log('kids record', record);
-    let subRecord = record.kids.id(kidID);
+    let ready = 0;
+    //? delete inventoryRecords
+    let inventoryRecords = await InventoryRecord.deleteOne({ kid_id: kidId });
+    console.log('inventoryRecords: ', inventoryRecords);
+    if (inventoryRecords.deletedCount == 0) {
+      res.send({ message: 'Error trying to delete Inventory Records' });
+      return;
+    } else {
+      ready = 1;
+    }
 
-    if (subRecord) {
-      subRecord.remove();
+    //? delete kidsRecord
+    let record = await KidsRecord.findOne({ user_id: userId });
+    console.log('kids record', record);
+    let subRecord = record.kids;
+    let obj = subRecord.find((x) => x._id == kidId);
+
+    if (obj) {
+      obj.remove();
       record.save();
-      res.send({ removed: true });
+      ready = 2;
     } else {
       res.send({ message: 'Record not found. Could not delete.' });
+      return;
     }
+
+    //? delete usedRecords
+    let usedRecords = await UsedRecord.deleteMany({
+      size_id: {
+        $in: [id0, id1, id2, id3, id4],
+      },
+    });
+    console.log('usedRecords: ', usedRecords);
+    if (usedRecords) {
+      ready = 3;
+    } else {
+      res.send({ message: 'Record not found. Could not delete.' });
+      return;
+    }
+    if (ready === 3) {
+      let remainingRecord = await KidsRecord.findOne({ user_id: userId });
+      console.log('remainingRecord', remainingRecord);
+      res.send({ firstRecord: remainingRecord.kids[0] });
+    }
+
+    //! These all work individually, now mak them work together with only 1 res.send()
   } catch (error) {
     res.send({ message: error.message });
   }

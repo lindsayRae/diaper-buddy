@@ -22,6 +22,34 @@ router.get('/:id', auth, async (req, res) => {
 });
 
 /**
+ * @description GET multiple used record by size id
+ */
+router.get('/:id0/:id1/:id2/:id3/:id4', auth, async (req, res) => {
+  console.log(req.params.id0);
+  try {
+    const records = await UsedRecord.find({
+      size_id: {
+        $in: [
+          `${req.params.id0}`,
+          `${req.params.id1}`,
+          `${req.params.id2}`,
+          `${req.params.id3}`,
+          `${req.params.id4}`,
+        ],
+      },
+    });
+    if (!records)
+      return res.send({
+        message: 'Did not find inventory records.',
+      });
+    else res.send(records);
+  } catch (error) {
+    console.log(error);
+    res.send({ message: error.message });
+  }
+});
+
+/**
  * @description called after creating a new kid to set up their empty used inventory
  */
 router.post('/:size_id', auth, async (req, res) => {

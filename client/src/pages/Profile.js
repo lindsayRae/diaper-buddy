@@ -29,6 +29,32 @@ const Profile = () => {
     buildUI();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const usedData = async () => {
+    let sizeData = JSON.parse(sessionStorage.getItem('sizeData'));
+    let idArr = sizeData.map((el) => el._id);
+
+    try {
+      const url = `/api/used/${idArr[0]}/${idArr[1]}/${idArr[2]}/${idArr[3]}/${idArr[4]} `;
+      console.log(url);
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': localStorage.getItem('jwt'),
+      };
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: headers,
+      });
+      const data = await res.json();
+      if (data.message) {
+        setError(data.message);
+        return;
+      }
+      console.log(data);
+      return data;
+    } catch (error) {
+      setError(error.message);
+    }
+  };
   const inventoryData = async () => {
     try {
       const url = `/api/inventory/${user.currentChild}`;
@@ -54,14 +80,18 @@ const Profile = () => {
     }
   };
   const buildUI = async () => {
-    let results = await inventoryData();
+    let purchasedResults = await inventoryData();
+    let usedResults = await usedData();
 
-    const totalPurchased = results
+    const totalPurchased = purchasedResults
       .map((item) => item.purchased)
       .reduce((prev, next) => prev + next);
+    const totalUsed = usedResults.reduce(
+      (acc, o) => acc + parseInt(o.used.length),
+      0
+    );
 
-    //? const totalUsed =
-    //? setUsed()
+    setUsed(totalUsed);
     setPurchased(totalPurchased);
   };
 

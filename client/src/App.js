@@ -8,6 +8,7 @@ import './App.css';
 import SignIn from './pages/SignIn';
 import Register from './pages/Register';
 import Activate from './components/SignIn/Activate';
+import Reactivated from './components/SignIn/Reactivated';
 import StartPassReset from './pages/StartPassReset';
 import SetNewPass from './pages/SetNewPassword';
 import Home from './pages/Home';
@@ -25,6 +26,7 @@ function App() {
           <Route path='/' element={<SignIn />} />
           <Route path='/register' element={<Register />} />
           <Route path='/activate' element={<Activate />} />
+          <Route path='/reactivate' element={<Reactivated />} />
           <Route path='/startpassreset' element={<StartPassReset />} />
           <Route path='/pass-reset' element={<SetNewPass />} />
 

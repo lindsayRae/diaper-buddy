@@ -63,18 +63,22 @@
   text-align: center;
 }
 
+.sent-container {
+  height: 50vh;
+}
 .sent-container h1 {
   color: var(--c-white);
-  font-size: 1.8rem;
   text-align: center;
-  margin-bottom: 0.5rem;
 }
 
 .sent-container p {
   color: var(--c-white-50);
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   text-align: center;
-  margin: 0 1rem;
+}
+
+.text-dark {
+  color: var(--primary-text) !important;
 }
 
 .error-msg {

@@ -19,9 +19,16 @@ router.post('/register', async (req, res) => {
 
   let user = await User.findOne({ email: req.body.email });
 
-  if (user) {
+  if (user && user.activated) {
     return res.status(400).send({ message: 'User already registered.' });
   }
+  if (user && !user.activated) {
+    return res.status(400).send({
+      message:
+        'User already registered, but not activated. Please go back to login screen.',
+    });
+  }
+
   if (req.body.password.length < 8) {
     return res
       .status(400)
@@ -85,6 +92,36 @@ router.post('/register', async (req, res) => {
     });
   }
 });
+
+/**
+ * @description UPDATE user to deactivate or reactivate
+ */
+router.put('/activateStatus', async (req, res) => {
+  try {
+    let user = await User.findOne({ _id: req.body.id });
+
+    if (!user) {
+      return res.status(400).send({
+        message: 'Could not find user.',
+      });
+    }
+    user.activated = req.body.activateStatus;
+    user.save();
+    res.send(user);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: 'There was a problem with the server, please try again later.',
+    });
+  }
+});
+
+/**
+ * @description UPDATE user active status with current password
+ */
+// router.put('/reactivate', async (req, res) => {
+
+// })
 
 /**
  * @description called after creating a new user to set up their empty kids array
@@ -194,4 +231,5 @@ router.put('/update/:id', auth, async (req, res) => {
     res.status(500).send({ message: error });
   }
 });
+
 module.exports = router;

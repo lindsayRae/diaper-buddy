@@ -1,5 +1,7 @@
 import React, { useState, useContext } from 'react';
 
+import Modal from '../Modal/Modal';
+import Reactivate1 from '../Reactivate1';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import '../../components/Inputs.css';
@@ -8,6 +10,7 @@ import './SignIn.css';
 const SignInForm = () => {
   let navigate = useNavigate();
 
+  const [modalVisible, setModalVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -51,6 +54,12 @@ const SignInForm = () => {
 
       const data = await response.json();
       console.log('login data:', data);
+      if (data.message === 'This user is deactivated') {
+        // show modal
+        //
+        setModalVisible(true);
+        return;
+      }
       if (data.message) {
         setError(data.message);
         return;
@@ -104,6 +113,16 @@ const SignInForm = () => {
       <p className='forgot'>
         <NavLink to='/startpassreset'>Forgot Password</NavLink>
       </p>
+      <p className='forgot'>
+        <NavLink to='#'>Forgot Password & Reactivate Account</NavLink>
+      </p>
+      <Modal open={modalVisible} closeModal={() => setModalVisible(false)}>
+        <Reactivate1
+          password={password}
+          email={email}
+          closeModal={() => setModalVisible(false)}
+        />
+      </Modal>
     </div>
   );
 };

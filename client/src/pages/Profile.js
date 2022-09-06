@@ -3,6 +3,7 @@ import Modal from '../components/Modal/Modal';
 import EditProfile from '../components/EditProfile';
 import Logout from '../components/Logout';
 import Navbar from '../components/Nav/Navbar';
+import DeactivateAccount from '../components/DeactivateAccount';
 import { UserContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { MdLogin, MdLogout } from 'react-icons/md';
@@ -17,6 +18,8 @@ const Profile = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [purchased, setPurchased] = useState(0);
   const [used, setUsed] = useState(0);
+  const [isEdit, setIsEdit] = useState(false);
+  const [isDeactivateAccount, setIsDeactivateAccount] = useState(false);
   const [error, setError] = useState('');
   const { user, setUser } = useContext(UserContext);
   const isAuthenticated = localStorage.getItem('userData');
@@ -28,7 +31,21 @@ const Profile = () => {
     }
     buildUI();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
+  const closeModal = () => {
+    setModalVisible(false);
+    setIsEdit(false);
+    setIsDeactivateAccount(false);
+  };
+  const openEditModal = () => {
+    setModalVisible(true);
+    setIsDeactivateAccount(false);
+    setIsEdit(true);
+  };
+  const openDeleteModal = () => {
+    setModalVisible(true);
+    setIsEdit(false);
+    setIsDeactivateAccount(true);
+  };
   const usedData = async () => {
     let sizeData = JSON.parse(sessionStorage.getItem('sizeData'));
     let idArr = sizeData.map((el) => el._id);
@@ -109,7 +126,7 @@ const Profile = () => {
       <section className='section'>
         <div className='profile-heading'>
           <h2 className='profile-name'>{user.firstName}</h2>
-          <button className='btn-link' onClick={() => setModalVisible(true)}>
+          <button className='btn-link' onClick={() => openEditModal()}>
             Edit
           </button>
         </div>
@@ -133,7 +150,7 @@ const Profile = () => {
           </div>
         </div>
       </section>
-      <section className='section'>
+      <section className='section' style={{ paddingBottom: '100px' }}>
         <h3 style={{ fontWeight: '600' }}>Username & Password</h3>
         <div className='contact-container'>
           <div className='profile-icons'>
@@ -160,13 +177,33 @@ const Profile = () => {
             </div>
           </div>
         </div>
+        <div style={{ marginTop: '4rem' }}>
+          <button
+            type='button'
+            className='btn-link btn-link-danger'
+            onClick={() => {
+              openDeleteModal();
+            }}
+          >
+            Deactivate My Account
+          </button>
+        </div>
       </section>
       <Modal open={modalVisible} closeModal={() => setModalVisible(false)}>
-        <EditProfile
-          userData={user}
-          setUser={setUser}
-          closeModal={() => setModalVisible(false)}
-        />
+        {isEdit && (
+          <EditProfile
+            userData={user}
+            setUser={setUser}
+            closeModal={closeModal}
+          />
+        )}
+        {isDeactivateAccount && (
+          <DeactivateAccount
+            user={user}
+            setUser={setUser}
+            closeModal={closeModal}
+          />
+        )}
       </Modal>
       <Navbar />
     </div>

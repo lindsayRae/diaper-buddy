@@ -19,6 +19,7 @@ import {
 } from '../../node_modules/swiper/react/swiper-react';
 
 import '../../node_modules/swiper/swiper-bundle.min.css';
+import Toast from '../components/Toast/Toast';
 
 const sizeTitles = [
   {
@@ -69,9 +70,100 @@ function SwipeSize() {
   const [historyContent, setHistoryContent] = useState('List');
   const [historyText, setHistoryText] = useState('Graph');
   const [historyData, setHistoryData] = useState('');
+  const [lowAlertAmount, setLowAlertAmount] = useState();
+  const [lowAlertSent, setLowAlertSent] = useState(undefined);
+
+  const [list, setList] = useState([]);
+  let toastProperties = null;
+  const showToast = (type, description) => {
+    switch (type) {
+      case 'success':
+        toastProperties = {
+          id: list.length + 1,
+          description: 'Saved',
+          backgroundColor: '#5cb85c',
+        };
+        break;
+      case 'sent':
+        toastProperties = {
+          id: list.length + 1,
+          description: 'Low alert has been emailed to you.',
+          backgroundColor: '#5cb85c',
+        };
+        break;
+      case 'info':
+        toastProperties = {
+          id: list.length + 1,
+          description: description,
+          backgroundColor: '#5bc0de',
+        };
+        break;
+      case 'danger':
+        toastProperties = {
+          id: list.length + 1,
+          description: 'This is a error',
+          backgroundColor: '#d9534f',
+        };
+        break;
+      default:
+        toastProperties = [];
+    }
+
+    setList([...list, toastProperties]);
+  };
   const userID = user._id;
   const sliderRef = useRef();
+  //console.log(user);
+  const updateLowAlert = async (status) => {
+    let body = {
+      kid_id: user.currentChild,
+      alertStatus: status,
+      firstName: user.firstName,
+      email: user.email,
+      lowAlertAmount: lowAlertAmount,
+    };
+    try {
+      const url = `/api/kids/alertStatus/${user._id}`;
 
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': localStorage.getItem('jwt'),
+      };
+
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      console.log('/alertStatus/', data);
+      if (data.message) {
+        console.error(data.message);
+        setError(data.message);
+        return;
+      }
+      if (data.emailed) {
+        showToast('sent');
+      }
+      setLowAlertSent(status);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const checkLowAlertStatus = (onHand) => {
+    if (lowAlertSent === undefined || lowAlertAmount == 0) {
+      console.log('** do not send low alert');
+      return;
+    } else if (!lowAlertSent && onHand <= lowAlertAmount) {
+      console.log('** send low alert email, then updateLowAlert');
+      // send lowAlertEmail -> set
+      updateLowAlert(true); // -> show toast email sent
+    } else if (lowAlertSent && onHand > lowAlertAmount) {
+      updateLowAlert(false);
+    } else {
+      console.log('no update needed...');
+    }
+  };
   const loadTitleCard = async () => {
     let data = await getKidData();
 
@@ -107,7 +199,8 @@ function SwipeSize() {
     let currentData = inventoryData.find((x) => x.size == useableSize);
     setSizeId(currentData._id);
     setCurrentSizeData(currentData);
-    setDisplayCount(currentData.onHand);
+    await setDisplayCount(currentData.onHand);
+    checkLowAlertStatus(currentData.onHand);
     if (!slideChange) {
       sliderRef.current.swiper.slideTo(currentSize);
     }
@@ -162,6 +255,8 @@ function SwipeSize() {
         setError(data.message);
         return;
       }
+      setLowAlertAmount(data.lowAlert);
+      setLowAlertSent(data.lowAlertSent);
       return data;
     } catch (err) {
       console.log(err);
@@ -360,10 +455,12 @@ function SwipeSize() {
   };
   return (
     <>
+      <Toast toastList={list} position='top-left' setList={setList} />
       <section className='section'>
         <div className='full-card'>
           <div className='card-count-text'>
             <div className='diaper-ct'>{displayCount}</div>
+
             <h2>
               {viewableSize == 0 ? 'Newborn' : `Size ${viewableSize}`} diapers
               on hand.

@@ -5,6 +5,7 @@ const router = express.Router();
 const { KidsRecord, validateKid } = require('../models/kids.model');
 const { InventoryRecord } = require('../models/inventory.model');
 const { UsedRecord } = require('../models/used.model');
+const { sendLowAlertEmail } = require('../middleware/email-lowalert');
 
 const inventorySetup = async (newKidResult, headers, baseURL) => {
   let url = `${baseURL}/api/kids/inventorysetup/${
@@ -53,6 +54,7 @@ router.post('/', auth, async (req, res) => {
     brandPreference: req.body.brandPreference,
     currentSize: req.body.currentSize,
     lowAlert: req.body.lowAlert,
+    lowAlertSent: false,
   };
 
   try {
@@ -154,6 +156,45 @@ router.put('/', auth, async (req, res) => {
 
     if (!result) {
       res.send({ message: 'No kids for this user.' });
+      return;
+    }
+    res.send(result);
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+});
+
+/**
+ * @description edit a child's alert status
+ *
+ */
+router.put('/alertStatus/:id', auth, async (req, res) => {
+  let id = req.params.id;
+  let kidID = req.body.kid_id;
+  let alertStatus = req.body.alertStatus;
+  let firstName = req.body.firstName;
+  let email = req.body.email;
+  let lowAlertAmount = req.body.lowAlertAmount;
+
+  try {
+    let result = await KidsRecord.updateOne(
+      { user_id: id, 'kids._id': kidID },
+      {
+        $set: {
+          'kids.$.lowAlertSent': alertStatus,
+        },
+      }
+    );
+
+    if (!result) {
+      res.send({ message: 'No kids for this user.' });
+      return;
+    }
+    console.log(result);
+    if (alertStatus == true) {
+      console.log('email sending to', email);
+      sendLowAlertEmail(firstName, email, lowAlertAmount);
+      res.send({ emailed: email });
       return;
     }
     res.send(result);

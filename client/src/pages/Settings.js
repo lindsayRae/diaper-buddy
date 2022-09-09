@@ -422,7 +422,7 @@ const Settings = () => {
             <Select
               className='settings-select'
               styles={customStyles}
-              onChange={setSizeOption}
+              onChange={setAlertOption}
               options={alertList}
               value={alertOption}
               placeholder={'Select Low Alert'}

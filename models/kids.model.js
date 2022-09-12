@@ -23,6 +23,9 @@ const kidsSchema = new mongoose.Schema({
   lowAlert: {
     type: String,
   },
+  lowAlertSent: {
+    type: Boolean,
+  },
   totalPurchased: {
     type: Number,
   },

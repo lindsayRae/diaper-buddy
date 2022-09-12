@@ -204,10 +204,14 @@ const Pricing = () => {
   const setRemainingDisplay = async (currSize) => {
     let data = await getInventoryData();
     let avgUsage = 10;
-    currSize = currSize.slice(-1);
+    if (currSize === 'Newborn') {
+      currSize = 0;
+    } else {
+      currSize = currSize.slice(-1);
+    }
     let onHand = data.find((x) => x.size == currSize).onHand;
     let daysRemaining = onHand / avgUsage;
-    setDays(daysRemaining);
+    setDays(Math.floor(daysRemaining));
   };
   return (
     <div className='background-light'>

@@ -20,6 +20,7 @@ import {
 
 import '../../node_modules/swiper/swiper-bundle.min.css';
 import Toast from '../components/Toast/Toast';
+import { CSSTransition } from 'react-transition-group';
 
 const sizeTitles = [
   {
@@ -74,6 +75,7 @@ function SwipeSize() {
   const [lowAlertSent, setLowAlertSent] = useState(undefined);
 
   const [list, setList] = useState([]);
+  const [inProp, setInProp] = useState(false);
   let toastProperties = null;
   const showToast = (type, description) => {
     switch (type) {
@@ -200,11 +202,16 @@ function SwipeSize() {
     setSizeId(currentData._id);
     setCurrentSizeData(currentData);
     await setDisplayCount(currentData.onHand);
+
     checkLowAlertStatus(currentData.onHand);
     if (!slideChange) {
       sliderRef.current.swiper.slideTo(currentSize);
     }
     updateUsedHistory(currentData._id);
+
+    setTimeout(() => {
+      setInProp(false);
+    }, 1000);
   };
   useEffect(async () => {
     loadTitleCard();
@@ -357,6 +364,7 @@ function SwipeSize() {
 
       setAddAmt(0);
       loadTitleCard();
+      setInProp(true);
     } catch (error) {
       console.log(error);
       setError(error.message);
@@ -442,6 +450,7 @@ function SwipeSize() {
     let currSize = sizeData.find((el) => el.size == viewableSize);
     await incrementUsedRecords(currSize._id);
     await decrementInventoryOnHand(currSize._id);
+    setInProp(true);
   };
   const toggle = (e) => {
     let currentText = e.target.innerText;
@@ -459,7 +468,9 @@ function SwipeSize() {
       <section className='section'>
         <div className='full-card'>
           <div className='card-count-text'>
-            <div className='diaper-ct'>{displayCount}</div>
+            <CSSTransition in={inProp} timeout={2500} classNames='my-node'>
+              <div className='diaper-ct'>{displayCount}</div>
+            </CSSTransition>
 
             <h2>
               {viewableSize == 0 ? 'Newborn' : `Size ${viewableSize}`} diapers

@@ -131,7 +131,6 @@ const Pricing = () => {
         headers: headers,
       });
       const data = await res.json();
-      console.log('kid data', data);
 
       let brandIndex;
       switch (data.brandPreference) {

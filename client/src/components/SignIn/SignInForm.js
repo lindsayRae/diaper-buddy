@@ -113,9 +113,9 @@ const SignInForm = () => {
       <p className='forgot'>
         <NavLink to='/startpassreset'>Forgot Password</NavLink>
       </p>
-      <p className='forgot'>
+      {/* <p className='forgot'>
         <NavLink to='#'>Forgot Password & Reactivate Account</NavLink>
-      </p>
+      </p> */}
       <Modal open={modalVisible} closeModal={() => setModalVisible(false)}>
         <Reactivate1
           password={password}

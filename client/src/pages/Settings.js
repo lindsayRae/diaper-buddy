@@ -8,9 +8,10 @@ import DeleteChild from '../components/DeleteChild';
 import Logout from '../components/Logout';
 import Navbar from '../components/Nav/Navbar';
 import Toast from '../components/Toast/Toast';
+// import FileUploader from '../components/FileUploader';
 
 import icon from '../images/icon.png';
-import { FaBaby } from 'react-icons/fa';
+import { FaBaby, FaRegUserCircle } from 'react-icons/fa';
 import { AiOutlineShoppingCart, AiOutlineBell } from 'react-icons/ai';
 import { TiSortNumerically } from 'react-icons/ti';
 import './Settings.css';
@@ -50,6 +51,7 @@ const Settings = () => {
   const [brandOption, setBrandOption] = useState();
   const [sizeOption, setSizeOption] = useState();
   const [alertOption, setAlertOption] = useState();
+  const [imageUpload, setImageUpload] = useState(null);
 
   const [babyID, setBabyID] = useState('');
 
@@ -253,27 +255,45 @@ const Settings = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let body = {
-      user_id: user._id,
-      _id: babyID,
-      firstName: kidsData.length === 1 ? babyName : nameOption.value,
-      brandPreference: brandOption.value,
-      currentSize: sizeOption.value,
-      lowAlert: alertOption.value,
-    };
+    const formData = new FormData();
+
+    formData.append('user_id', user._id);
+    formData.append('_id', babyID);
+    if (kidsData.length === 1) {
+      formData.append('firstName', babyName);
+    } else {
+      formData.append('firstName', nameOption.value);
+    }
+
+    formData.append('brandPreference', brandOption.value);
+    formData.append('currentSize', sizeOption.value);
+    formData.append('lowAlert', alertOption.value);
+    formData.append('image', imageUpload);
+
+    // let body = {
+    //   user_id: user._id,
+    //   _id: babyID,
+    //   firstName: kidsData.length === 1 ? babyName : nameOption.value,
+    //   brandPreference: brandOption.value,
+    //   currentSize: sizeOption.value,
+    //   lowAlert: alertOption.value,
+    //   //image: imageUpload,
+    // };
+    // console.log(body);
+
+    console.log('formData', formData);
 
     try {
       const res = await fetch(`/api/kids`, {
         method: 'PUT',
         headers: {
           'x-auth-token': localStorage.getItem('jwt'),
-          'Content-type': 'application/json',
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(formData),
       });
 
       const data = await res.json();
-      console.log(data);
+      console.log('data', data);
       if (data.message) {
         setError(data.message);
         return;
@@ -317,7 +337,7 @@ const Settings = () => {
         </div>
       </section>
       <section className='section' style={{ marginTop: '20px' }}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType='multipart/form-data'>
           {kidsData.length === 1 ? (
             <div className='input-line-container'>
               <FaBaby
@@ -428,8 +448,26 @@ const Settings = () => {
               placeholder={'Select Low Alert'}
             />
           </div>
+          <div className='input-line-container'>
+            <FaRegUserCircle
+              size={24}
+              className='select-icon'
+              style={{ marginTop: '5px' }}
+            />
 
-          <button className='btn btn-lt settings-btn'>Save</button>
+            <input
+              type='file'
+              name='image'
+              className='custom-file-input'
+              accept='image/*'
+              onChange={(e) => {
+                console.log(e.target.files[0]);
+                setImageUpload(e.target.files[0]);
+              }}
+            />
+          </div>
+
+          <button className='btn btn-green settings-btn'>Save</button>
           <div className='btn-link-between'>
             <button
               type='button'

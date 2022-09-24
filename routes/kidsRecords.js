@@ -2,10 +2,22 @@ const auth = require('../middleware/auth');
 const fetch = require('node-fetch');
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const crypto = require('crypto');
+const sharp = require('sharp');
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+const { uploadFile, deleteFile, getObjectSignedUrl } = require('../s3');
+
 const { KidsRecord, validateKid } = require('../models/kids.model');
 const { InventoryRecord } = require('../models/inventory.model');
 const { UsedRecord } = require('../models/used.model');
 const { sendLowAlertEmail } = require('../middleware/email-lowalert');
+
+const generateFileName = (bytes = 32) =>
+  crypto.randomBytes(bytes).toString('hex');
 
 const inventorySetup = async (newKidResult, headers, baseURL) => {
   let url = `${baseURL}/api/kids/inventorysetup/${
@@ -26,13 +38,23 @@ const inventorySetup = async (newKidResult, headers, baseURL) => {
  * @description CREATE kid from setting page then the inventory
  *
  */
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, upload.single('image'), async (req, res) => {
   const { error } = validateKid(req.body);
 
   if (error)
     return res
       .status(400)
       .send({ status: 400, message: error.details[0].message });
+
+  const file = req.file;
+  const imageName = generateFileName();
+
+  // resize the image
+  const fileBuffer = await sharp(file.buffer)
+    .resize({ height: 400 })
+    .toBuffer();
+
+  await uploadFile(fileBuffer, imageName, file.mimetype);
 
   const record = await KidsRecord.findOne({ user_id: req.body.user_id });
 
@@ -49,18 +71,23 @@ router.post('/', auth, async (req, res) => {
     }
   }
 
+  // resize and upload to S3
+  // req.body.image
+  // get back the imgaeURL from S3
+
   let newKid = {
     firstName: req.body.firstName,
     brandPreference: req.body.brandPreference,
     currentSize: req.body.currentSize,
     lowAlert: req.body.lowAlert,
     lowAlertSent: false,
+    imageName: imageName,
   };
 
   try {
     record.kids.push(newKid);
     let newKidResult = await record.save(newKid);
-
+    console.log('newKidResult', newKidResult);
     if (!newKidResult) {
       res.send({ message: 'Could not add child' });
       return;
@@ -134,6 +161,8 @@ router.post('/inventorysetup/:id', async (req, res) => {
  *
  */
 router.put('/', auth, async (req, res) => {
+  console.log('in edit kid');
+  console.log('req', req.body);
   let id = req.body.user_id;
   let kidID = req.body._id;
   let newName = req.body.firstName;
@@ -153,7 +182,7 @@ router.put('/', auth, async (req, res) => {
         },
       }
     );
-
+    console.log(result);
     if (!result) {
       res.send({ message: 'No kids for this user.' });
       return;
@@ -213,13 +242,14 @@ router.get('/:user_id/:kid_id', auth, async (req, res) => {
 
   try {
     const records = await KidsRecord.findOne({ user_id: id });
-
+    console.log('kid record:', records);
     if (!records) {
       res.send({ message: 'Did not find that user.' });
       return;
     }
     const record = records.kids.find((x) => x._id == kid_id);
-
+    console.log('kid recrod', record);
+    record.imageUrl = await getObjectSignedUrl(record.imageName);
     res.send(record);
   } catch (err) {
     res.send({ message: err.message });
@@ -238,6 +268,10 @@ router.get('/:user_id', auth, async (req, res) => {
     if (!record) {
       res.send({ message: 'Did not find that user.' });
       return;
+    }
+    const kids = record.kids;
+    for (let kid of kids) {
+      kid.imageUrl = await getObjectSignedUrl(kid.imageName);
     }
     res.send(record.kids);
   } catch (err) {

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import Select from 'react-select';
-import { FaBaby } from 'react-icons/fa';
+import { FaBaby, FaRegUserCircle } from 'react-icons/fa';
 import { AiOutlineShoppingCart, AiOutlineBell } from 'react-icons/ai';
 import { TiSortNumerically } from 'react-icons/ti';
 
@@ -39,6 +39,7 @@ const AddChild = ({
   const [brandOption, setBrandOption] = useState();
   const [sizeOption, setSizeOption] = useState();
   const [alertOption, setAlertOption] = useState();
+  const [imageUpload, setImageUpload] = useState(null);
   const [error, setError] = useState('');
 
   const handleAddSubmit = async (e) => {
@@ -55,23 +56,21 @@ const AddChild = ({
     if (!alertOption) {
       return setError('You must select a low alert.');
     }
+    const formData = new FormData();
 
-    let body = {
-      user_id: user._id,
-      firstName: baby,
-      brandPreference: brandOption.value,
-      currentSize: sizeOption.value,
-      lowAlert: alertOption.value,
-    };
-
+    formData.append('user_id', user._id);
+    formData.append('firstName', baby);
+    formData.append('brandPreference', brandOption.value);
+    formData.append('currentSize', sizeOption.value);
+    formData.append('lowAlert', alertOption.value);
+    formData.append('image', imageUpload);
     try {
       const res = await fetch(`/api/kids`, {
         method: 'POST',
         headers: {
           'x-auth-token': localStorage.getItem('jwt'),
-          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(body),
+        body: formData,
       });
       const data = await res.json();
       console.log(data);
@@ -135,7 +134,7 @@ const AddChild = ({
     }
   };
   return (
-    <form onSubmit={handleAddSubmit}>
+    <form onSubmit={handleAddSubmit} encType='multipart/form-data'>
       <h1>Add Child</h1>
       <div className='input-line-container' style={{ marginBottom: '16px' }}>
         <FaBaby
@@ -195,6 +194,23 @@ const AddChild = ({
           options={alertList}
           value={alertOption}
           placeholder={'Select Low Alert'}
+        />
+      </div>
+      <div className='input-line-container'>
+        <FaRegUserCircle
+          size={24}
+          className='select-icon'
+          style={{ marginTop: '5px' }}
+        />
+        <input
+          type='file'
+          name='image'
+          className='custom-file-input'
+          accept='image/*'
+          onChange={(e) => {
+            console.log(e.target.files[0]);
+            setImageUpload(e.target.files[0]);
+          }}
         />
       </div>
       {error && (

@@ -32,6 +32,10 @@ const kidsSchema = new mongoose.Schema({
   totalUsed: {
     type: Number,
   },
+  imageName: {
+    type: String,
+    trim: true,
+  },
 });
 
 const KidsRecordSchema = new mongoose.Schema({

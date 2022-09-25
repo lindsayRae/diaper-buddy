@@ -36,6 +36,10 @@ const kidsSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  imageUrl: {
+    type: String,
+    trim: true,
+  },
 });
 
 const KidsRecordSchema = new mongoose.Schema({

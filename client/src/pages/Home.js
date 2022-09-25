@@ -5,13 +5,16 @@ import Navbar from '../components/Nav/Navbar';
 import Logout from '../components/Logout';
 import { UserContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import babyNB from '../images/babyNB.png';
 
 const Home = () => {
   const { user, setUser } = useContext(UserContext);
   const isAuthenticated = localStorage.getItem('userData');
 
   const [babyName, setBabyName] = useState('');
+  const [babyImg, setBabyImg] = useState(babyNB);
   const [error, setError] = useState('');
+
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -27,8 +30,9 @@ const Home = () => {
 
     let currentID = user.currentChild;
     let currentChildData = kids.find((x) => x._id === currentID);
-
+    console.log(currentChildData);
     setBabyName(currentChildData.firstName);
+    setBabyImg(currentChildData.imageUrl);
     // setBabyData(currentChildData);
     localStorage.setItem('babyName', currentChildData.firstName);
   };
@@ -46,7 +50,7 @@ const Home = () => {
         headers: headers,
       });
       const data = await res.json();
-
+      console.log(data);
       if (data.message) {
         setError(data.message);
         return;
@@ -61,10 +65,20 @@ const Home = () => {
       <section className='section'>
         <div className='page-title'>
           <div className='logout-container'>
-            <div>{babyName}'s Diapers</div>
+            <div style={{ display: 'flex' }}>
+              <img
+                src={babyImg}
+                height='70'
+                width='70'
+                style={{ borderRadius: '10px' }}
+              ></img>
+              <div style={{ marginLeft: '4rem' }}>
+                <div>{babyName}'s Diapers</div>
+                <h1>Home</h1>
+              </div>
+            </div>
             <Logout user={user} setUser={setUser} />
           </div>
-          <h1>Home</h1>
         </div>
       </section>
       <section>

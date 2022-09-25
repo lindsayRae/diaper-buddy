@@ -51,7 +51,9 @@ const Settings = () => {
   const [brandOption, setBrandOption] = useState();
   const [sizeOption, setSizeOption] = useState();
   const [alertOption, setAlertOption] = useState();
-  const [imageUpload, setImageUpload] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [babyImg, setBabyImg] = useState();
+  const [previewImageUrl, setPreviewImageUrl] = useState(null);
 
   const [babyID, setBabyID] = useState('');
 
@@ -84,9 +86,10 @@ const Settings = () => {
     setIsDeleteChild(false);
   };
   const setNewCurrentChild = async (data, closeModal) => {
-    console.log(data);
     // update user currentChild
-    updateUserData(data.firstRecord._id);
+    if (data.firstRecord) {
+      await updateUserData(data.firstRecord._id);
+    }
     await getKids();
     closeModal();
   };
@@ -97,7 +100,7 @@ const Settings = () => {
     let currentID = user.currentChild;
 
     let currentChildData = data.find((x) => x._id === currentID);
-
+    console.log(currentChildData);
     setNameList(nameOptionList);
     setBabyID(currentChildData._id);
     setNameOption({
@@ -117,6 +120,7 @@ const Settings = () => {
       label: currentChildData.lowAlert,
       value: currentChildData.lowAlert,
     });
+    setBabyImg(currentChildData.imageUrl);
   };
   const setOneChild = (data) => {
     setBabyName(data[0].firstName);
@@ -134,6 +138,7 @@ const Settings = () => {
       label: data[0].lowAlert,
       value: data[0].lowAlert,
     });
+    setBabyImg(data[0].imageUrl);
   };
   const getKids = async () => {
     const user_ID = user._id;
@@ -155,7 +160,19 @@ const Settings = () => {
         setError(data.message);
         return;
       } else {
-        if (!data || data.length === 0) return openAddChild();
+        if (!data || data.length === 0) {
+          console.log(data.length);
+          setBabyName('');
+          setNameOption();
+          setBrandOption();
+          setSizeOption();
+          setAlertOption();
+          setSelectedImage();
+          setBabyImg();
+          setPreviewImageUrl();
+          openAddChild();
+          return;
+        }
         setKidsData(data);
         if (data.length > 1) {
           setMultiChildren(data);
@@ -184,6 +201,13 @@ const Settings = () => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    if (selectedImage) {
+      setPreviewImageUrl(URL.createObjectURL(selectedImage));
+      setBabyImg(null);
+    }
+  }, [selectedImage]);
+
   // need to turn and array into a array of objects
   const createNameOptions = (data) => {
     let arr = data.map((el) => el.firstName);
@@ -191,6 +215,7 @@ const Settings = () => {
   };
 
   const openAddChild = (e) => {
+    console.log('hearddd');
     setIsAddChild(true);
     setModalVisible(true);
   };
@@ -232,7 +257,7 @@ const Settings = () => {
     let body = {
       kidID: kid_id,
     };
-    console.log(body);
+
     try {
       const res = await fetch(`/api/users/update/${user_id}`, {
         method: 'PUT',
@@ -268,32 +293,19 @@ const Settings = () => {
     formData.append('brandPreference', brandOption.value);
     formData.append('currentSize', sizeOption.value);
     formData.append('lowAlert', alertOption.value);
-    formData.append('image', imageUpload);
-
-    // let body = {
-    //   user_id: user._id,
-    //   _id: babyID,
-    //   firstName: kidsData.length === 1 ? babyName : nameOption.value,
-    //   brandPreference: brandOption.value,
-    //   currentSize: sizeOption.value,
-    //   lowAlert: alertOption.value,
-    //   //image: imageUpload,
-    // };
-    // console.log(body);
-
-    console.log('formData', formData);
-
+    formData.append('image', selectedImage);
+    console.log(selectedImage);
     try {
       const res = await fetch(`/api/kids`, {
         method: 'PUT',
         headers: {
           'x-auth-token': localStorage.getItem('jwt'),
         },
-        body: JSON.stringify(formData),
+        body: formData,
       });
 
       const data = await res.json();
-      console.log('data', data);
+
       if (data.message) {
         setError(data.message);
         return;
@@ -392,6 +404,7 @@ const Settings = () => {
                     label: newObj.lowAlert,
                     value: newObj.lowAlert,
                   });
+                  setBabyImg(newObj.imageUrl);
 
                   let userUpdated = await updateUserData(newObj._id);
                   if (userUpdated)
@@ -454,17 +467,40 @@ const Settings = () => {
               className='select-icon'
               style={{ marginTop: '5px' }}
             />
+            {previewImageUrl && selectedImage && (
+              <img
+                src={previewImageUrl}
+                height='48'
+                width='55'
+                style={{ borderRadius: '10px' }}
+              ></img>
+            )}
+            {babyImg && (
+              <img
+                src={babyImg}
+                height='48'
+                width='55'
+                style={{ borderRadius: '10px' }}
+              ></img>
+            )}
 
             <input
+              id='select-image'
               type='file'
               name='image'
               className='custom-file-input'
               accept='image/*'
               onChange={(e) => {
                 console.log(e.target.files[0]);
-                setImageUpload(e.target.files[0]);
+                setSelectedImage(e.target.files[0]);
+                setPreviewImageUrl(e.target.files[0]);
+                setBabyImg(null);
               }}
+              style={{ display: 'none' }}
             />
+            <label htmlFor='select-image' className='upload-btn'>
+              Select Image
+            </label>
           </div>
 
           <button className='btn btn-green settings-btn'>Save</button>
@@ -520,3 +556,5 @@ const Settings = () => {
 };
 
 export default Settings;
+
+//? resource for file preview image https://javascript.plainenglish.io/how-to-add-a-file-input-button-and-display-a-preview-image-with-react-2568d9d849f5

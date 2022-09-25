@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { FaBaby, FaRegUserCircle } from 'react-icons/fa';
 import { AiOutlineShoppingCart, AiOutlineBell } from 'react-icons/ai';
@@ -39,7 +39,8 @@ const AddChild = ({
   const [brandOption, setBrandOption] = useState();
   const [sizeOption, setSizeOption] = useState();
   const [alertOption, setAlertOption] = useState();
-  const [imageUpload, setImageUpload] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState();
   const [error, setError] = useState('');
 
   const handleAddSubmit = async (e) => {
@@ -63,7 +64,8 @@ const AddChild = ({
     formData.append('brandPreference', brandOption.value);
     formData.append('currentSize', sizeOption.value);
     formData.append('lowAlert', alertOption.value);
-    formData.append('image', imageUpload);
+    formData.append('image', selectedImage);
+
     try {
       const res = await fetch(`/api/kids`, {
         method: 'POST',
@@ -73,7 +75,7 @@ const AddChild = ({
         body: formData,
       });
       const data = await res.json();
-      console.log(data);
+
       if (data.status == 400) {
         setError(data.message);
         return;
@@ -133,6 +135,11 @@ const AddChild = ({
       setError(error.message);
     }
   };
+  useEffect(() => {
+    if (selectedImage) {
+      setPreviewImageUrl(URL.createObjectURL(selectedImage));
+    }
+  }, [selectedImage]);
   return (
     <form onSubmit={handleAddSubmit} encType='multipart/form-data'>
       <h1>Add Child</h1>
@@ -202,16 +209,29 @@ const AddChild = ({
           className='select-icon'
           style={{ marginTop: '5px' }}
         />
+        {previewImageUrl && selectedImage && (
+          <img
+            src={previewImageUrl}
+            height='48'
+            width='55'
+            style={{ borderRadius: '10px' }}
+          ></img>
+        )}
         <input
+          id='select-image-2'
           type='file'
           name='image'
           className='custom-file-input'
           accept='image/*'
           onChange={(e) => {
-            console.log(e.target.files[0]);
-            setImageUpload(e.target.files[0]);
+            setSelectedImage(e.target.files[0]);
+            setPreviewImageUrl(e.target.files[0]);
           }}
+          style={{ display: 'none' }}
         />
+        <label htmlFor='select-image-2' className='upload-btn'>
+          Select Image
+        </label>
       </div>
       {error && (
         <p style={{ textAlign: 'center', color: '#f94687' }}>{error}</p>

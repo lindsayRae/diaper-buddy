@@ -51,7 +51,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
 
   // resize the image
   const fileBuffer = await sharp(file.buffer)
-    .resize({ height: 400 })
+    .resize({ height: 70, width: 70 })
     .toBuffer();
 
   await uploadFile(fileBuffer, imageName, file.mimetype);
@@ -70,10 +70,6 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
         .send({ message: 'There is already a child under that name.' });
     }
   }
-
-  // resize and upload to S3
-  // req.body.image
-  // get back the imgaeURL from S3
 
   let newKid = {
     firstName: req.body.firstName,
@@ -160,15 +156,24 @@ router.post('/inventorysetup/:id', async (req, res) => {
  * @description edit a child
  *
  */
-router.put('/', auth, async (req, res) => {
-  console.log('in edit kid');
-  console.log('req', req.body);
+router.put('/', auth, upload.single('image'), async (req, res) => {
   let id = req.body.user_id;
   let kidID = req.body._id;
   let newName = req.body.firstName;
   let newBrand = req.body.brandPreference;
   let newSize = req.body.currentSize;
   let newAlert = req.body.lowAlert;
+
+  const file = req.file;
+
+  const imageName = generateFileName();
+
+  // resize the image
+  const fileBuffer = await sharp(file.buffer)
+    .resize({ height: 70, width: 70 })
+    .toBuffer();
+
+  await uploadFile(fileBuffer, imageName, file.mimetype);
 
   try {
     let result = await KidsRecord.updateOne(
@@ -179,10 +184,11 @@ router.put('/', auth, async (req, res) => {
           'kids.$.brandPreference': newBrand,
           'kids.$.currentSize': newSize,
           'kids.$.lowAlert': newAlert,
+          'kids.$.imageName': imageName,
         },
       }
     );
-    console.log(result);
+
     if (!result) {
       res.send({ message: 'No kids for this user.' });
       return;

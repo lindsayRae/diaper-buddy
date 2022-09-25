@@ -46,6 +46,8 @@ body {
 .App {
   max-width: 414px;
   margin: 0 auto;
+  border-left: 2px solid #d6d6d640;
+  border-right: 2px solid #d6d6d640;
 }
 
 h1,
@@ -123,7 +125,7 @@ caption {
 .logout-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  /* align-items: center; */
 }
 
 /* Links */

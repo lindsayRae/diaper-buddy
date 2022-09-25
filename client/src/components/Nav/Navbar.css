@@ -1,3 +1,5 @@
+/* 
+position fixed is caused the desktop ui issue */
 .nav-container {
   background-color: white;
   height: 75px;
@@ -13,6 +15,8 @@
   justify-content: space-around;
   align-items: center;
   padding: 0 1.5rem;
+  max-width: 414px;
+  margin: 0 auto;
 }
 
 .nav-links {

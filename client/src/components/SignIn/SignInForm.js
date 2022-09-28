@@ -5,13 +5,14 @@ import Reactivate1 from '../Reactivate1';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import '../../components/Inputs.css';
+import vector2 from '../../images/Vector2.png';
 import './SignIn.css';
 
 const SignInForm = () => {
   let navigate = useNavigate();
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -80,6 +81,7 @@ const SignInForm = () => {
   };
   return (
     <div className='block' style={{ paddingTop: '0' }}>
+      {/* <img src={vector2} alt='vector2' className='vector-left' /> */}
       <form onSubmit={handleSubmit}>
         <input
           className='input'

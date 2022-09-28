@@ -13,7 +13,7 @@ const SignInNav = () => {
           <span>Register</span>
         </NavLink>
       </div>
-      <img src={vector2} alt='vector2' className='vector-left' />
+      {/* <img src={vector2} alt='vector2' className='vector-left' /> */}
     </section>
   );
 };

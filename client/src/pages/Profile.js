@@ -123,7 +123,7 @@ const Profile = () => {
           <h1>Profile</h1>
         </div>
       </section>
-      <section className='section'>
+      <section className='section' style={{ paddingTop: '1rem' }}>
         <div className='profile-heading'>
           <h2 className='profile-name'>{user.firstName}</h2>
           <button className='btn-link' onClick={() => openEditModal()}>
@@ -131,7 +131,7 @@ const Profile = () => {
           </button>
         </div>
       </section>
-      <section className='section'>
+      <section className='section' style={{ paddingTop: '1rem' }}>
         <h3 style={{ fontWeight: '600' }}>
           Diaper Insight for {localStorage.getItem('babyName')}
         </h3>
@@ -150,7 +150,10 @@ const Profile = () => {
           </div>
         </div>
       </section>
-      <section className='section' style={{ paddingBottom: '100px' }}>
+      <section
+        className='section'
+        style={{ paddingTop: '1rem', paddingBottom: '100px' }}
+      >
         <h3 style={{ fontWeight: '600' }}>Username & Password</h3>
         <div className='contact-container'>
           <div className='profile-icons'>
@@ -177,7 +180,7 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div style={{ marginTop: '4rem' }}>
+        <div style={{ marginTop: '3rem' }}>
           <button
             type='button'
             className='btn-link btn-link-danger'

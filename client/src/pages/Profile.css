@@ -2,8 +2,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  margin-top: 2rem;
 }
 .profile-heading h2 {
   font-size: 1.8rem;

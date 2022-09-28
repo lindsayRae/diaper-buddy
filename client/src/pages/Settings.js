@@ -100,7 +100,7 @@ const Settings = () => {
     let currentID = user.currentChild;
 
     let currentChildData = data.find((x) => x._id === currentID);
-    console.log(currentChildData);
+    // console.log(currentChildData);
     setNameList(nameOptionList);
     setBabyID(currentChildData._id);
     setNameOption({
@@ -154,7 +154,7 @@ const Settings = () => {
         headers: headers,
       });
       const data = await res.json();
-      console.log('get kids data', data);
+      // console.log('get kids data', data);
       if (data.message) {
         console.log('error', error);
         setError(data.message);
@@ -348,7 +348,7 @@ const Settings = () => {
           <h1>Settings</h1>
         </div>
       </section>
-      <section className='section' style={{ marginTop: '20px' }}>
+      <section className='section'>
         <form onSubmit={handleSubmit} encType='multipart/form-data'>
           {kidsData.length === 1 ? (
             <div className='input-line-container'>

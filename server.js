@@ -61,7 +61,7 @@ app.use('*', (req, res) => res.status(404).json({ error: 'Page not found' }));
 
 if (process.env.NODE_ENV === 'production') {
   // Serve any static file
-  app.use(express.static(path.join(_dirname, 'client/build')));
+  app.use(express.static(path.join(__dirname, 'client/build')));
 
   // Handle React routing, return all requests to React app
   app.get('*', function (req, res) {

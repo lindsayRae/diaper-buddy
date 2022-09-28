@@ -52,6 +52,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
   // resize the image
   const fileBuffer = await sharp(file.buffer)
     .resize({ height: 70, width: 70 })
+    .withMetadata()
     .toBuffer();
 
   await uploadFile(fileBuffer, imageName, file.mimetype);
@@ -171,6 +172,7 @@ router.put('/', auth, upload.single('image'), async (req, res) => {
   // resize the image
   const fileBuffer = await sharp(file.buffer)
     .resize({ height: 70, width: 70 })
+    .withMetadata()
     .toBuffer();
 
   await uploadFile(fileBuffer, imageName, file.mimetype);

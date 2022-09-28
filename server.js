@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const port = process.env.PORT || 1234;
 const app = express();
+const path = require('path');
 const puppeteer = require('puppeteer');
 
 app.use(cors());

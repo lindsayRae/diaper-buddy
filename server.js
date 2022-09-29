@@ -1,4 +1,6 @@
 require('dotenv').config();
+require('express-async-errors');
+const error = require('./middleware/error');
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -59,7 +61,22 @@ app.use('/api/used', usedRouter);
 
 app.use('*', (req, res) => res.status(404).json({ error: 'Page not found' }));
 
-if (process.env.NODE_ENV === 'production') {
+app.use(error);
+
+app.enable('trust proxy'); // must include!!
+
+if (process.env.NODE_ENV == 'production') {
+  app.use(function (req, res, next) {
+    if (req.secure) {
+      // request was via https, so do no special handling
+      next();
+    } else {
+      // request was via http, so redirect to https
+      res.redirect('https://' + req.headers.host + req.url);
+    }
+  });
+
+  app.use(express.static('public'));
   // Serve any static file
   app.use(express.static(path.join(__dirname, 'client/build')));
 

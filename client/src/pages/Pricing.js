@@ -238,42 +238,46 @@ const Pricing = () => {
         </div>
       </section>
       <section className='section'>
-        <div className='lowest-heading-container'>
+        <div className='comming-soon-overlay'>
           <h2>Lowest Prices</h2>
-          <Select
-            styles={customStyles}
-            menuPortalTarget={document.body}
-            menuPosition={'fixed'}
-            options={sizeList}
-            value={sizeOption}
-          />
-        </div>
-        <Swiper
-          ref={sliderRef}
-          spaceBetween={0}
-          initialSlide={0}
-          slidesPerView={'auto'}
-          centeredSlides={true}
-          onSlideChange={(swiper) => {
-            //  console.log('slide change', swiper);
-            setCurrentBrandIndex();
-          }}
-          //onSwiper={(swiper) => console.log(swiper)}
-          onSliderFirstMove={(swiper) => setSlideChange(true)}
-        >
-          {priceData.map((item) => {
-            return (
-              <SwiperSlide key={item.brand} className='price-container'>
-                <SwipePrices item={item} />
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
-        <div className='buy-btn-container'>
-          <button className='btn btn-blue'>Buy Lowest Price Diaper</button>
-          <button className='btn btn-green'>
-            Buy {brandPreference} at Lowest Price
-          </button>
+          <p>Comming Soon!</p>
+          {/* <div className='lowest-heading-container'>
+            <h2>Lowest Prices</h2>
+            <Select
+              styles={customStyles}
+              menuPortalTarget={document.body}
+              menuPosition={'fixed'}
+              options={sizeList}
+              value={sizeOption}
+            />
+          </div>
+          <Swiper
+            ref={sliderRef}
+            spaceBetween={0}
+            initialSlide={0}
+            slidesPerView={'auto'}
+            centeredSlides={true}
+            onSlideChange={(swiper) => {
+              //  console.log('slide change', swiper);
+              setCurrentBrandIndex();
+            }}
+            //onSwiper={(swiper) => console.log(swiper)}
+            onSliderFirstMove={(swiper) => setSlideChange(true)}
+          >
+            {priceData.map((item) => {
+              return (
+                <SwiperSlide key={item.brand} className='price-container'>
+                  <SwipePrices item={item} />
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+          <div className='buy-btn-container'>
+            <button className='btn btn-blue'>Buy Lowest Price Diaper</button>
+            <button className='btn btn-green'>
+              Buy {brandPreference} at Lowest Price
+            </button>
+          </div> */}
         </div>
       </section>
       <Navbar />

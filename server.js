@@ -60,7 +60,7 @@ app.use('/api/inventory', inventoryRouter);
 app.use('/api/used', usedRouter);
 
 app.use('*', (req, res) =>
-  res.status(404).json({ error: 'Page not found. Is "api" in your path' })
+  res.status(404).json({ error: 'This page is not found.' })
 );
 
 app.use(error);
@@ -87,7 +87,7 @@ if (process.env.NODE_ENV == 'production') {
     // Handle React routing, return all requests to React app
     app.get('/api', function (req, res) {
       console.log('in try');
-      res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+      res.sendFile(path.join(__dirname + '/client/build/index.html'));
     });
   } catch (error) {
     console.log('try catch error: ', error);

@@ -154,7 +154,6 @@ function SwipeSize() {
   };
   const checkLowAlertStatus = (onHand) => {
     if (lowAlertSent === undefined || lowAlertAmount == 0) {
-      console.log('** do not send low alert');
       return;
     } else if (!lowAlertSent && onHand <= lowAlertAmount) {
       console.log('** send low alert email, then updateLowAlert');

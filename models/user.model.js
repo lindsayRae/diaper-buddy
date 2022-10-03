@@ -71,14 +71,12 @@ function validateUser(user) {
 }
 
 function validateLogin(login) {
-  console.log('model login: ', login);
   const schema = Joi.object({
     email: Joi.string().min(5).max(255).required().email(),
     password: Joi.string().min(8).max(1024).required(),
   });
   const { error, value } = schema.validate(login);
-  console.log('model error:', error);
-  console.log('model value:', value);
+
   return { error, value };
 }
 

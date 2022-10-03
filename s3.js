@@ -47,8 +47,6 @@ async function getObjectSignedUrl(key) {
     Key: key,
   };
 
-  console.log(params);
-
   // https://aws.amazon.com/blogs/developer/generate-presigned-url-modular-aws-sdk-javascript/
   const command = new GetObjectCommand(params);
   const seconds = 60;

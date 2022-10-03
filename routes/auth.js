@@ -10,14 +10,13 @@ const { sendReactivateEmail } = require('../middleware/reactivate');
  */
 router.post('/', async (req, res) => {
   const { error } = await validateLogin(req.body);
-  console.log('login error:', error);
+
   if (error) return res.status(400).send({ message: error.details[0].message });
 
   let email = req.body.email;
 
   let user = await User.findOne({ email: email.toLowerCase() });
 
-  console.log('**user:', user);
   if (!user) {
     return res.status(400).send({ message: 'Invalid email or password.' });
   }
@@ -48,7 +47,7 @@ router.post('/', async (req, res) => {
 router.put('/reactivate', async (req, res) => {
   try {
     const { error } = await validateLogin(req.body);
-    console.log('login error:', error);
+
     if (error)
       return res.status(400).send({ message: error.details[0].message });
 
@@ -56,7 +55,6 @@ router.put('/reactivate', async (req, res) => {
 
     let user = await User.findOne({ email: email.toLowerCase() });
 
-    console.log('**user:', user);
     if (!user) {
       return res.status(400).send({ message: 'Invalid email or password.' });
     }

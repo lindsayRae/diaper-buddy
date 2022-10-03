@@ -59,16 +59,11 @@ app.use('/api/kids', kidsRouter);
 app.use('/api/inventory', inventoryRouter);
 app.use('/api/used', usedRouter);
 
-// app.use('*', (req, res) =>
-//   res.status(404).json({ error: 'This page is not found.' })
-// );
-
 app.use(error);
 
 app.enable('trust proxy'); // must include!!
 
 if (process.env.NODE_ENV == 'production') {
-  console.log('in test prod');
   app.use(function (req, res, next) {
     if (req.secure) {
       // request was via https, so do no special handling
@@ -86,7 +81,6 @@ if (process.env.NODE_ENV == 'production') {
   try {
     // Handle React routing, return all requests to React app
     app.get('*', function (req, res) {
-      console.log('in try');
       res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
     });
   } catch (error) {
@@ -95,5 +89,5 @@ if (process.env.NODE_ENV == 'production') {
 }
 
 app.listen(port, () => {
-  console.log(`diapers-mern2.0 app listening at http://localhost:${port}`);
+  console.log(`diapers-mern2.0 app listening at PORT:${port}`);
 });

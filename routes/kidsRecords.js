@@ -250,13 +250,13 @@ router.get('/:user_id/:kid_id', auth, async (req, res) => {
 
   try {
     const records = await KidsRecord.findOne({ user_id: id });
-    console.log('kid record:', records);
+
     if (!records) {
       res.send({ message: 'Did not find that user.' });
       return;
     }
     const record = records.kids.find((x) => x._id == kid_id);
-    console.log('kid recrod', record);
+
     record.imageUrl = await getObjectSignedUrl(record.imageName);
     res.send(record);
   } catch (err) {

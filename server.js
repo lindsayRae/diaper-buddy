@@ -85,7 +85,7 @@ if (process.env.NODE_ENV == 'production') {
 
   try {
     // Handle React routing, return all requests to React app
-    app.get('/api', function (req, res) {
+    app.get('*', function (req, res) {
       console.log('in try');
       res.sendFile(path.join(__dirname + '/client/build/index.html'));
     });

@@ -59,13 +59,16 @@ app.use('/api/kids', kidsRouter);
 app.use('/api/inventory', inventoryRouter);
 app.use('/api/used', usedRouter);
 
-app.use('*', (req, res) => res.status(404).json({ error: 'Page not found' }));
+app.use('*', (req, res) =>
+  res.status(404).json({ error: 'Page not found. Is "api" in your path' })
+);
 
 app.use(error);
 
 app.enable('trust proxy'); // must include!!
 
 if (process.env.NODE_ENV == 'production') {
+  console.log('in test prod');
   app.use(function (req, res, next) {
     if (req.secure) {
       // request was via https, so do no special handling
@@ -80,52 +83,17 @@ if (process.env.NODE_ENV == 'production') {
   // Serve any static file
   app.use(express.static(path.join(__dirname, 'client/build')));
 
-  // Handle React routing, return all requests to React app
-  app.get('*', function (req, res) {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-  });
+  try {
+    // Handle React routing, return all requests to React app
+    app.get('/api', function (req, res) {
+      console.log('in try');
+      res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    });
+  } catch (error) {
+    console.log('try catch error: ', error);
+  }
 }
 
 app.listen(port, () => {
   console.log(`diapers-mern2.0 app listening at http://localhost:${port}`);
 });
-
-// puppeteer
-// (async () => {
-//   //! change headless to true when finished with code
-//   console.log('running pupperteer...');
-//   const url =
-//     'https://www.target.com/p/huggies-little-snugglers-diapers-huge-pack-size-3-136ct/-/A-53551102';
-
-//   const browser = await puppeteer.launch({ headless: false });
-//   console.log(url);
-//   const page = await browser.newPage();
-//   await page.goto(url);
-//   // await page.waitForSelector(
-//   //   '.style__PriceFontSize-sc-1o3i6gc-0.kfATIS.h-text-bold'
-//   // );
-//   await page.waitForSelector(
-//     '.styles__CurrentPriceFontSize-sc-1mdemp3-1.dIeiFm'
-//   );
-
-//   const grabData = await page.evaluate(() => {
-//     // works for target format
-//     const formatCount = (str) => {
-//       let num = str.replace(/[^0-9]/g, '');
-//       return num[0] == 0 ? (num = num.replace('0', '.')) : (num = `.${num}`);
-//     };
-//     let priceTag = document.querySelector(
-//       '.styles__CurrentPriceFontSize-sc-1mdemp3-1.dIeiFm'
-//     ).innerText;
-//     console.log('priceTag: ', priceTag);
-//     let unitPrice = document.querySelector(
-//       '.h-text-sm.h-text-grayDark'
-//     ).innerText;
-//     unitPrice = formatCount(unitPrice);
-//     return { priceTag, unitPrice };
-//   });
-
-//   console.log(grabData);
-
-//   await browser.close();
-// })();

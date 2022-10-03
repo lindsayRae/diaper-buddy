@@ -240,7 +240,7 @@ const Pricing = () => {
       <section className='section'>
         <div className='comming-soon-overlay'>
           <h2>Lowest Prices</h2>
-          <p>Comming Soon!</p>
+          <p>Coming Soon!</p>
           {/* <div className='lowest-heading-container'>
             <h2>Lowest Prices</h2>
             <Select

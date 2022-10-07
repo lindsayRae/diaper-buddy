@@ -5,11 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import Modal from '../components/Modal/Modal';
 import AddChild from '../components/AddChild';
 import DeleteChild from '../components/DeleteChild';
-import Logout from '../components/Logout';
 import Navbar from '../components/Nav/Navbar';
 import Toast from '../components/Toast/Toast';
-// import FileUploader from '../components/FileUploader';
-
 import icon from '../images/icon.png';
 import { FaBaby, FaRegUserCircle } from 'react-icons/fa';
 import { AiOutlineShoppingCart, AiOutlineBell } from 'react-icons/ai';
@@ -338,9 +335,6 @@ const Settings = () => {
   return (
     <div>
       <section className='section'>
-        <div className='logout'>
-          <Logout user={user} setUser={setUser} />
-        </div>
         <Toast toastList={list} position='top-left' setList={setList} />
 
         <div className='setting-heading'>
@@ -545,7 +539,7 @@ const Settings = () => {
           />
         )}
       </Modal>
-      <Navbar />
+      <Navbar setUser={setUser} />
       {error && (
         <p style={{ color: '#d9534f', padding: '0 20px', textAlign: 'center' }}>
           {error}

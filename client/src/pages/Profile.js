@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Modal from '../components/Modal/Modal';
 import EditProfile from '../components/EditProfile';
-import Logout from '../components/Logout';
 import Navbar from '../components/Nav/Navbar';
 import DeactivateAccount from '../components/DeactivateAccount';
 import { UserContext } from '../context/UserContext';
@@ -116,10 +115,6 @@ const Profile = () => {
     <div className='background-light'>
       <section className='section'>
         <div className='page-title'>
-          <div className='logout-container'>
-            <div></div>
-            <Logout user={user} setUser={setUser} />
-          </div>
           <h1>Profile</h1>
         </div>
       </section>
@@ -208,7 +203,7 @@ const Profile = () => {
           />
         )}
       </Modal>
-      <Navbar />
+      <Navbar setUser={setUser} />
     </div>
   );
 };

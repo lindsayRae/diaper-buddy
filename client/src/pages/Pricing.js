@@ -218,7 +218,6 @@ const Pricing = () => {
         <div className='page-title'>
           <div className='logout-container'>
             <div>{kidName}'s Diapers</div>
-            <Logout user={user} setUser={setUser} />
           </div>
           <h1>Pricing</h1>
         </div>

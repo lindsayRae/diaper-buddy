@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 
 import SwipeSize from '../components/Swipe_Size';
 import Navbar from '../components/Nav/Navbar';
-import Logout from '../components/Logout';
+
 import { UserContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import babyNB from '../images/babyNB.png';
@@ -64,27 +64,24 @@ const Home = () => {
     <div className='background-light'>
       <section className='section'>
         <div className='page-title'>
-          <div className='logout-container'>
-            <div style={{ display: 'flex' }}>
-              <img
-                src={babyImg}
-                height='70'
-                width='70'
-                style={{ borderRadius: '10px' }}
-              ></img>
-              <div style={{ marginLeft: '4rem' }}>
-                <div>{babyName}'s Diapers</div>
-                <h1>Home</h1>
-              </div>
+          <div style={{ display: 'flex' }}>
+            <img
+              src={babyImg}
+              height='70'
+              width='70'
+              style={{ borderRadius: '10px' }}
+            ></img>
+            <div style={{ marginLeft: '4rem' }}>
+              <div>{babyName}'s Diapers</div>
+              <h1>Home</h1>
             </div>
-            <Logout user={user} setUser={setUser} />
           </div>
         </div>
       </section>
       <section>
         <SwipeSize />
       </section>
-      <Navbar />
+      <Navbar setUser={setUser} />
     </div>
   );
 };

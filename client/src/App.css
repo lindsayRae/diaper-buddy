@@ -122,11 +122,6 @@ caption {
   margin-bottom: 0;
   color: var(--c-primary-text);
 }
-.logout-container {
-  display: flex;
-  justify-content: space-between;
-  /* align-items: center; */
-}
 
 /* Links */
 a {

@@ -1,17 +1,18 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { FaHome, FaDollarSign, FaUser, FaCog } from 'react-icons/fa';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { AiOutlineHome, AiOutlineUser, AiOutlineSetting } from 'react-icons/ai';
-import { BsCurrencyDollar } from 'react-icons/bs';
+import { MdOutlineLogout } from 'react-icons/md';
+
 import './Navbar.css';
 
-const tabs = [
-  { route: '/home', icon: FaHome, label: 'Home' },
-  { route: '/pricing', icon: FaDollarSign, label: 'Pricing' },
-  { route: '/profile', icon: FaUser, label: 'Profile' },
-  { route: '/settings', icon: FaCog, label: 'Settings' },
-];
-const Navbar = () => {
+const Navbar = ({ setUser }) => {
+  const navigate = useNavigate();
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.clear();
+    setUser(null);
+    navigate('/');
+  };
   return (
     <nav className='nav-container'>
       <div className='nav-item'>
@@ -19,14 +20,6 @@ const Navbar = () => {
           <div className='nav-links'>
             <AiOutlineHome size={28} />
             <div>Home</div>
-          </div>
-        </NavLink>
-      </div>
-      <div className='nav-item'>
-        <NavLink to='/pricing'>
-          <div className='nav-links'>
-            <BsCurrencyDollar size={28} />
-            <div>Pricing</div>
           </div>
         </NavLink>
       </div>
@@ -45,6 +38,12 @@ const Navbar = () => {
             <div>Settings</div>
           </div>
         </NavLink>
+      </div>
+      <div className='nav-item'>
+        <div className='nav-links'>
+          <MdOutlineLogout size={28} onClick={handleLogout} />
+          <div>Log Out</div>
+        </div>
       </div>
     </nav>
   );

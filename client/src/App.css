@@ -208,3 +208,12 @@ a {
   text-align: center;
   margin-top: 30%;
 }
+
+.error-back {
+  text-align: center;
+  font-size: 2rem;
+}
+.error-back > a {
+  font-size: 2rem;
+  color: var(--c-blue);
+}

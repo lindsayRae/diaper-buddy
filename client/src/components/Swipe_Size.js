@@ -73,6 +73,7 @@ function SwipeSize() {
   const [historyData, setHistoryData] = useState('');
   const [lowAlertAmount, setLowAlertAmount] = useState();
   const [lowAlertSent, setLowAlertSent] = useState(undefined);
+  const [days, setDays] = useState(10);
 
   const [list, setList] = useState([]);
   const [inProp, setInProp] = useState(false);
@@ -115,7 +116,7 @@ function SwipeSize() {
   };
   const userID = user._id;
   const sliderRef = useRef();
-  //console.log(user);
+
   const updateLowAlert = async (status) => {
     let body = {
       kid_id: user.currentChild,
@@ -241,6 +242,41 @@ function SwipeSize() {
       setError(err.message);
     }
   };
+  const getInventoryData = async () => {
+    try {
+      const url = `/api/inventory/${user.currentChild}`;
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': localStorage.getItem('jwt'),
+      };
+
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: headers,
+      });
+      const data = await res.json();
+
+      if (data.message) {
+        setError(data.message);
+        return;
+      }
+      return data;
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+  const setRemainingDisplay = async (currSize) => {
+    console.log('current size:', currSize);
+    let data = await getInventoryData();
+    let avgUsage = 10;
+    if (currSize === 'Newborn') {
+      currSize = 0;
+    }
+    let onHand = data.find((x) => x.size == currSize).onHand;
+    let daysRemaining = onHand / avgUsage;
+    setDays(Math.floor(daysRemaining));
+  };
   const getKidData = async () => {
     try {
       const url = `/api/kids/${userID}/${user.currentChild}`;
@@ -263,6 +299,7 @@ function SwipeSize() {
       }
       setLowAlertAmount(data.lowAlert);
       setLowAlertSent(data.lowAlertSent);
+      setRemainingDisplay(data.currentSize);
       return data;
     } catch (err) {
       console.log(err);
@@ -471,10 +508,13 @@ function SwipeSize() {
               <div className='diaper-ct'>{displayCount}</div>
             </CSSTransition>
 
-            <h2>
-              {viewableSize == 0 ? 'Newborn' : `Size ${viewableSize}`} diapers
+            <p>
+              {viewableSize === 0 ? 'Newborn' : `Size ${viewableSize}`} diapers
               on hand.
-            </h2>
+              {days === 0 && ' Go get diapers!'}
+              {days === 1 && ` About ${days} day until you run out`}
+              {days > 1 && ` About ${days} days until you run out`}
+            </p>
           </div>
           <img src={vector3} alt='vector3' className='img-absolute' />
         </div>
@@ -490,6 +530,7 @@ function SwipeSize() {
             // runs on page load, and first slide
             setViewableSize(swiper.realIndex);
             updateDiaperTitleCard(swiper.realIndex);
+            setRemainingDisplay(swiper.realIndex);
           }}
           //onSwiper={(swiper) => {}
           // onTransitionEnd={(swiper) => console.log(swiper)} // runs on page load and first slide
@@ -499,7 +540,7 @@ function SwipeSize() {
             return (
               <SwiperSlide key={index} className='size-container'>
                 <div className='size-swipe-card'>
-                  <img src={item.img} />
+                  <img src={item.img} alt='baby' />
                   <div className='size-swipe-text'>
                     <h2 className='size-heading'>{item.heading}</h2>
                     <div className='size-weight-title'>Average Weight</div>

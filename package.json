@@ -29,7 +29,6 @@
     "node-fetch": "^2.6.1",
     "nodemailer": "^6.7.2",
     "nodemon": "^2.0.15",
-    "puppeteer": "^15.3.2",
     "sharp": "^0.31.0",
     "uuid": "^8.3.2"
   }

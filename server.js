@@ -7,12 +7,11 @@ const mongoose = require('mongoose');
 const port = process.env.PORT || 1234;
 const app = express();
 const path = require('path');
-const puppeteer = require('puppeteer');
 
+// enable cores for all routes
 app.use(cors());
 app.use(express.json()); // our server can accept json in body of request
 
-// private key ask steven
 const privateKey = process.env.diapers_jwtPrivateKey;
 
 if (!privateKey) {

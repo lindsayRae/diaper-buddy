@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 
 import vector4 from '../images/Vector4.png';
 import SwipePrices from '../components/Swipe_Prices';
-import Logout from '../components/Logout';
+
 import Navbar from '../components/Nav/Navbar';
 import { UserContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
@@ -119,6 +119,7 @@ const Pricing = () => {
   };
 
   const getKidData = async () => {
+    console.log('getKidData running...');
     try {
       const url = `/api/kids/${user._id}/${user.currentChild}`;
       const headers = {
@@ -238,9 +239,7 @@ const Pricing = () => {
       </section>
       <section className='section'>
         <div className='comming-soon-overlay'>
-          <h2>Lowest Prices</h2>
-          <p>Coming Soon!</p>
-          {/* <div className='lowest-heading-container'>
+          <div className='lowest-heading-container'>
             <h2>Lowest Prices</h2>
             <Select
               styles={customStyles}
@@ -276,7 +275,7 @@ const Pricing = () => {
             <button className='btn btn-green'>
               Buy {brandPreference} at Lowest Price
             </button>
-          </div> */}
+          </div>
         </div>
       </section>
       <Navbar />

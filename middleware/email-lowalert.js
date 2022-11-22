@@ -28,11 +28,11 @@ let sendLowAlertEmail = (firstName, email, lowAlertAmount) => {
   transporter.sendMail(mailOptions, function (error, info) {
     console.log(`error: ${error}`);
     console.log(`info: ${info}`);
-    if (error) {
-      res.send({ error: error });
-    } else {
-      res.send({ status: 200, message: 'Email was sent. Thank you!' });
-    }
+    // if (error) {
+    //   res.send({ error: error }); // res is not defined
+    // } else {
+    //   res.send({ status: 200, message: 'Email was sent. Thank you!' });
+    // }
   });
 };
 

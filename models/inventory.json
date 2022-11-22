@@ -5,29 +5,26 @@
       {
         "size": "0",
         "purchased": 100,
-        "used": [
-          { "date": "01/01/22", "count": "50" },
-          { "date": "01/02/22", "count": "50" }
-        ],
-        "onHand": 0
+        "onHand": 81,
+        "size_id": "zzzzzz"
       },
       {
         "size": "1",
         "purchased": 100,
         "used": [
-          { "date": "01/03/22", "count": "50" },
-          { "date": "01/04/22", "count": "50" }
+          { "date": "01/03/22", "count": "11" },
+          { "date": "01/04/22", "count": "11" }
         ],
-        "onHand": 0
+        "onHand": 78
       },
       {
         "size": "2",
         "purchased": 100,
         "used": [
-          { "date": "01/05/22", "count": "50" },
-          { "date": "01/06/22", "count": "30" }
+          { "date": "01/05/22", "count": "10" },
+          { "date": "01/06/22", "count": "1" }
         ],
-        "onHand": 20
+        "onHand": 89
       },
       {
         "size": "3",

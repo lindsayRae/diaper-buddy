@@ -1,0 +1,63 @@
+[
+  {
+    "_id": "z0",
+    "size_id": "",
+    "size": 0,
+    "used": [
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "qqqqq" },
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "yyyyy" },
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "eeeee" },
+      { "time_stamp": "01/02/22", "count": "1", "objectID": "uuuuu" },
+      { "time_stamp": "01/02/22", "count": "1", "objectID": "ppppp" }
+      // when I do a query we check how many rows per date given date
+    ]
+  },
+  {
+    "_id": "z1",
+    "size_id": "",
+    "size": 1,
+    "used": [
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "qqqqq" },
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "yyyyy" },
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "eeeee" },
+      { "time_stamp": "01/02/22", "count": "1", "objectID": "uuuuu" },
+      { "time_stamp": "01/02/22", "count": "1", "objectID": "ppppp" }
+    ]
+  },
+  {
+    "_id": "z2",
+    "size_id": "",
+    "size": 2,
+    "used": [
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "qqqqq" },
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "yyyyy" },
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "eeeee" },
+      { "time_stamp": "01/02/22", "count": "1", "objectID": "uuuuu" },
+      { "time_stamp": "01/02/22", "count": "1", "objectID": "ppppp" }
+    ]
+  },
+  {
+    "_id": "z3",
+    "size_id": "",
+    "size": 3,
+    "used": [
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "qqqqq" },
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "yyyyy" },
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "eeeee" },
+      { "time_stamp": "01/02/22", "count": "1", "objectID": "uuuuu" },
+      { "time_stamp": "01/02/22", "count": "1", "objectID": "ppppp" }
+    ]
+  },
+  {
+    "_id": "z4",
+    "size_id": "",
+    "size": 4,
+    "used": [
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "qqqqq" },
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "yyyyy" },
+      { "time_stamp": "01/01/22", "count": "1", "objectID": "eeeee" },
+      { "time_stamp": "01/02/22", "count": "1", "objectID": "uuuuu" },
+      { "time_stamp": "01/02/22", "count": "1", "objectID": "ppppp" }
+    ]
+  }
+]

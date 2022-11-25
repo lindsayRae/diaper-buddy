@@ -1,7 +1,10 @@
+const { response } = require('express');
 const nodemailer = require('nodemailer');
 const emailURL = process.env.emailURL;
+const emailUser = process.env.nodemailer_user;
+const emailPass = process.env.nodemailer_pass;
 
-let sendEmailReset = (firstName, email, GUID) => {
+async function sendEmailReset(firstName, email, GUID) {
   let emailBody = `Hello ${firstName},
 
   You are receiving this email because you want to reset your password for the Diaper application. To do so, please copy and past or click the link below. If you received this by mistake then please ignore.
@@ -10,28 +13,35 @@ let sendEmailReset = (firstName, email, GUID) => {
 
   Have a wonderful day!`;
 
+  //! nodemailer no longer takes gmail
   let transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: 'Outlook365',
     auth: {
-      user: 'lbarnett712@gmail.com',
-      pass: 'hwhyqqoeaujzfics',
+      user: emailUser,
+      pass: emailPass,
     },
   });
 
   let mailOptions = {
-    from: 'lbarnett712@gmail.com',
+    from: emailUser,
     to: email,
     subject: 'Diaper Buddy password reset',
     text: emailBody,
   };
-
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      res.send({ error: error });
-    } else {
-      res.send({ status: 200, message: 'Email was sent. Thank you!' });
-    }
-  });
-};
+  try {
+    await transporter.sendMail(mailOptions, function (error, info) {
+      console.log('ERROR', error);
+      console.log('info', info);
+      if (!error) {
+        return info;
+      } else {
+        return error;
+      }
+    });
+  } catch (error) {
+    console.log('ERROR', error);
+    return error;
+  }
+}
 
 module.exports.sendEmailReset = sendEmailReset;

@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer');
 const emailURL = process.env.emailURL;
-console.log('emailURL', emailURL);
+const nodemailerPass = process.env.nodemailerPass;
+
+nodemailerPass;
 
 let sendEmail = (firstName, email, GUID) => {
   let emailBody = `Hello ${firstName},
@@ -15,7 +17,7 @@ let sendEmail = (firstName, email, GUID) => {
     service: 'gmail',
     auth: {
       user: 'lbarnett712@gmail.com',
-      pass: 'hwhyqqoeaujzfics',
+      pass: nodemailerPass,
     },
   });
 

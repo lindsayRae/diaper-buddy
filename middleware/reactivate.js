@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 const emailURL = process.env.emailURL;
+const nodemailerPass = process.env.nodemailerPass;
 
 let sendReactivateEmail = (firstName, email, GUID) => {
   let emailBody = `Hello ${firstName},
@@ -14,7 +15,7 @@ let sendReactivateEmail = (firstName, email, GUID) => {
     service: 'gmail',
     auth: {
       user: 'lbarnett712@gmail.com',
-      pass: 'hwhyqqoeaujzfics',
+      pass: nodemailerPass,
     },
   });
 

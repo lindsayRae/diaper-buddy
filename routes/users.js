@@ -158,7 +158,12 @@ router.put('/reset', async (req, res) => {
     user.GUID = uuidv4();
     let result = await user.save();
 
-    sendEmailReset(user.firstName, user.email, user.GUID);
+    let nodemailer = await sendEmailReset(
+      user.firstName,
+      user.email,
+      user.GUID
+    );
+    console.log('nodemailer', nodemailer);
 
     return res.send({
       user: _.pick(user, ['firstName', 'email', '_id', 'activated', 'GUID']),

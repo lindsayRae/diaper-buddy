@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const nodemailerPass = process.env.nodemailerPass;
 
 let sendLowAlertEmail = (firstName, email, lowAlertAmount) => {
   let emailBody = `Hello ${firstName},
@@ -14,7 +15,7 @@ let sendLowAlertEmail = (firstName, email, lowAlertAmount) => {
     service: 'gmail',
     auth: {
       user: 'lbarnett712@gmail.com',
-      pass: 'hwhyqqoeaujzfics',
+      pass: nodemailerPass,
     },
   });
 

@@ -163,11 +163,20 @@ router.put('/reset', async (req, res) => {
       user.email,
       user.GUID
     );
-    console.log('nodemailer', nodemailer);
 
-    return res.send({
-      user: _.pick(user, ['firstName', 'email', '_id', 'activated', 'GUID']),
-    });
+    // when auth is not working, nodemailer.responseCode will be 535
+    // when auth is OK, nodemailer.responseCode will be undefined
+
+    // nodemailer.response: 250 2.0.0 OK <CH2PR14MB4005FE869D6775CC3C284AD294129@CH2PR14MB4005.namprd14.prod.outlook.com> [Hostname=CH2PR14MB4005.namprd14.prod.outlook.com]
+    // nodemailer.response: 535 5.7.139 Authentication unsuccessful, the user credentials were incorrect. [CH2PR15CA0029.namprd15.prod.outlook.com]
+
+    if (nodemailer.response.includes('OK')) {
+      return res.send({
+        user: _.pick(user, ['firstName', 'email', '_id', 'activated', 'GUID']),
+      });
+    } else {
+      return res.send(false);
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).send({

@@ -29,17 +29,8 @@ async function sendEmailReset(firstName, email, GUID) {
     text: emailBody,
   };
   try {
-    await transporter.sendMail(mailOptions, function (error, info) {
-      console.log('ERROR', error);
-      console.log('info', info);
-      if (!error) {
-        return info;
-      } else {
-        return error;
-      }
-    });
+    return await transporter.sendMail(mailOptions);
   } catch (error) {
-    console.log('ERROR', error);
     return error;
   }
 }

@@ -1,4 +1,3 @@
-const { response } = require('express');
 const nodemailer = require('nodemailer');
 const emailURL = process.env.emailURL;
 const emailUser = process.env.nodemailer_user;

@@ -33,14 +33,17 @@ const StartReset = () => {
       }
       const data = await res.json();
       console.log('data', data);
-      if (data.message) {
-        setError(data.message);
+      if (data) {
+        setSent(true);
+        localStorage.setItem('userData', JSON.stringify(data));
+        setError('');
+      } else {
+        setError(
+          'There was an issue sending your email. Please try again later.'
+        );
         setSent(false);
         return;
       }
-      setSent(true);
-      localStorage.setItem('userData', JSON.stringify(data));
-      setError('');
     } catch (error) {
       console.error(error);
       setError(error.message);

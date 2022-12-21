@@ -75,12 +75,12 @@ if (process.env.NODE_ENV == 'production') {
 
   app.use(express.static('public'));
   // Serve any static file
-  app.use(express.static(path.join(__dirname, 'client/build')));
+  app.use(express.static(path.join(__dirname, './client/build')));
 
   try {
     // Handle React routing, return all requests to React app
     app.get('*', function (req, res) {
-      res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+      res.sendFile(path.join(__dirname, './client/build/index.html'));
     });
   } catch (error) {
     console.log('try catch error: ', error);

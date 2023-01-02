@@ -1,7 +1,8 @@
 const nodemailer = require('nodemailer');
-const nodemailerPass = process.env.nodemailerPass;
+const emailUser = process.env.nodemailer_user;
+const emailPass = process.env.nodemailer_pass;
 
-let sendLowAlertEmail = (firstName, email, lowAlertAmount) => {
+async function sendLowAlertEmail(firstName, email, lowAlertAmount) {
   let emailBody = `Hello ${firstName},
 
   This is a courtesy reminder that your diaper inventory is at or below ${lowAlertAmount} diapers. 
@@ -11,30 +12,28 @@ let sendLowAlertEmail = (firstName, email, lowAlertAmount) => {
   Thank you,
   Diaper Buddy`;
 
+  //! nodemailer no longer takes gmail
   let transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: 'Outlook365',
     auth: {
-      user: 'lbarnett712@gmail.com',
-      pass: nodemailerPass,
+      user: emailUser,
+      pass: emailPass,
     },
   });
 
   let mailOptions = {
-    from: 'lbarnett712@gmail.com',
+    from: emailUser,
     to: email,
     subject: 'Diaper Buddy - Low Diaper Alert',
     text: emailBody,
   };
 
-  transporter.sendMail(mailOptions, function (error, info) {
-    console.log(`error: ${error}`);
-    console.log(`info: ${info}`);
-    // if (error) {
-    //   res.send({ error: error }); // res is not defined
-    // } else {
-    //   res.send({ status: 200, message: 'Email was sent. Thank you!' });
-    // }
-  });
-};
+  try {
+    return await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.log('ERROR from email low alert: ', error);
+    return error;
+  }
+}
 
 module.exports.sendLowAlertEmail = sendLowAlertEmail;

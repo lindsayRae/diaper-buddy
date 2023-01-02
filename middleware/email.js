@@ -1,10 +1,9 @@
 const nodemailer = require('nodemailer');
 const emailURL = process.env.emailURL;
-const nodemailerPass = process.env.nodemailerPass;
+const emailUser = process.env.nodemailer_user;
+const emailPass = process.env.nodemailer_pass;
 
-nodemailerPass;
-
-let sendEmail = (firstName, email, GUID) => {
+async function sendEmail(firstName, email, GUID) {
   let emailBody = `Hello ${firstName},
 
   Thank you for registering with Diaper Buddy. In order to activate your account, please copy and past or click the link below. If you received this by mistake then please ignore.
@@ -13,30 +12,28 @@ let sendEmail = (firstName, email, GUID) => {
 
   Have a wonderful day!`;
 
+  //! nodemailer no longer takes gmail
   let transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: 'Outlook365',
     auth: {
-      user: 'lbarnett712@gmail.com',
-      pass: nodemailerPass,
+      user: emailUser,
+      pass: emailPass,
     },
   });
 
   let mailOptions = {
-    from: 'lbarnett712@gmail.com',
+    from: emailUser,
     to: email,
     subject: 'Diaper Buddy Activation Link',
     text: emailBody,
   };
 
-  transporter.sendMail(mailOptions, function (error, info) {
-    console.log(`error: ${error}`);
-    console.log(`info: ${info}`);
-    if (error) {
-      res.send({ error: error });
-    } else {
-      res.send({ status: 200, message: 'Email was sent. Thank you!' });
-    }
-  });
-};
+  try {
+    return await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.log('Error email registration: '.error);
+    return error;
+  }
+}
 
 module.exports.sendEmail = sendEmail;
